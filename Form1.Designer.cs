@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            RUNbtn = new Button();
+            btnRun = new Button();
             SuspendLayout();
             // 
-            // RUNbtn
+            // btnRun
             // 
-            RUNbtn.Location = new Point(26, 28);
-            RUNbtn.Name = "RUNbtn";
-            RUNbtn.Size = new Size(197, 104);
-            RUNbtn.TabIndex = 0;
-            RUNbtn.Text = "RUN";
-            RUNbtn.UseVisualStyleBackColor = true;
-            RUNbtn.Click += RUNbtn_Click;
+            btnRun.Location = new Point(26, 28);
+            btnRun.Name = "btnRun";
+            btnRun.Size = new Size(197, 104);
+            btnRun.TabIndex = 0;
+            btnRun.Text = "RUN";
+            btnRun.UseVisualStyleBackColor = true;
+            btnRun.Click += btnRun_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(RUNbtn);
+            Controls.Add(btnRun);
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);
@@ -54,6 +54,6 @@
 
         #endregion
 
-        private Button RUNbtn;
+        private Button btnRun;
     }
 }

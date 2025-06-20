@@ -9,7 +9,7 @@ namespace CSharpAppPlayground
             InitializeComponent();
         }
 
-        private void RUNbtn_Click(object sender, EventArgs e)
+        private void btnRun_Click(object sender, EventArgs e)
         {
             //Console.WriteLine("Hello, World!"); // outputs to console, not suitable for WinForms
             Debug.Print("Hello, World!"); // outputs to the Output window in Visual Studio
