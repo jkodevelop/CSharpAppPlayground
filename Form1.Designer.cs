@@ -28,12 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            RUNbtn = new Button();
+            SuspendLayout();
+            // 
+            // RUNbtn
+            // 
+            RUNbtn.Location = new Point(26, 28);
+            RUNbtn.Name = "RUNbtn";
+            RUNbtn.Size = new Size(197, 104);
+            RUNbtn.TabIndex = 0;
+            RUNbtn.Text = "RUN";
+            RUNbtn.UseVisualStyleBackColor = true;
+            RUNbtn.Click += RUNbtn_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(RUNbtn);
+            Name = "Form1";
+            Text = "Form1";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private Button RUNbtn;
     }
 }
