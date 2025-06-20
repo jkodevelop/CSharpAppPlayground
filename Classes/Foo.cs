@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using MethodTimer;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground.Classes
 {
@@ -12,6 +13,7 @@ namespace CSharpAppPlayground.Classes
             Bar = bar ?? "Hello, World!";
         }
 
+        [Time]
         public void PrintBar()
         {
             Debug.Print(Bar); // Outputs to the Output window in Visual Studio
