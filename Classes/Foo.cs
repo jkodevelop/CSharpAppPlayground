@@ -13,9 +13,10 @@ namespace CSharpAppPlayground.Classes
             Bar = bar ?? "Hello, World!";
         }
 
-        [Time]
-        public void PrintBar()
+        [Time("Message passed: {msg}")]
+        public void PrintBar(string? msg = "")
         {
+            if(msg == "") msg = Bar;
             Debug.Print(Bar); // Outputs to the Output window in Visual Studio
         }
 

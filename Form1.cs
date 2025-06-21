@@ -20,7 +20,7 @@ namespace CSharpAppPlayground
 
         private void btnFoo_Click(object sender, EventArgs e)
         {
-            f.PrintBar();
+            f.PrintBar("The Bar.");
         }
     }
 }
