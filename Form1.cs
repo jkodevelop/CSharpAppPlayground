@@ -1,4 +1,6 @@
 using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.Loggers; // Add this using
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground
@@ -10,6 +12,9 @@ namespace CSharpAppPlayground
         public Form1()
         {
             InitializeComponent();
+            // ILogger logger = new FileLogger("CSharpAppPlayground", new FileLoggerOptions { FilePath = "log.txt", LogLevel = LogLevel.Information });
+            // logger.LogInformation("Application started.");
+            GlobalLogger.Instance.LogInformation("Application started.");
         }
 
         private void btnRun_Click(object sender, EventArgs e)
