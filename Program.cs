@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
 namespace CSharpAppPlayground
 {
     internal static class Program
@@ -15,15 +12,9 @@ namespace CSharpAppPlayground
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"), optional: false, reloadOnChange: true)
-                .Build();
+            // Create a logger instance
+            Loggers.GlobalLogger.Initialize("logs.txt");
 
-            string logLevelString = configuration["Logging:LogLevel:Default"] ?? "Information";
-            LogLevel logLevel = Enum.TryParse<LogLevel>(logLevelString, out LogLevel loglevel) ? loglevel : LogLevel.Information;
-
-            // Pass logLevel to your FileLogger
-            CSharpAppPlayground.Loggers.GlobalLogger.Initialize(logLevel);
             Application.Run(new Form1());
         }
     }
