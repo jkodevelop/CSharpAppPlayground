@@ -13,7 +13,7 @@ namespace CSharpAppPlayground
             ApplicationConfiguration.Initialize();
 
             // Create a logger instance
-            Loggers.GlobalLogger.Initialize("logs.txt");
+            Loggers.GlobalLogger.Initialize("globallogs.txt");
 
             Application.Run(new Form1());
         }

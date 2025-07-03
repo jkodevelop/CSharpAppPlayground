@@ -1,4 +1,5 @@
 using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.DIExample;
 using CSharpAppPlayground.Loggers;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -23,6 +24,9 @@ namespace CSharpAppPlayground
             Debug.Print("Hello, World!"); // outputs to the Output window in Visual Studio
 
             GlobalLogger.Instance.LogInformation("Run Clicked");
+
+            DIExampleSampleApp dieExample = new DIExampleSampleApp();
+            dieExample.Run();
         }
 
         private void btnFoo_Click(object sender, EventArgs e)

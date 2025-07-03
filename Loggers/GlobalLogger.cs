@@ -9,7 +9,7 @@ namespace CSharpAppPlayground.Loggers
         public static LogLevel currentLevel = LogLevel.Information; // Default log level
         public static ILogger Instance { get; private set; }
 
-        public static void Initialize(string? logPath = "logs.txt")
+        public static void Initialize(string? logPath = "globallogs.txt")
         {
             if (Instance != null) { return; }
 
