@@ -27,11 +27,13 @@ namespace CSharpAppPlayground.DIExample.median
 
         public void Run()
         {
-            using ServiceProvider serviceProvider = Services.BuildServiceProvider();
-            // TesterCaseAService testCase = serviceProvider.GetRequiredService<TesterCaseAService>();
-            ITesterService testCase = serviceProvider.GetRequiredService<ITesterService>();
-            testCase.RunTestA();
-            testCase.RunTestB();
+            using (ServiceProvider serviceProvider = Services.BuildServiceProvider())
+            {
+                // TesterCaseAService testCase = serviceProvider.GetRequiredService<TesterCaseAService>(); // explicitly requesting the service
+                ITesterService testCase = serviceProvider.GetRequiredService<ITesterService>(); // implicitly requesting the service via interface
+                testCase.RunTestA();
+                testCase.RunTestB();
+            }
         }
 
     }

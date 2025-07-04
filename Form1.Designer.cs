@@ -30,6 +30,7 @@
         {
             btnRun = new Button();
             btnFoo = new Button();
+            btnDI = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -46,17 +47,28 @@
             // 
             btnFoo.Location = new Point(26, 163);
             btnFoo.Name = "btnFoo";
-            btnFoo.Size = new Size(197, 45);
+            btnFoo.Size = new Size(197, 35);
             btnFoo.TabIndex = 1;
             btnFoo.Text = "Foo";
             btnFoo.UseVisualStyleBackColor = true;
             btnFoo.Click += btnFoo_Click;
+            // 
+            // btnDI
+            // 
+            btnDI.Location = new Point(26, 204);
+            btnDI.Name = "btnDI";
+            btnDI.Size = new Size(197, 40);
+            btnDI.TabIndex = 2;
+            btnDI.Text = "Dependency Injection Examples";
+            btnDI.UseVisualStyleBackColor = true;
+            btnDI.Click += btnDI_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnDI);
             Controls.Add(btnFoo);
             Controls.Add(btnRun);
             Name = "Form1";
@@ -68,5 +80,6 @@
 
         private Button btnRun;
         private Button btnFoo;
+        private Button btnDI;
     }
 }
