@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.DIExample.Interfaces
+namespace CSharpAppPlayground.DIExample.median
 {
     public interface ITesterService
     {

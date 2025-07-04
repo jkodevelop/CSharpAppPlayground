@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using CSharpAppPlayground.DIExample.Services;
-using CSharpAppPlayground.DIExample.Interfaces;
 
-namespace CSharpAppPlayground.DIExample
+namespace CSharpAppPlayground.DIExample.median
 {
     public class DIExampleSampleApp
     {
@@ -17,15 +15,14 @@ namespace CSharpAppPlayground.DIExample
             // Register the FileLoggerProvider and configure logging
             Services.AddLogging(builder =>
             {
-                var options = new FileLoggerOptions { FilePath = "log.txt", LogLevel = LogLevel.Information };
+                var options = new FileLoggerOptions { FilePath = "logs.txt", LogLevel = LogLevel.Information };
                 builder.ClearProviders();
                 builder.AddProvider(new FileLoggerProvider(options));
-                // builder.SetMinimumLevel(options.LogLevel); // this is redundant, the FileLoggerProvider already done this
+                // builder.SetMinimumLevel(options.LogLevel); // this is redundant, the FileLoggerProvider + FileLoggerOptions already done this
             });
 
             // Fix: Ensure TesterCaseAService implements ITesterService
             Services.AddTransient<ITesterService, TesterCaseAService>();
-            // Services.AddTransient<TesterCaseBService>();
         }
 
         public void Run()

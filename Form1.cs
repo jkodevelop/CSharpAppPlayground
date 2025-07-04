@@ -1,5 +1,5 @@
 using CSharpAppPlayground.Classes;
-using CSharpAppPlayground.DIExample;
+using CSharpAppPlayground.DIExample.median;
 using CSharpAppPlayground.Loggers;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

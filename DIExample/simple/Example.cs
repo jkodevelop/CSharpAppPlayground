@@ -25,7 +25,7 @@ public class ExampleB : IExample
 
 public class ExampleRunner
 {
-    IExample example;
+    private readonly IExample example;
     public ExampleRunner(IExample e)
     {
         example = e;
@@ -36,9 +36,9 @@ public class ExampleRunner
     }
 }
 
-public class Program()
+public class SampleProgram()
 {
-    public static void Main(string[] args)
+    public void Run()
     {
         // dependency injection, ExampleA or ExampleB can be injected
         ExampleRunner theRunner = new ExampleRunner(new ExampleA());
