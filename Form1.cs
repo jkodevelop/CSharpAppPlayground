@@ -49,6 +49,7 @@ namespace CSharpAppPlayground
         private void btnGeneric_Click(object sender, EventArgs e)
         {
             GenericsDemo.Show();
+            GenericsReturnDemo.Show();
         }
     }
 }
