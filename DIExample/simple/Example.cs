@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System.Diagnostics;
+
+/// <summary>
 /// This is the most basic example of Dependency Injection in C#.
 /// Doesn't use any DI framework or tools from .NET, but the concept is clear.
 /// </summary>
@@ -11,7 +13,7 @@ public class ExampleA : IExample
 { 
     public void DoSomething()
     {
-        Console.WriteLine("ExampleA is doing something. Read from file.");
+        Debug.Print("ExampleA is doing something. Read from file.");
     }
 }
 
@@ -19,7 +21,7 @@ public class ExampleB : IExample
 {
     public void DoSomething()
     {
-        Console.WriteLine("ExampleB is doing something. Read from DB.");
+        Debug.Print("ExampleB is doing something. Read from DB.");
     }
 }
 

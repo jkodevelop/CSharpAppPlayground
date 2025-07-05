@@ -31,6 +31,7 @@
             btnRun = new Button();
             btnFoo = new Button();
             btnDI = new Button();
+            btnGeneric = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -63,11 +64,22 @@
             btnDI.UseVisualStyleBackColor = true;
             btnDI.Click += btnDI_Click;
             // 
+            // btnGeneric
+            // 
+            btnGeneric.Location = new Point(26, 250);
+            btnGeneric.Name = "btnGeneric";
+            btnGeneric.Size = new Size(197, 33);
+            btnGeneric.TabIndex = 3;
+            btnGeneric.Text = "Generic Types";
+            btnGeneric.UseVisualStyleBackColor = true;
+            btnGeneric.Click += btnGeneric_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnGeneric);
             Controls.Add(btnDI);
             Controls.Add(btnFoo);
             Controls.Add(btnRun);
@@ -81,5 +93,6 @@
         private Button btnRun;
         private Button btnFoo;
         private Button btnDI;
+        private Button btnGeneric;
     }
 }
