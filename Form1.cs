@@ -85,7 +85,7 @@ namespace CSharpAppPlayground
         private void btnThreads_Click(object sender, EventArgs e)
         {
             int processors = 1;
-            string processorsStr = System.Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS") ?? "1";
+            string processorsStr = System.Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS") ?? "1"; // alt: Environment.ProcessorCount.ToString();
             if (processorsStr != null)
                 processors = int.Parse(processorsStr);
             string resultsStr = $"Number of processors: {processors}";

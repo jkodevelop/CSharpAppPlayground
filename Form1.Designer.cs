@@ -37,6 +37,8 @@
             lblMain = new Label();
             btnStartThreads = new Button();
             groupBox1 = new GroupBox();
+            lblThreads = new Label();
+            btnStatus = new Button();
             textboxMTE = new TextBox();
             btnThread2 = new Button();
             btnThread1 = new Button();
@@ -113,9 +115,9 @@
             // 
             // btnStartThreads
             // 
-            btnStartThreads.Location = new Point(6, 33);
+            btnStartThreads.Location = new Point(6, 22);
             btnStartThreads.Name = "btnStartThreads";
-            btnStartThreads.Size = new Size(252, 23);
+            btnStartThreads.Size = new Size(172, 34);
             btnStartThreads.TabIndex = 8;
             btnStartThreads.Text = "Start Threads";
             btnStartThreads.UseVisualStyleBackColor = true;
@@ -123,6 +125,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(lblThreads);
+            groupBox1.Controls.Add(btnStatus);
             groupBox1.Controls.Add(textboxMTE);
             groupBox1.Controls.Add(btnThread2);
             groupBox1.Controls.Add(btnThread1);
@@ -134,19 +138,38 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "More MultiThreading Examples";
             // 
+            // lblThreads
+            // 
+            lblThreads.AutoSize = true;
+            lblThreads.Location = new Point(10, 65);
+            lblThreads.Name = "lblThreads";
+            lblThreads.Size = new Size(42, 15);
+            lblThreads.TabIndex = 13;
+            lblThreads.Text = "Status:";
+            // 
+            // btnStatus
+            // 
+            btnStatus.Enabled = false;
+            btnStatus.Location = new Point(184, 22);
+            btnStatus.Name = "btnStatus";
+            btnStatus.Size = new Size(74, 34);
+            btnStatus.TabIndex = 12;
+            btnStatus.Text = "status";
+            btnStatus.UseVisualStyleBackColor = true;
+            // 
             // textboxMTE
             // 
-            textboxMTE.Location = new Point(6, 112);
+            textboxMTE.Location = new Point(6, 129);
             textboxMTE.Multiline = true;
             textboxMTE.Name = "textboxMTE";
             textboxMTE.ScrollBars = ScrollBars.Both;
-            textboxMTE.Size = new Size(252, 273);
+            textboxMTE.Size = new Size(252, 122);
             textboxMTE.TabIndex = 11;
             // 
             // btnThread2
             // 
             btnThread2.Enabled = false;
-            btnThread2.Location = new Point(133, 71);
+            btnThread2.Location = new Point(133, 88);
             btnThread2.Name = "btnThread2";
             btnThread2.Size = new Size(125, 23);
             btnThread2.TabIndex = 10;
@@ -156,7 +179,7 @@
             // btnThread1
             // 
             btnThread1.Enabled = false;
-            btnThread1.Location = new Point(6, 71);
+            btnThread1.Location = new Point(6, 88);
             btnThread1.Name = "btnThread1";
             btnThread1.Size = new Size(121, 23);
             btnThread1.TabIndex = 9;
@@ -199,5 +222,7 @@
         public Button btnThread1;
         public TextBox textboxMTE;
         private TextBox textBox1;
+        public Button btnStatus;
+        public Label lblThreads;
     }
 }
