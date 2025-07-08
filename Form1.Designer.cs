@@ -140,7 +140,7 @@
             textboxMTE.Multiline = true;
             textboxMTE.Name = "textboxMTE";
             textboxMTE.ScrollBars = ScrollBars.Both;
-            textboxMTE.Size = new Size(252, 71);
+            textboxMTE.Size = new Size(252, 273);
             textboxMTE.TabIndex = 11;
             // 
             // btnThread2
