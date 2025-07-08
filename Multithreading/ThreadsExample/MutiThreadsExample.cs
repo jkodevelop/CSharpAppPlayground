@@ -44,18 +44,22 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
                 pauseEvents[threadIndex].Set(); // Resume the thread
                 isPaused[threadIndex] = false;
                 PrintMsg($"Thread {threadIndex + 1} resumed.");
-                var btnText = sender.GetType().GetProperty("Text").GetValue(sender)?.ToString() ?? string.Empty;
-                var newText = btnText.Replace("Resume", "Pause");
-                sender.GetType().GetProperty("Text").SetValue(sender, newText, null); // Replace 'Resume' with 'Pause'
+                string btnText = (sender as Button)?.Text ?? string.Empty;
+                string newText = btnText.Replace("Resume", "Pause");
+                (sender as Button).Text = newText; // Replace 'Resume' with 'Pause'
+
+                /// alt style to change button text
+                // string btnText = sender.GetType().GetProperty("Text").GetValue(sender)?.ToString() ?? string.Empty;
+                // sender.GetType().GetProperty("Text").SetValue(sender, newText, null); // Replace 'Resume' with 'Pause'
             }
             else
             {
                 isPaused[threadIndex] = true;
                 pauseEvents[threadIndex].Reset(); // Pause the thread
                 PrintMsg($"Thread {threadIndex + 1} paused.");
-                var btnText = sender.GetType().GetProperty("Text").GetValue(sender)?.ToString() ?? string.Empty;
-                var newText = btnText.Replace("Pause", "Resume");
-                sender.GetType().GetProperty("Text").SetValue(sender, newText, null); // Replace 'Pause' with 'Resume'
+                string btnText = (sender as Button)?.Text ?? string.Empty;
+                string newText = btnText.Replace("Pause", "Resume");
+                (sender as Button).Text = newText; // Replace 'Resume' with 'Pause'
             }
         }
 
