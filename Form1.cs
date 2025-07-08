@@ -14,7 +14,7 @@ namespace CSharpAppPlayground
     {
         private Foo f = new Foo("Hello From Bar();");
 
-        protected MutiThreadsExample mt;
+        protected MutiThreadsExample mte;
 
         public void updateTextBox(string msg)
         {
@@ -49,7 +49,7 @@ namespace CSharpAppPlayground
             GlobalLogger.Instance.LogInformation("Application started.");
 
             // multithreading examples
-            mt = new MutiThreadsExample(this);
+            mte = new MutiThreadsExample(this);
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace CSharpAppPlayground
             GenericsDemo.Show();
             GenericsReturnDemo.Show();
         }
-        
+
         private void btnThreads_Click(object sender, EventArgs e)
         {
             int processors = 1;
@@ -94,10 +94,8 @@ namespace CSharpAppPlayground
 
             updateTextBox(resultsStr);
             updateTextBox("running threads...");
-            
-            SimpleThreadExampleWithInvokeUsage();
 
-            mt.Show();
+            SimpleThreadExampleWithInvokeUsage();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -125,9 +123,10 @@ namespace CSharpAppPlayground
                 Debug.Print("!! simple thread example already running right now !!");
                 return;
             }
-            
+
             // ThreadStart() defines what to run
-            ThreadStart simpleThreadStart = new ThreadStart(() => {
+            ThreadStart simpleThreadStart = new ThreadStart(() =>
+            {
                 simpleThreadRunning = true;
                 threadProcess(4);
                 simpleThreadRunning = false;
@@ -141,6 +140,11 @@ namespace CSharpAppPlayground
             thread.IsBackground = true; // Setting this true allows for application to exit even if it's running
                                         // all threads are foreground when created, IsBackground = true sends it to the background
             thread.Start();
+        }
+
+        private void btnStartThreads_Click(object sender, EventArgs e)
+        {
+            mte.Show();
         }
     }
 }

@@ -35,8 +35,11 @@
             btnThreads = new Button();
             textboxMain = new TextBox();
             lblMain = new Label();
-            button1 = new Button();
+            btnStartThreads = new Button();
             groupBox1 = new GroupBox();
+            textboxMTE = new TextBox();
+            btnThread2 = new Button();
+            btnThread1 = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -95,6 +98,7 @@
             textboxMain.Location = new Point(247, 87);
             textboxMain.Multiline = true;
             textboxMain.Name = "textboxMain";
+            textboxMain.ScrollBars = ScrollBars.Both;
             textboxMain.Size = new Size(237, 128);
             textboxMain.TabIndex = 6;
             // 
@@ -107,24 +111,57 @@
             lblMain.TabIndex = 7;
             lblMain.Text = "label";
             // 
-            // button1
+            // btnStartThreads
             // 
-            button1.Location = new Point(15, 54);
-            button1.Name = "button1";
-            button1.Size = new Size(194, 23);
-            button1.TabIndex = 8;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            btnStartThreads.Location = new Point(6, 33);
+            btnStartThreads.Name = "btnStartThreads";
+            btnStartThreads.Size = new Size(252, 23);
+            btnStartThreads.TabIndex = 8;
+            btnStartThreads.Text = "Start Threads";
+            btnStartThreads.UseVisualStyleBackColor = true;
+            btnStartThreads.Click += btnStartThreads_Click;
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(button1);
+            groupBox1.Controls.Add(textboxMTE);
+            groupBox1.Controls.Add(btnThread2);
+            groupBox1.Controls.Add(btnThread1);
+            groupBox1.Controls.Add(btnStartThreads);
             groupBox1.Location = new Point(508, 32);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(264, 391);
             groupBox1.TabIndex = 9;
             groupBox1.TabStop = false;
             groupBox1.Text = "More MultiThreading Examples";
+            // 
+            // textboxMTE
+            // 
+            textboxMTE.Location = new Point(6, 112);
+            textboxMTE.Multiline = true;
+            textboxMTE.Name = "textboxMTE";
+            textboxMTE.ScrollBars = ScrollBars.Both;
+            textboxMTE.Size = new Size(252, 71);
+            textboxMTE.TabIndex = 11;
+            // 
+            // btnThread2
+            // 
+            btnThread2.Enabled = false;
+            btnThread2.Location = new Point(133, 71);
+            btnThread2.Name = "btnThread2";
+            btnThread2.Size = new Size(125, 23);
+            btnThread2.TabIndex = 10;
+            btnThread2.Text = "Pause Thread 2";
+            btnThread2.UseVisualStyleBackColor = true;
+            // 
+            // btnThread1
+            // 
+            btnThread1.Enabled = false;
+            btnThread1.Location = new Point(6, 71);
+            btnThread1.Name = "btnThread1";
+            btnThread1.Size = new Size(121, 23);
+            btnThread1.TabIndex = 9;
+            btnThread1.Text = "Pause Thread 1";
+            btnThread1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -142,6 +179,7 @@
             Name = "Form1";
             Text = "Form1";
             groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -155,7 +193,11 @@
         private Button btnThreads;
         public TextBox textboxMain;
         private Label lblMain;
-        private Button button1;
+        private Button btnStartThreads;
         private GroupBox groupBox1;
+        public Button btnThread2;
+        public Button btnThread1;
+        public TextBox textboxMTE;
+        private TextBox textBox1;
     }
 }
