@@ -7,6 +7,7 @@ using CSharpAppPlayground.Multithreading.ThreadsExample;
 using CSharpAppPlayground.Loggers;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using CSharpAppPlayground.Multithreading.ParallelExample;
 
 namespace CSharpAppPlayground
 {
@@ -14,7 +15,9 @@ namespace CSharpAppPlayground
     {
         private Foo f = new Foo("Hello From Bar();");
 
+        // Multi-threading examples
         protected MutiThreadsExample mte;
+        protected ParallelExample pe = new ParallelExample();
 
         public void updateTextBox(string msg)
         {
@@ -145,6 +148,11 @@ namespace CSharpAppPlayground
         private void btnStartThreads_Click(object sender, EventArgs e)
         {
             mte.Show();
+        }
+
+        private void btnStartParallel_Click(object sender, EventArgs e)
+        {
+            pe.Show();
         }
     }
 }

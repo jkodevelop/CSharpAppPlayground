@@ -37,6 +37,7 @@
             lblMain = new Label();
             btnStartThreads = new Button();
             groupBox1 = new GroupBox();
+            btnStartParallel = new Button();
             lblThreads = new Label();
             btnStatus = new Button();
             textboxMTE = new TextBox();
@@ -119,12 +120,13 @@
             btnStartThreads.Name = "btnStartThreads";
             btnStartThreads.Size = new Size(172, 34);
             btnStartThreads.TabIndex = 8;
-            btnStartThreads.Text = "Start Threads";
+            btnStartThreads.Text = "1. Start Threads";
             btnStartThreads.UseVisualStyleBackColor = true;
             btnStartThreads.Click += btnStartThreads_Click;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnStartParallel);
             groupBox1.Controls.Add(lblThreads);
             groupBox1.Controls.Add(btnStatus);
             groupBox1.Controls.Add(textboxMTE);
@@ -137,6 +139,16 @@
             groupBox1.TabIndex = 9;
             groupBox1.TabStop = false;
             groupBox1.Text = "More MultiThreading Examples";
+            // 
+            // btnStartParallel
+            // 
+            btnStartParallel.Location = new Point(6, 356);
+            btnStartParallel.Name = "btnStartParallel";
+            btnStartParallel.Size = new Size(252, 29);
+            btnStartParallel.TabIndex = 14;
+            btnStartParallel.Text = "2. Start Parallel";
+            btnStartParallel.UseVisualStyleBackColor = true;
+            btnStartParallel.Click += btnStartParallel_Click;
             // 
             // lblThreads
             // 
@@ -224,5 +236,6 @@
         private TextBox textBox1;
         public Button btnStatus;
         public Label lblThreads;
+        private Button btnStartParallel;
     }
 }
