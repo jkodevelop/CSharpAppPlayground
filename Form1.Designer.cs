@@ -43,6 +43,7 @@
             textboxMTE = new TextBox();
             btnThread2 = new Button();
             btnThread1 = new Button();
+            btnStartTasks = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -126,6 +127,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnStartTasks);
             groupBox1.Controls.Add(btnStartParallel);
             groupBox1.Controls.Add(lblThreads);
             groupBox1.Controls.Add(btnStatus);
@@ -146,7 +148,7 @@
             btnStartParallel.Name = "btnStartParallel";
             btnStartParallel.Size = new Size(252, 29);
             btnStartParallel.TabIndex = 14;
-            btnStartParallel.Text = "2. Start Parallel";
+            btnStartParallel.Text = "3. Start Parallel";
             btnStartParallel.UseVisualStyleBackColor = true;
             btnStartParallel.Click += btnStartParallel_Click;
             // 
@@ -198,6 +200,16 @@
             btnThread1.Text = "Pause Thread 1";
             btnThread1.UseVisualStyleBackColor = true;
             // 
+            // btnStartTasks
+            // 
+            btnStartTasks.Location = new Point(6, 274);
+            btnStartTasks.Name = "btnStartTasks";
+            btnStartTasks.Size = new Size(252, 31);
+            btnStartTasks.TabIndex = 15;
+            btnStartTasks.Text = "2. Start Tasks";
+            btnStartTasks.UseVisualStyleBackColor = true;
+            btnStartTasks.Click += btnStartTasks_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -237,5 +249,6 @@
         public Button btnStatus;
         public Label lblThreads;
         private Button btnStartParallel;
+        private Button btnStartTasks;
     }
 }

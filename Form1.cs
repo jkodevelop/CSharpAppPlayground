@@ -8,6 +8,7 @@ using CSharpAppPlayground.Loggers;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using CSharpAppPlayground.Multithreading.ParallelExample;
+using CSharpAppPlayground.Multithreading.TasksExample;
 
 namespace CSharpAppPlayground
 {
@@ -17,7 +18,8 @@ namespace CSharpAppPlayground
 
         // Multi-threading examples
         protected MutiThreadsExample mte;
-        protected ParallelExample pe = new ParallelExample();
+        protected ParallelExample pe;
+        protected TasksExample te;
 
         public void updateTextBox(string msg)
         {
@@ -53,6 +55,8 @@ namespace CSharpAppPlayground
 
             // multithreading examples
             mte = new MutiThreadsExample(this);
+            pe = new ParallelExample();
+            te = new TasksExample();
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -153,6 +157,23 @@ namespace CSharpAppPlayground
         private void btnStartParallel_Click(object sender, EventArgs e)
         {
             pe.Show();
+        }
+
+        private void btnStartTasks_Click(object sender, EventArgs e)
+        {
+            te.ShowAsync().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    Debug.Print($"Error: {t.Exception?.Message}");
+                    updateTextBox($"Error: {t.Exception?.Message}");
+                }
+                else
+                {
+                    Debug.Print("All tasks completed successfully.");
+                    updateTextBox("All tasks completed successfully.");
+                }
+            });
         }
     }
 }
