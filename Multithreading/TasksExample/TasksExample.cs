@@ -12,11 +12,11 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
             Debug.Print("Processing a collection in parallel with async/await...");
             List<int> workOrderIds = Enumerable.Range(1, 10).ToList();
 
-            var tasks = workOrderIds.Select(workId => ProcessWorkOrderAsync(workId)).ToList();
+            List<Task<string>> tasks = workOrderIds.Select(workId => ProcessWorkOrderAsync(workId)).ToList();
 
-            var results = await Task.WhenAll(tasks);
+            string[] results = await Task.WhenAll(tasks);
 
-            foreach (var result in results)
+            foreach (string result in results)
             {
                 Debug.Print(result);
             }
