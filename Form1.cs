@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using CSharpAppPlayground.Multithreading.ParallelExample;
 using CSharpAppPlayground.Multithreading.TasksExample;
+using System.Threading.Tasks;
 
 namespace CSharpAppPlayground
 {
@@ -154,9 +155,10 @@ namespace CSharpAppPlayground
             mte.Show();
         }
 
-        private void btnStartParallel_Click(object sender, EventArgs e)
+        private async void btnStartParallel_Click(object sender, EventArgs e)
         {
-            pe.Show();
+            //pe.Show();
+
             //pe.ShowAsync().ContinueWith(t =>
             //{
             //    if (t.IsFaulted)
@@ -170,6 +172,8 @@ namespace CSharpAppPlayground
             //        updateTextBox("Parallel2 processing completed successfully.");
             //    }
             //});
+
+            await pe.ShowAsync();
         }
 
         private void btnStartTasks_Click(object sender, EventArgs e)
