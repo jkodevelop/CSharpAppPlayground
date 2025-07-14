@@ -44,6 +44,7 @@
             btnThread2 = new Button();
             btnThread1 = new Button();
             btnStartTasks = new Button();
+            btnNewView = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -210,11 +211,22 @@
             btnStartTasks.UseVisualStyleBackColor = true;
             btnStartTasks.Click += btnStartTasks_Click;
             // 
+            // btnNewView
+            // 
+            btnNewView.Location = new Point(26, 290);
+            btnNewView.Name = "btnNewView";
+            btnNewView.Size = new Size(197, 33);
+            btnNewView.TabIndex = 16;
+            btnNewView.Text = "Open New View";
+            btnNewView.UseVisualStyleBackColor = true;
+            btnNewView.Click += btnNewView_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnNewView);
             Controls.Add(lblMain);
             Controls.Add(textboxMain);
             Controls.Add(btnThreads);
@@ -250,5 +262,6 @@
         public Label lblThreads;
         private Button btnStartParallel;
         private Button btnStartTasks;
+        private Button btnNewView;
     }
 }

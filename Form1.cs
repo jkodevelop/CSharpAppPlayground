@@ -1,3 +1,4 @@
+using CSharpAppPlayground;
 using CSharpAppPlayground.Classes;
 using CSharpAppPlayground.DIExample.advance;
 using CSharpAppPlayground.DIExample.median;
@@ -191,6 +192,12 @@ namespace CSharpAppPlayground
                     updateTextBox("All tasks completed successfully.");
                 }
             });
+        }
+
+        private void btnNewView_Click(object sender, EventArgs e)
+        {
+            var form2 = new Form2();
+            form2.ShowDialog();
         }
     }
 }
