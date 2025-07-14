@@ -147,6 +147,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "More MultiThreading Examples";
             // 
+            // btnStartTasks
+            // 
+            btnStartTasks.Location = new Point(6, 309);
+            btnStartTasks.Name = "btnStartTasks";
+            btnStartTasks.Size = new Size(252, 31);
+            btnStartTasks.TabIndex = 15;
+            btnStartTasks.Text = "2. Start Tasks";
+            btnStartTasks.UseVisualStyleBackColor = true;
+            btnStartTasks.Click += btnStartTasks_Click;
+            // 
             // btnStartParallel
             // 
             btnStartParallel.Location = new Point(6, 356);
@@ -233,16 +243,6 @@
             panelPage2.Size = new Size(800, 450);
             panelPage2.TabIndex = 18;
             panelPage2.Visible = false;
-            // 
-            // btnStartTasks
-            // 
-            btnStartTasks.Location = new Point(6, 309);
-            btnStartTasks.Name = "btnStartTasks";
-            btnStartTasks.Size = new Size(252, 31);
-            btnStartTasks.TabIndex = 15;
-            btnStartTasks.Text = "2. Start Tasks";
-            btnStartTasks.UseVisualStyleBackColor = true;
-            btnStartTasks.Click += btnStartTasks_Click;
             // 
             // btnBackFromPage2
             // 
