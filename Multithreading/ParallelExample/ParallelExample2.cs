@@ -29,7 +29,7 @@ namespace CSharpAppPlayground.Multithreading.ParallelExample
         public async void Show()
         {
             // Call the async version and wait for it to complete
-            // ShowAsync().Wait();
+            // ShowAsync().Wait(); // this is not recommended as it can cause DEADLOCK in some contexts
             ShowAsync();
         }
 

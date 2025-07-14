@@ -10,9 +10,10 @@ namespace CSharpAppPlayground.Multithreading.ParallelExample
         public void Show()
         {
             Debug.Print("Processing a collection in parallel with Parallel.ForEach...");
-            List<int> workOrderIds = Enumerable.Range(1, 10).ToList();
+            // List<int> workOrderIds = Enumerable.Range(1, 10).ToList();
+            int[] workerIds = Enumerable.Range(1, 10).ToArray();
 
-            Parallel.ForEach(workOrderIds, workId =>
+            Parallel.ForEach(workerIds, workId =>
             {
                 // This lambda will be executed on multiple threads concurrently.
                 Task<string> processingResult = ProcessWorkOrder(workId);
