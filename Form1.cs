@@ -199,5 +199,36 @@ namespace CSharpAppPlayground
             var form2 = new Form2();
             form2.ShowDialog();
         }
+
+        private void btnSwitchPage_Click(object sender, EventArgs e)
+        {
+            // Hide main controls except panelPage2
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl != panelPage2)
+                {
+                    ctrl.Visible = false;
+                }
+            }
+            panelPage2.Visible = true;
+        }
+
+        private void btnBackFromPage2_Click(object sender, EventArgs e)
+        {
+            // Show main controls except panelPage2
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl != panelPage2)
+                {
+                    ctrl.Visible = true;
+                }
+            }
+            panelPage2.Visible = false;
+        }
+
+        private void btnStartTasks_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

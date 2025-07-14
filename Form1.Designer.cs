@@ -43,9 +43,13 @@
             textboxMTE = new TextBox();
             btnThread2 = new Button();
             btnThread1 = new Button();
-            btnStartTasks = new Button();
             btnNewView = new Button();
+            btnSwitchPage = new Button();
+            panelPage2 = new Panel();
+            btnStartTasks = new Button();
+            btnBackFromPage2 = new Button();
             groupBox1.SuspendLayout();
+            panelPage2.SuspendLayout();
             SuspendLayout();
             // 
             // btnRun
@@ -128,7 +132,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(btnStartTasks);
             groupBox1.Controls.Add(btnStartParallel);
             groupBox1.Controls.Add(lblThreads);
             groupBox1.Controls.Add(btnStatus);
@@ -136,6 +139,7 @@
             groupBox1.Controls.Add(btnThread2);
             groupBox1.Controls.Add(btnThread1);
             groupBox1.Controls.Add(btnStartThreads);
+            groupBox1.Controls.Add(btnStartTasks);
             groupBox1.Location = new Point(508, 32);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(264, 391);
@@ -201,16 +205,6 @@
             btnThread1.Text = "Pause Thread 1";
             btnThread1.UseVisualStyleBackColor = true;
             // 
-            // btnStartTasks
-            // 
-            btnStartTasks.Location = new Point(6, 274);
-            btnStartTasks.Name = "btnStartTasks";
-            btnStartTasks.Size = new Size(252, 31);
-            btnStartTasks.TabIndex = 15;
-            btnStartTasks.Text = "2. Start Tasks";
-            btnStartTasks.UseVisualStyleBackColor = true;
-            btnStartTasks.Click += btnStartTasks_Click;
-            // 
             // btnNewView
             // 
             btnNewView.Location = new Point(26, 290);
@@ -221,11 +215,51 @@
             btnNewView.UseVisualStyleBackColor = true;
             btnNewView.Click += btnNewView_Click;
             // 
+            // btnSwitchPage
+            // 
+            btnSwitchPage.Location = new Point(26, 330);
+            btnSwitchPage.Name = "btnSwitchPage";
+            btnSwitchPage.Size = new Size(197, 33);
+            btnSwitchPage.TabIndex = 17;
+            btnSwitchPage.Text = "Switch Page";
+            btnSwitchPage.UseVisualStyleBackColor = true;
+            btnSwitchPage.Click += btnSwitchPage_Click;
+            // 
+            // panelPage2
+            // 
+            panelPage2.Controls.Add(btnBackFromPage2);
+            panelPage2.Location = new Point(0, 0);
+            panelPage2.Name = "panelPage2";
+            panelPage2.Size = new Size(800, 450);
+            panelPage2.TabIndex = 18;
+            panelPage2.Visible = false;
+            // 
+            // btnStartTasks
+            // 
+            btnStartTasks.Location = new Point(6, 309);
+            btnStartTasks.Name = "btnStartTasks";
+            btnStartTasks.Size = new Size(252, 31);
+            btnStartTasks.TabIndex = 15;
+            btnStartTasks.Text = "2. Start Tasks";
+            btnStartTasks.UseVisualStyleBackColor = true;
+            btnStartTasks.Click += btnStartTasks_Click;
+            // 
+            // btnBackFromPage2
+            // 
+            btnBackFromPage2.Location = new Point(20, 20);
+            btnBackFromPage2.Name = "btnBackFromPage2";
+            btnBackFromPage2.Size = new Size(120, 40);
+            btnBackFromPage2.TabIndex = 0;
+            btnBackFromPage2.Text = "Back";
+            btnBackFromPage2.UseVisualStyleBackColor = true;
+            btnBackFromPage2.Click += btnBackFromPage2_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnSwitchPage);
             Controls.Add(btnNewView);
             Controls.Add(lblMain);
             Controls.Add(textboxMain);
@@ -235,10 +269,12 @@
             Controls.Add(btnFoo);
             Controls.Add(btnRun);
             Controls.Add(groupBox1);
+            Controls.Add(panelPage2);
             Name = "Form1";
             Text = "Form1";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            panelPage2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -261,7 +297,10 @@
         public Button btnStatus;
         public Label lblThreads;
         private Button btnStartParallel;
-        private Button btnStartTasks;
         private Button btnNewView;
+        private Button btnSwitchPage;
+        private Panel panelPage2;
+        private Button btnBackFromPage2;
+        private Button btnStartTasks;
     }
 }
