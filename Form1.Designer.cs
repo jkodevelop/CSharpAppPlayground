@@ -36,19 +36,20 @@
             textboxMain = new TextBox();
             lblMain = new Label();
             btnStartThreads = new Button();
-            groupBox1 = new GroupBox();
+            grpBox1 = new GroupBox();
             btnStartParallel = new Button();
             lblThreads = new Label();
             btnStatus = new Button();
             textboxMTE = new TextBox();
             btnThread2 = new Button();
             btnThread1 = new Button();
-            btnNewView = new Button();
-            btnSwitchPage = new Button();
-            panelPage2 = new Panel();
             btnStartTasks = new Button();
+            btnNewView = new Button();
+            btnSwitchPageConcurrency = new Button();
+            panelPage2 = new Panel();
+            lblPanel2_01 = new Label();
             btnBackFromPage2 = new Button();
-            groupBox1.SuspendLayout();
+            grpBox1.SuspendLayout();
             panelPage2.SuspendLayout();
             SuspendLayout();
             // 
@@ -130,32 +131,22 @@
             btnStartThreads.UseVisualStyleBackColor = true;
             btnStartThreads.Click += btnStartThreads_Click;
             // 
-            // groupBox1
+            // grpBox1
             // 
-            groupBox1.Controls.Add(btnStartParallel);
-            groupBox1.Controls.Add(lblThreads);
-            groupBox1.Controls.Add(btnStatus);
-            groupBox1.Controls.Add(textboxMTE);
-            groupBox1.Controls.Add(btnThread2);
-            groupBox1.Controls.Add(btnThread1);
-            groupBox1.Controls.Add(btnStartThreads);
-            groupBox1.Controls.Add(btnStartTasks);
-            groupBox1.Location = new Point(508, 32);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(264, 391);
-            groupBox1.TabIndex = 9;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "More MultiThreading Examples";
-            // 
-            // btnStartTasks
-            // 
-            btnStartTasks.Location = new Point(6, 309);
-            btnStartTasks.Name = "btnStartTasks";
-            btnStartTasks.Size = new Size(252, 31);
-            btnStartTasks.TabIndex = 15;
-            btnStartTasks.Text = "2. Start Tasks";
-            btnStartTasks.UseVisualStyleBackColor = true;
-            btnStartTasks.Click += btnStartTasks_Click;
+            grpBox1.Controls.Add(btnStartParallel);
+            grpBox1.Controls.Add(lblThreads);
+            grpBox1.Controls.Add(btnStatus);
+            grpBox1.Controls.Add(textboxMTE);
+            grpBox1.Controls.Add(btnThread2);
+            grpBox1.Controls.Add(btnThread1);
+            grpBox1.Controls.Add(btnStartThreads);
+            grpBox1.Controls.Add(btnStartTasks);
+            grpBox1.Location = new Point(508, 32);
+            grpBox1.Name = "grpBox1";
+            grpBox1.Size = new Size(264, 391);
+            grpBox1.TabIndex = 9;
+            grpBox1.TabStop = false;
+            grpBox1.Text = "More MultiThreading Examples";
             // 
             // btnStartParallel
             // 
@@ -215,28 +206,39 @@
             btnThread1.Text = "Pause Thread 1";
             btnThread1.UseVisualStyleBackColor = true;
             // 
+            // btnStartTasks
+            // 
+            btnStartTasks.Location = new Point(6, 309);
+            btnStartTasks.Name = "btnStartTasks";
+            btnStartTasks.Size = new Size(252, 31);
+            btnStartTasks.TabIndex = 15;
+            btnStartTasks.Text = "2. Start Tasks";
+            btnStartTasks.UseVisualStyleBackColor = true;
+            btnStartTasks.Click += btnStartTasks_Click;
+            // 
             // btnNewView
             // 
             btnNewView.Location = new Point(26, 290);
             btnNewView.Name = "btnNewView";
             btnNewView.Size = new Size(197, 33);
             btnNewView.TabIndex = 16;
-            btnNewView.Text = "Open New View";
+            btnNewView.Text = "Open Dialog";
             btnNewView.UseVisualStyleBackColor = true;
             btnNewView.Click += btnNewView_Click;
             // 
-            // btnSwitchPage
+            // btnSwitchPageConcurrency
             // 
-            btnSwitchPage.Location = new Point(26, 330);
-            btnSwitchPage.Name = "btnSwitchPage";
-            btnSwitchPage.Size = new Size(197, 33);
-            btnSwitchPage.TabIndex = 17;
-            btnSwitchPage.Text = "Switch Page";
-            btnSwitchPage.UseVisualStyleBackColor = true;
-            btnSwitchPage.Click += btnSwitchPage_Click;
+            btnSwitchPageConcurrency.Location = new Point(26, 330);
+            btnSwitchPageConcurrency.Name = "btnSwitchPageConcurrency";
+            btnSwitchPageConcurrency.Size = new Size(197, 33);
+            btnSwitchPageConcurrency.TabIndex = 17;
+            btnSwitchPageConcurrency.Text = "Switch Panel";
+            btnSwitchPageConcurrency.UseVisualStyleBackColor = true;
+            btnSwitchPageConcurrency.Click += btnSwitchPageConcurrency_Click;
             // 
             // panelPage2
             // 
+            panelPage2.Controls.Add(lblPanel2_01);
             panelPage2.Controls.Add(btnBackFromPage2);
             panelPage2.Location = new Point(0, 0);
             panelPage2.Name = "panelPage2";
@@ -244,13 +246,22 @@
             panelPage2.TabIndex = 18;
             panelPage2.Visible = false;
             // 
+            // lblPanel2_01
+            // 
+            lblPanel2_01.AutoSize = true;
+            lblPanel2_01.Location = new Point(12, 28);
+            lblPanel2_01.Name = "lblPanel2_01";
+            lblPanel2_01.Size = new Size(235, 15);
+            lblPanel2_01.TabIndex = 1;
+            lblPanel2_01.Text = "Example for creating another panel; Panel 2";
+            // 
             // btnBackFromPage2
             // 
-            btnBackFromPage2.Location = new Point(20, 20);
+            btnBackFromPage2.Location = new Point(12, 378);
             btnBackFromPage2.Name = "btnBackFromPage2";
-            btnBackFromPage2.Size = new Size(120, 40);
+            btnBackFromPage2.Size = new Size(776, 60);
             btnBackFromPage2.TabIndex = 0;
-            btnBackFromPage2.Text = "Back";
+            btnBackFromPage2.Text = "Switch Panel Back";
             btnBackFromPage2.UseVisualStyleBackColor = true;
             btnBackFromPage2.Click += btnBackFromPage2_Click;
             // 
@@ -259,7 +270,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnSwitchPage);
+            Controls.Add(btnSwitchPageConcurrency);
             Controls.Add(btnNewView);
             Controls.Add(lblMain);
             Controls.Add(textboxMain);
@@ -268,13 +279,14 @@
             Controls.Add(btnDI);
             Controls.Add(btnFoo);
             Controls.Add(btnRun);
-            Controls.Add(groupBox1);
+            Controls.Add(grpBox1);
             Controls.Add(panelPage2);
             Name = "Form1";
             Text = "Form1";
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            grpBox1.ResumeLayout(false);
+            grpBox1.PerformLayout();
             panelPage2.ResumeLayout(false);
+            panelPage2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -289,18 +301,18 @@
         public TextBox textboxMain;
         private Label lblMain;
         private Button btnStartThreads;
-        private GroupBox groupBox1;
+        private GroupBox grpBox1;
         public Button btnThread2;
         public Button btnThread1;
         public TextBox textboxMTE;
-        private TextBox textBox1;
         public Button btnStatus;
         public Label lblThreads;
         private Button btnStartParallel;
         private Button btnNewView;
-        private Button btnSwitchPage;
+        private Button btnSwitchPageConcurrency;
         private Panel panelPage2;
         private Button btnBackFromPage2;
         private Button btnStartTasks;
+        private Label lblPanel2_01;
     }
 }

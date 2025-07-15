@@ -115,9 +115,9 @@ namespace CSharpAppPlayground
             Invoke((MethodInvoker)(() => updateLabel("starting now...")));
             for (int i = 0; i < limit; i++)
             {
-                string msg = $"Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}";
+                string msg = $"Thread {System.Threading.Thread.CurrentThread.ManagedThreadId} - Count: {i}";
                 updateTextBox(msg);
-                Thread.Sleep(500); // Simulate work, 200 milliseconds
+                System.Threading.Thread.Sleep(500); // Simulate work, 200 milliseconds
             }
         }
 
@@ -184,12 +184,12 @@ namespace CSharpAppPlayground
                 if (t.IsFaulted)
                 {
                     Debug.Print($"Error: {t.Exception?.Message}");
-                    updateTextBox($"Error: {t.Exception?.Message}");
+                    // updateTextBox($"Error: {t.Exception?.Message}");
                 }
                 else
                 {
                     Debug.Print("All tasks completed successfully.");
-                    updateTextBox("All tasks completed successfully.");
+                    // updateTextBox("All tasks completed successfully.");
                 }
             });
         }
@@ -200,7 +200,7 @@ namespace CSharpAppPlayground
             form2.ShowDialog();
         }
 
-        private void btnSwitchPage_Click(object sender, EventArgs e)
+        private void btnSwitchPageConcurrency_Click(object sender, EventArgs e)
         {
             // Hide main controls except panelPage2
             foreach (Control ctrl in this.Controls)
