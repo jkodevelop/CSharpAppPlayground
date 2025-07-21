@@ -43,15 +43,12 @@
             textboxMTE = new TextBox();
             btnThread2 = new Button();
             btnThread1 = new Button();
-            btnStartTasks = new Button();
-            panelPage2 = new Panel();
-            lblPanel2_01 = new Label();
-            btnBackFromPage2 = new Button();
-            btnNewView = new Button();
-            btnSwitchPageConcurrency = new Button();
+            btnConcurTask = new Button();
             btnUIForm = new Button();
+            btnConcurThread = new Button();
+            pageSetupDialog1 = new PageSetupDialog();
+            btnConcurParallel = new Button();
             grpBox1.SuspendLayout();
-            panelPage2.SuspendLayout();
             SuspendLayout();
             // 
             // btnRun
@@ -141,8 +138,7 @@
             grpBox1.Controls.Add(btnThread2);
             grpBox1.Controls.Add(btnThread1);
             grpBox1.Controls.Add(btnStartThreads);
-            grpBox1.Controls.Add(btnStartTasks);
-            grpBox1.Location = new Point(508, 32);
+            grpBox1.Location = new Point(524, 28);
             grpBox1.Name = "grpBox1";
             grpBox1.Size = new Size(264, 391);
             grpBox1.TabIndex = 9;
@@ -207,83 +203,55 @@
             btnThread1.Text = "Pause Thread 1";
             btnThread1.UseVisualStyleBackColor = true;
             // 
-            // btnStartTasks
+            // btnConcurTask
             // 
-            btnStartTasks.Location = new Point(6, 309);
-            btnStartTasks.Name = "btnStartTasks";
-            btnStartTasks.Size = new Size(252, 31);
-            btnStartTasks.TabIndex = 15;
-            btnStartTasks.Text = "2. Start Tasks";
-            btnStartTasks.UseVisualStyleBackColor = true;
-            btnStartTasks.Click += btnStartTasks_Click;
-            // 
-            // panelPage2
-            // 
-            panelPage2.Controls.Add(lblPanel2_01);
-            panelPage2.Controls.Add(btnBackFromPage2);
-            panelPage2.Location = new Point(12, 12);
-            panelPage2.Name = "panelPage2";
-            panelPage2.Size = new Size(800, 450);
-            panelPage2.TabIndex = 18;
-            panelPage2.Visible = false;
-            // 
-            // lblPanel2_01
-            // 
-            lblPanel2_01.AutoSize = true;
-            lblPanel2_01.Location = new Point(12, 28);
-            lblPanel2_01.Name = "lblPanel2_01";
-            lblPanel2_01.Size = new Size(235, 15);
-            lblPanel2_01.TabIndex = 1;
-            lblPanel2_01.Text = "Example for creating another panel; Panel 2";
-            // 
-            // btnBackFromPage2
-            // 
-            btnBackFromPage2.Location = new Point(12, 378);
-            btnBackFromPage2.Name = "btnBackFromPage2";
-            btnBackFromPage2.Size = new Size(776, 60);
-            btnBackFromPage2.TabIndex = 0;
-            btnBackFromPage2.Text = "Switch Panel Back";
-            btnBackFromPage2.UseVisualStyleBackColor = true;
-            btnBackFromPage2.Click += btnBackFromPage2_Click;
-            // 
-            // btnNewView
-            // 
-            btnNewView.Location = new Point(26, 290);
-            btnNewView.Name = "btnNewView";
-            btnNewView.Size = new Size(197, 33);
-            btnNewView.TabIndex = 16;
-            btnNewView.Text = "Open Dialog";
-            btnNewView.UseVisualStyleBackColor = true;
-            btnNewView.Click += btnNewView_Click;
-            // 
-            // btnSwitchPageConcurrency
-            // 
-            btnSwitchPageConcurrency.Location = new Point(26, 330);
-            btnSwitchPageConcurrency.Name = "btnSwitchPageConcurrency";
-            btnSwitchPageConcurrency.Size = new Size(197, 33);
-            btnSwitchPageConcurrency.TabIndex = 17;
-            btnSwitchPageConcurrency.Text = "Switch Panel";
-            btnSwitchPageConcurrency.UseVisualStyleBackColor = true;
-            btnSwitchPageConcurrency.Click += btnSwitchPageConcurrency_Click;
+            btnConcurTask.Location = new Point(26, 367);
+            btnConcurTask.Name = "btnConcurTask";
+            btnConcurTask.Size = new Size(197, 33);
+            btnConcurTask.TabIndex = 16;
+            btnConcurTask.Text = "Task()";
+            btnConcurTask.UseVisualStyleBackColor = true;
+            btnConcurTask.Click += btnConcurTask_Click;
             // 
             // btnUIForm
             // 
-            btnUIForm.Location = new Point(257, 269);
+            btnUIForm.Location = new Point(26, 289);
             btnUIForm.Name = "btnUIForm";
-            btnUIForm.Size = new Size(184, 35);
+            btnUIForm.Size = new Size(197, 35);
             btnUIForm.TabIndex = 18;
-            btnUIForm.Text = "~ WinForms UI";
+            btnUIForm.Text = "WinForms UI";
             btnUIForm.UseVisualStyleBackColor = true;
             btnUIForm.Click += btnUIForm_Click;
+            // 
+            // btnConcurThread
+            // 
+            btnConcurThread.Location = new Point(26, 331);
+            btnConcurThread.Name = "btnConcurThread";
+            btnConcurThread.Size = new Size(197, 30);
+            btnConcurThread.TabIndex = 19;
+            btnConcurThread.Text = "Thread()";
+            btnConcurThread.UseVisualStyleBackColor = true;
+            btnConcurThread.Click += btnConcurThread_Click;
+            // 
+            // btnConcurParallel
+            // 
+            btnConcurParallel.Location = new Point(247, 367);
+            btnConcurParallel.Name = "btnConcurParallel";
+            btnConcurParallel.Size = new Size(197, 33);
+            btnConcurParallel.TabIndex = 20;
+            btnConcurParallel.Text = "Parallel()";
+            btnConcurParallel.UseVisualStyleBackColor = true;
+            btnConcurParallel.Click += btnConcurParallel_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnConcurParallel);
+            Controls.Add(btnConcurThread);
             Controls.Add(btnUIForm);
-            Controls.Add(btnSwitchPageConcurrency);
-            Controls.Add(btnNewView);
+            Controls.Add(btnConcurTask);
             Controls.Add(lblMain);
             Controls.Add(textboxMain);
             Controls.Add(btnThreads);
@@ -292,13 +260,10 @@
             Controls.Add(btnFoo);
             Controls.Add(btnRun);
             Controls.Add(grpBox1);
-            Controls.Add(panelPage2);
             Name = "Form1";
             Text = "Form1";
             grpBox1.ResumeLayout(false);
             grpBox1.PerformLayout();
-            panelPage2.ResumeLayout(false);
-            panelPage2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -320,12 +285,10 @@
         public Button btnStatus;
         public Label lblThreads;
         private Button btnStartParallel;
-        private Button btnNewView;
-        private Button btnSwitchPageConcurrency;
-        private Panel panelPage2;
-        private Button btnBackFromPage2;
-        private Button btnStartTasks;
-        private Label lblPanel2_01;
+        private Button btnConcurTask;
         private Button btnUIForm;
+        private Button btnConcurThread;
+        private PageSetupDialog pageSetupDialog1;
+        private Button btnConcurParallel;
     }
 }

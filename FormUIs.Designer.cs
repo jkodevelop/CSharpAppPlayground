@@ -28,45 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormUIs));
+            btnShowPanel01 = new Button();
             panel1 = new Panel();
-            label1 = new Label();
+            btnHidePanel01 = new Button();
+            lblPanel1 = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // button1
+            // btnShowPanel01
             // 
-            button1.Location = new Point(12, 23);
-            button1.Name = "button1";
-            button1.Size = new Size(177, 60);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            btnShowPanel01.Location = new Point(25, 25);
+            btnShowPanel01.Name = "btnShowPanel01";
+            btnShowPanel01.Size = new Size(177, 60);
+            btnShowPanel01.TabIndex = 0;
+            btnShowPanel01.Text = "Show Panel";
+            btnShowPanel01.UseVisualStyleBackColor = true;
+            btnShowPanel01.Click += btnShowPanel01_Click;
             // 
             // panel1
             // 
-            panel1.Controls.Add(label1);
-            panel1.Location = new Point(206, 23);
+            panel1.BackColor = SystemColors.AppWorkspace;
+            panel1.Controls.Add(btnHidePanel01);
+            panel1.Controls.Add(lblPanel1);
+            panel1.Location = new Point(12, 12);
             panel1.Name = "panel1";
-            panel1.Size = new Size(567, 112);
+            panel1.Size = new Size(776, 126);
             panel1.TabIndex = 1;
+            panel1.Visible = false;
             // 
-            // label1
+            // btnHidePanel01
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(230, 21);
-            label1.Name = "label1";
-            label1.Size = new Size(38, 15);
-            label1.TabIndex = 0;
-            label1.Text = "label1";
+            btnHidePanel01.Location = new Point(614, 68);
+            btnHidePanel01.Name = "btnHidePanel01";
+            btnHidePanel01.Size = new Size(148, 46);
+            btnHidePanel01.TabIndex = 1;
+            btnHidePanel01.Text = "Hide Panel";
+            btnHidePanel01.UseVisualStyleBackColor = true;
+            btnHidePanel01.Click += btnHidePanel01_Click;
+            // 
+            // lblPanel1
+            // 
+            lblPanel1.AutoSize = true;
+            lblPanel1.Location = new Point(214, 13);
+            lblPanel1.Name = "lblPanel1";
+            lblPanel1.Size = new Size(358, 135);
+            lblPanel1.TabIndex = 0;
+            lblPanel1.Text = resources.GetString("lblPanel1.Text");
             // 
             // FormUIs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnShowPanel01);
             Controls.Add(panel1);
-            Controls.Add(button1);
             Name = "FormUIs";
             Text = "OtherUIs";
             panel1.ResumeLayout(false);
@@ -76,8 +92,9 @@
 
         #endregion
 
-        private Button button1;
+        private Button btnShowPanel01;
         private Panel panel1;
-        private Label label1;
+        private Label lblPanel1;
+        private Button btnHidePanel01;
     }
 }

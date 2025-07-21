@@ -7,7 +7,7 @@ namespace CSharpAppPlayground.Multithreading.ParallelExample
     /// </summary>
     public class ParallelExample
     {
-        public void Show()
+        public void Run()
         {
             Debug.Print("Processing a collection in parallel with Parallel.ForEach...");
             // List<int> workOrderIds = Enumerable.Range(1, 10).ToList();

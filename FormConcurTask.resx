@@ -117,16 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblPanel1.Text" xml:space="preserve">
-    <value>Panel 1: Panel can be used to group things together like GroupBox.
-But difference is Panel support scroll
-GroupBox supports a a clear border with caption
-
-To make panel look like a page on top of form.
-1. Initialize with .Visible = false
-2. To show .Visible = true + .BringToFront()
-
-
-</value>
-  </data>
 </root>

@@ -6,6 +6,12 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
+// TO DOCUMENT:
+// Form.Show() - non-blocking diy of the form, allows the main thread to continue processing other events
+// Form.ShowDialog() - blocking diy of the form, waits for the form to be closed before continuing processing other events
+// Form.Activate() - brings the form to the front and gives it focus, ONLY WORKS if the form is already open
+// Form.Focus() - sets the input focus to the form, does not bring it to the front, ONLY WORKS if the form is already open
+
 namespace CSharpAppPlayground.Classes
 {
     public class FormFactory
@@ -63,12 +69,14 @@ namespace CSharpAppPlayground.Classes
             }
             if(_isOpen)
             {
+                Debug.Print($"Form {_qualifiedFormName} is already open, bringing to front.");
                 _instance.BringToFront();
                 return;
             }
             _instance.FormClosed -= Event_FormClosed; // Unsubscribe if already attached
             _instance.FormClosed += Event_FormClosed; // Subscribe
-            _instance.Show();
+            _instance.Show(); // this does not block the main thread (UI thread)
+            // _instance.ShowDialog(); // this blocks the main thread until the form is closed
             _isOpen = true;
         }
 

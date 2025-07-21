@@ -1,16 +1,18 @@
 using CSharpAppPlayground.Multithreading.TasksExample;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {
-    public class Form2 : Form
+    public class FormConcurTask : Form
     {
         private Button btnBack;
         private Button btnStartTaskSimple;
+        private Button btnTaskExample01;
         private TextBox textboxConcur;
 
-        public Form2()
+        public FormConcurTask()
         {
             InitializeComponent();
         }
@@ -20,6 +22,7 @@ namespace CSharpAppPlayground
             btnBack = new Button();
             textboxConcur = new TextBox();
             btnStartTaskSimple = new Button();
+            btnTaskExample01 = new Button();
             SuspendLayout();
             // 
             // btnBack
@@ -50,13 +53,24 @@ namespace CSharpAppPlayground
             btnStartTaskSimple.UseVisualStyleBackColor = true;
             btnStartTaskSimple.Click += btnStartTaskSimple_Click;
             // 
-            // Form2
+            // btnTaskExample01
+            // 
+            btnTaskExample01.Location = new Point(12, 72);
+            btnTaskExample01.Name = "btnTaskExample01";
+            btnTaskExample01.Size = new Size(166, 27);
+            btnTaskExample01.TabIndex = 4;
+            btnTaskExample01.Text = "Task Example";
+            btnTaskExample01.UseVisualStyleBackColor = true;
+            btnTaskExample01.Click += btnTaskExample01_Click;
+            // 
+            // FormConcurTask
             // 
             ClientSize = new Size(810, 389);
+            Controls.Add(btnTaskExample01);
             Controls.Add(btnStartTaskSimple);
             Controls.Add(textboxConcur);
             Controls.Add(btnBack);
-            Name = "Form2";
+            Name = "FormConcurTask";
             Text = "Other Concurrency Examples";
             ResumeLayout(false);
             PerformLayout();
@@ -66,11 +80,29 @@ namespace CSharpAppPlayground
         {
             this.Close();
         }
-        
+
         protected TaskSimpleExample tse = new TaskSimpleExample();
         private void btnStartTaskSimple_Click(object sender, EventArgs e)
         {
             tse.Run();
+        }
+
+        protected TasksExample te = new TasksExample();
+        private void btnTaskExample01_Click(object sender, EventArgs e)
+        {
+            te.ShowAsync().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    Debug.Print($"Error: {t.Exception?.Message}");
+                    // updateTextBox($"Error: {t.Exception?.Message}");
+                }
+                else
+                {
+                    Debug.Print("All tasks completed successfully.");
+                    // updateTextBox("All tasks completed successfully.");
+                }
+            });
         }
     }
 } 

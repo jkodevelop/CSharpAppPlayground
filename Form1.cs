@@ -21,7 +21,6 @@ namespace CSharpAppPlayground
         // Multi-threading examples
         protected MutiThreadsExample mte;
         protected ParallelExample2 pe;
-        protected TasksExample te;
 
         public void updateTextBox(string msg)
         {
@@ -58,7 +57,6 @@ namespace CSharpAppPlayground
             // multithreading examples
             mte = new MutiThreadsExample(this);
             pe = new ParallelExample2();
-            te = new TasksExample();
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -177,59 +175,28 @@ namespace CSharpAppPlayground
             await pe.ShowAsync();
         }
 
-        private void btnStartTasks_Click(object sender, EventArgs e)
-        {
-            te.ShowAsync().ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                {
-                    Debug.Print($"Error: {t.Exception?.Message}");
-                    // updateTextBox($"Error: {t.Exception?.Message}");
-                }
-                else
-                {
-                    Debug.Print("All tasks completed successfully.");
-                    // updateTextBox("All tasks completed successfully.");
-                }
-            });
-        }
-
-        private void btnNewView_Click(object sender, EventArgs e)
-        {
-            var form2 = new Form2();
-            form2.ShowDialog();
-        }
-
-        private void btnSwitchPageConcurrency_Click(object sender, EventArgs e)
-        {
-            // Hide main controls except panelPage2
-            foreach (Control ctrl in this.Controls)
-            {
-                if (ctrl != panelPage2)
-                {
-                    ctrl.Visible = false;
-                }
-            }
-            panelPage2.Visible = true;
-        }
-
-        private void btnBackFromPage2_Click(object sender, EventArgs e)
-        {
-            // Show main controls except panelPage2
-            foreach (Control ctrl in this.Controls)
-            {
-                if (ctrl != panelPage2)
-                {
-                    ctrl.Visible = true;
-                }
-            }
-            panelPage2.Visible = false;
-        }
-
         protected FormFactory _formUIs = new FormFactory("CSharpAppPlayground.FormUIs, CSharpAppPlayground");
         private void btnUIForm_Click(object sender, EventArgs e)
         {
             _formUIs.Open();
+        }
+
+        protected FormFactory _formConcurTask = new FormFactory("CSharpAppPlayground.FormConcurTask, CSharpAppPlayground");
+        private void btnConcurTask_Click(object sender, EventArgs e)
+        {
+            _formConcurTask.Open();
+        }
+
+        protected FormFactory _formConcurThread = new FormFactory("CSharpAppPlayground.FormConcurThread, CSharpAppPlayground");
+        private void btnConcurThread_Click(object sender, EventArgs e)
+        {
+            _formConcurThread.Open();
+        }
+
+        protected FormFactory _formConcurParallel = new FormFactory("CSharpAppPlayground.FormConcurParallel, CSharpAppPlayground");
+        private void btnConcurParallel_Click(object sender, EventArgs e)
+        {
+            _formConcurParallel.Open();
         }
     }
 }
