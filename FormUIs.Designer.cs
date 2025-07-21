@@ -42,7 +42,6 @@
             button1.TabIndex = 0;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
             // 
             // panel1
             // 
@@ -51,7 +50,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(567, 112);
             panel1.TabIndex = 1;
-            panel1.Paint += panel1_Paint;
             // 
             // label1
             // 

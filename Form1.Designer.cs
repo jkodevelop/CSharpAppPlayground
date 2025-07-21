@@ -37,9 +37,6 @@
             lblMain = new Label();
             btnStartThreads = new Button();
             grpBox1 = new GroupBox();
-            panelPage2 = new Panel();
-            lblPanel2_01 = new Label();
-            btnBackFromPage2 = new Button();
             btnStartParallel = new Button();
             lblThreads = new Label();
             btnStatus = new Button();
@@ -47,6 +44,9 @@
             btnThread2 = new Button();
             btnThread1 = new Button();
             btnStartTasks = new Button();
+            panelPage2 = new Panel();
+            lblPanel2_01 = new Label();
+            btnBackFromPage2 = new Button();
             btnNewView = new Button();
             btnSwitchPageConcurrency = new Button();
             btnUIForm = new Button();
@@ -149,35 +149,6 @@
             grpBox1.TabStop = false;
             grpBox1.Text = "More MultiThreading Examples";
             // 
-            // panelPage2
-            // 
-            panelPage2.Controls.Add(lblPanel2_01);
-            panelPage2.Controls.Add(btnBackFromPage2);
-            panelPage2.Location = new Point(12, 12);
-            panelPage2.Name = "panelPage2";
-            panelPage2.Size = new Size(800, 450);
-            panelPage2.TabIndex = 18;
-            panelPage2.Visible = false;
-            // 
-            // lblPanel2_01
-            // 
-            lblPanel2_01.AutoSize = true;
-            lblPanel2_01.Location = new Point(12, 28);
-            lblPanel2_01.Name = "lblPanel2_01";
-            lblPanel2_01.Size = new Size(235, 15);
-            lblPanel2_01.TabIndex = 1;
-            lblPanel2_01.Text = "Example for creating another panel; Panel 2";
-            // 
-            // btnBackFromPage2
-            // 
-            btnBackFromPage2.Location = new Point(12, 378);
-            btnBackFromPage2.Name = "btnBackFromPage2";
-            btnBackFromPage2.Size = new Size(776, 60);
-            btnBackFromPage2.TabIndex = 0;
-            btnBackFromPage2.Text = "Switch Panel Back";
-            btnBackFromPage2.UseVisualStyleBackColor = true;
-            btnBackFromPage2.Click += btnBackFromPage2_Click;
-            // 
             // btnStartParallel
             // 
             btnStartParallel.Location = new Point(6, 356);
@@ -245,6 +216,35 @@
             btnStartTasks.Text = "2. Start Tasks";
             btnStartTasks.UseVisualStyleBackColor = true;
             btnStartTasks.Click += btnStartTasks_Click;
+            // 
+            // panelPage2
+            // 
+            panelPage2.Controls.Add(lblPanel2_01);
+            panelPage2.Controls.Add(btnBackFromPage2);
+            panelPage2.Location = new Point(12, 12);
+            panelPage2.Name = "panelPage2";
+            panelPage2.Size = new Size(800, 450);
+            panelPage2.TabIndex = 18;
+            panelPage2.Visible = false;
+            // 
+            // lblPanel2_01
+            // 
+            lblPanel2_01.AutoSize = true;
+            lblPanel2_01.Location = new Point(12, 28);
+            lblPanel2_01.Name = "lblPanel2_01";
+            lblPanel2_01.Size = new Size(235, 15);
+            lblPanel2_01.TabIndex = 1;
+            lblPanel2_01.Text = "Example for creating another panel; Panel 2";
+            // 
+            // btnBackFromPage2
+            // 
+            btnBackFromPage2.Location = new Point(12, 378);
+            btnBackFromPage2.Name = "btnBackFromPage2";
+            btnBackFromPage2.Size = new Size(776, 60);
+            btnBackFromPage2.TabIndex = 0;
+            btnBackFromPage2.Text = "Switch Panel Back";
+            btnBackFromPage2.UseVisualStyleBackColor = true;
+            btnBackFromPage2.Click += btnBackFromPage2_Click;
             // 
             // btnNewView
             // 
