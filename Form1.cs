@@ -20,7 +20,6 @@ namespace CSharpAppPlayground
 
         // Multi-threading examples
         protected MutiThreadsExample mte;
-        protected ParallelExample2 pe;
 
         public void updateTextBox(string msg)
         {
@@ -56,7 +55,6 @@ namespace CSharpAppPlayground
 
             // multithreading examples
             mte = new MutiThreadsExample(this);
-            pe = new ParallelExample2();
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -152,27 +150,6 @@ namespace CSharpAppPlayground
         private void btnStartThreads_Click(object sender, EventArgs e)
         {
             mte.Show();
-        }
-
-        private async void btnStartParallel_Click(object sender, EventArgs e)
-        {
-            //pe.Show();
-
-            //pe.ShowAsync().ContinueWith(t =>
-            //{
-            //    if (t.IsFaulted)
-            //    {
-            //        Debug.Print($"Error: {t.Exception?.Message}");
-            //        updateTextBox($"Error: {t.Exception?.Message}");
-            //    }
-            //    else
-            //    {
-            //        Debug.Print("Parallel2 processing completed successfully.");
-            //        updateTextBox("Parallel2 processing completed successfully.");
-            //    }
-            //});
-
-            await pe.ShowAsync();
         }
 
         protected FormFactory _formUIs = new FormFactory("CSharpAppPlayground.FormUIs, CSharpAppPlayground");
