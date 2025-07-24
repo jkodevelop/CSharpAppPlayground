@@ -31,6 +31,10 @@
             btnMTExample = new Button();
             lblMain = new Label();
             tboxMain = new TextBox();
+            btnMT02Start = new Button();
+            groupBox1 = new GroupBox();
+            btnMT02Stop = new Button();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // btnMTExample
@@ -61,16 +65,50 @@
             tboxMain.Size = new Size(258, 316);
             tboxMain.TabIndex = 2;
             // 
+            // btnMT02Start
+            // 
+            btnMT02Start.Location = new Point(6, 22);
+            btnMT02Start.Name = "btnMT02Start";
+            btnMT02Start.Size = new Size(135, 33);
+            btnMT02Start.TabIndex = 3;
+            btnMT02Start.Text = "Start";
+            btnMT02Start.UseVisualStyleBackColor = true;
+            btnMT02Start.Click += btnMT02Start_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(btnMT02Stop);
+            groupBox1.Controls.Add(btnMT02Start);
+            groupBox1.Location = new Point(24, 78);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(288, 69);
+            groupBox1.TabIndex = 4;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Threading With Stop";
+            // 
+            // btnMT02Stop
+            // 
+            btnMT02Stop.Enabled = false;
+            btnMT02Stop.Location = new Point(147, 22);
+            btnMT02Stop.Name = "btnMT02Stop";
+            btnMT02Stop.Size = new Size(135, 33);
+            btnMT02Stop.TabIndex = 4;
+            btnMT02Stop.Text = "Stop";
+            btnMT02Stop.UseVisualStyleBackColor = true;
+            btnMT02Stop.Click += btnMT02Stop_Click;
+            // 
             // FormConcurThread
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(groupBox1);
             Controls.Add(tboxMain);
             Controls.Add(lblMain);
             Controls.Add(btnMTExample);
             Name = "FormConcurThread";
             Text = "ConcurrencyThreads";
+            groupBox1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -80,5 +118,8 @@
         private Button btnMTExample;
         private Label lblMain;
         private TextBox tboxMain;
+        private Button btnMT02Start;
+        private GroupBox groupBox1;
+        private Button btnMT02Stop;
     }
 }

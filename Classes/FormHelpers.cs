@@ -52,5 +52,16 @@ namespace CSharpAppPlayground.Classes
             Type t = Type.GetType(strFullyQualifiedName);
             return Activator.CreateInstance(t);
         }
+
+        /// <summary>
+        /// This allow you to switch the enabled state of two buttons.
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        public static void FlipButtons(Button A, Button B)
+        {
+            A.Enabled = !A.Enabled;
+            B.Enabled = !B.Enabled;
+        }
     }
 }
