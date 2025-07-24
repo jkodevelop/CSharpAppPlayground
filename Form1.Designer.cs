@@ -45,7 +45,6 @@
             btnConcurTask = new Button();
             btnUIForm = new Button();
             btnConcurThread = new Button();
-            pageSetupDialog1 = new PageSetupDialog();
             btnConcurParallel = new Button();
             grpBox1.SuspendLayout();
             SuspendLayout();
@@ -275,7 +274,6 @@
         private Button btnConcurTask;
         private Button btnUIForm;
         private Button btnConcurThread;
-        private PageSetupDialog pageSetupDialog1;
         private Button btnConcurParallel;
     }
 }
