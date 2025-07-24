@@ -9,7 +9,6 @@ namespace CSharpAppPlayground
         public FormConcurThread()
         {
             InitializeComponent();
-            startstopExampleInit();
         }
 
         // invoking the main UI thread to do it if it is called from another thread
@@ -81,7 +80,7 @@ namespace CSharpAppPlayground
         private void threadSimpleProcess(int limit = 10)
         {
             // Invoke((MethodInvoker)(() => updateLabelMain("starting now...")));
-            for (int i = 0; i < limit; i++)
+            for (int i = 1; i <= limit; i++)
             {
                 string msg = $"Simple Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
                 updateTextBoxMain(msg);
@@ -121,14 +120,21 @@ namespace CSharpAppPlayground
         // sources:
         // https://www.codeproject.com/Tips/5267935/Use-CancellationToken-not-Thread-Sleep
         // https://josipmisko.com/posts/c-sharp-stop-thread
-        CancellationTokenSource tokenSource = new(); // Create a token source. shorthand: new CancellationTokenSource();
+        // CancellationTokenSource tokenSource = new(); // Create a token source. shorthand: new CancellationTokenSource();
+        CancellationTokenSource tokenSource;
         bool threadStartStopRunning = false;
-        private void startstopExampleInit(){
-            // Register post-cancellation logic ONCE, method called from constructor
+        private void startstopExampleInit()
+        {
+            // -----------------------------------------------------------------------------
+            // TO DOCUMENT, token usage + limitation of having to reset everytime
+            // -----------------------------------------------------------------------------
+            // Initialize the CancellationTokenSource, This needs to be done everytime
+            // BECAUSE the once a token is cancelled, it cannot be reused.
+            // SO we need to create a new CancellationTokenSource for each new operation.
+            tokenSource = new CancellationTokenSource();
+
+            // Register post-cancellation logic ONCE
             // This is called when the token is cancelled
-            if (tokenSource == null) {
-                tokenSource = new CancellationTokenSource();
-            }
             tokenSource.Token.Register(() =>
             {
                 string msg = "Cancellation was requested. Performing cleanup...";
@@ -144,11 +150,10 @@ namespace CSharpAppPlayground
         private void threadStartStopProcess(CancellationToken token, int limit = 10)
         {
             // Invoke((MethodInvoker)(() => updateLabelMain("starting now...")));
-            for (int i = 0; i < limit && !token.IsCancellationRequested; i++)
+            for (int i = 1; i <= limit && !token.IsCancellationRequested; i++)
             {
                 string msg = $"Start/Stop Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
                 updateTextBoxMain(msg);
-                // Thread.Sleep(500); // Simulate work, 200 milliseconds
                 bool cancellationTriggered = token.WaitHandle.WaitOne(500); // Wait for 500 milliseconds or until cancellation is requested
             }
         }
@@ -156,6 +161,7 @@ namespace CSharpAppPlayground
         private void btnMT02Start_Click(object sender, EventArgs e)
         {
             FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
+            startstopExampleInit();
             if (threadStartStopRunning)
             {
                 Debug.Print("!! start/stop thread example already running right now !!");
