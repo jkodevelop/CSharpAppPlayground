@@ -18,9 +18,6 @@ namespace CSharpAppPlayground
     {
         private Foo f = new Foo("Hello From Bar();");
 
-        // Multi-threading examples
-        protected MutiThreadsExample mte;
-
         public void updateTextBox(string msg)
         {
             if (InvokeRequired)
@@ -52,9 +49,6 @@ namespace CSharpAppPlayground
         {
             InitializeComponent();
             GlobalLogger.Instance.LogInformation("Application started.");
-
-            // multithreading examples
-            mte = new MutiThreadsExample(this);
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -149,7 +143,7 @@ namespace CSharpAppPlayground
 
         private void btnStartThreads_Click(object sender, EventArgs e)
         {
-            mte.Show();
+            
         }
 
         protected FormFactory _formUIs = new FormFactory("CSharpAppPlayground.FormUIs, CSharpAppPlayground");

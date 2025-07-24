@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.Multithreading.ThreadsExample;
 using System.Diagnostics;
 using System.Threading;
 
@@ -9,6 +10,7 @@ namespace CSharpAppPlayground
         public FormConcurThread()
         {
             InitializeComponent();
+            MultiThreadExampleInit();
         }
 
         // invoking the main UI thread to do it if it is called from another thread
@@ -117,13 +119,16 @@ namespace CSharpAppPlayground
             thread.Start();
         }
 
+        /// <summary>
+        /// Example with CancellationTokenSource and CancellationToken. Shows how to start and stop a thread
+        /// </summary>
         // sources:
         // https://www.codeproject.com/Tips/5267935/Use-CancellationToken-not-Thread-Sleep
         // https://josipmisko.com/posts/c-sharp-stop-thread
         // CancellationTokenSource tokenSource = new(); // Create a token source. shorthand: new CancellationTokenSource();
         CancellationTokenSource tokenSource;
         bool threadStartStopRunning = false;
-        private void startstopExampleInit()
+        private void startstopExampleInitToken()
         {
             // -----------------------------------------------------------------------------
             // TO DOCUMENT, token usage + limitation of having to reset everytime
@@ -138,9 +143,12 @@ namespace CSharpAppPlayground
             tokenSource.Token.Register(() =>
             {
                 string msg = "Cancellation was requested. Performing cleanup...";
-                if (this.InvokeRequired) {
+                if (this.InvokeRequired)
+                {
                     this.Invoke(new Action(() => updateTextBoxMain(msg)));
-                } else {
+                }
+                else
+                {
                     updateTextBoxMain(msg);
                 }
                 threadStartStopRunning = false;
@@ -161,7 +169,8 @@ namespace CSharpAppPlayground
         private void btnMT02Start_Click(object sender, EventArgs e)
         {
             FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
-            startstopExampleInit();
+            startstopExampleInitToken();
+
             if (threadStartStopRunning)
             {
                 Debug.Print("!! start/stop thread example already running right now !!");
@@ -174,7 +183,7 @@ namespace CSharpAppPlayground
                 threadStartStopRunning = false;
             });
             Thread thread = new Thread(startstopThreadStart);
-            thread.IsBackground = true; 
+            thread.IsBackground = true;
             thread.Start();
         }
 
@@ -182,6 +191,22 @@ namespace CSharpAppPlayground
         {
             FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
             tokenSource.Cancel(); // Request cancellation of the token
+        }
+
+        /// <summary>
+        /// Example of threads A and B running concurrently. Allow for pausing and resuming.
+        /// Also shows the threads status
+        /// </summary>
+        protected MutiThreadsExample mte;
+        private void MultiThreadExampleInit()
+        {
+            if (mte == null)
+                mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus, lblMain, tboxMain);
+        }
+
+        private void btnMTMultiStart_Click(object sender, EventArgs e)
+        {
+            mte.Run();
         }
     }
 }

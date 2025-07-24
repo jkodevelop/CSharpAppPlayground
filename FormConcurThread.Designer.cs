@@ -34,7 +34,14 @@
             btnMT02Start = new Button();
             groupBox1 = new GroupBox();
             btnMT02Stop = new Button();
+            groupBox2 = new GroupBox();
+            btnThreadB = new Button();
+            btnThreadA = new Button();
+            btnMTMultiStatus = new Button();
+            btnMTMultiStart = new Button();
+            richTextBox1 = new RichTextBox();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // btnMTExample
@@ -58,11 +65,11 @@
             // 
             // tboxMain
             // 
-            tboxMain.Location = new Point(499, 97);
+            tboxMain.Location = new Point(635, 97);
             tboxMain.Multiline = true;
             tboxMain.Name = "tboxMain";
             tboxMain.ScrollBars = ScrollBars.Vertical;
-            tboxMain.Size = new Size(258, 316);
+            tboxMain.Size = new Size(122, 316);
             tboxMain.TabIndex = 2;
             // 
             // btnMT02Start
@@ -97,11 +104,72 @@
             btnMT02Stop.UseVisualStyleBackColor = true;
             btnMT02Stop.Click += btnMT02Stop_Click;
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(btnThreadB);
+            groupBox2.Controls.Add(btnThreadA);
+            groupBox2.Controls.Add(btnMTMultiStatus);
+            groupBox2.Controls.Add(btnMTMultiStart);
+            groupBox2.Location = new Point(24, 168);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(288, 130);
+            groupBox2.TabIndex = 5;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Theading Pause/Resume and Status";
+            // 
+            // btnThreadB
+            // 
+            btnThreadB.Location = new Point(147, 85);
+            btnThreadB.Name = "btnThreadB";
+            btnThreadB.Size = new Size(135, 31);
+            btnThreadB.TabIndex = 3;
+            btnThreadB.Text = "Pause Thread B";
+            btnThreadB.UseVisualStyleBackColor = true;
+            // 
+            // btnThreadA
+            // 
+            btnThreadA.Location = new Point(6, 85);
+            btnThreadA.Name = "btnThreadA";
+            btnThreadA.Size = new Size(135, 31);
+            btnThreadA.TabIndex = 2;
+            btnThreadA.Text = "Pause Thread A";
+            btnThreadA.UseVisualStyleBackColor = true;
+            // 
+            // btnMTMultiStatus
+            // 
+            btnMTMultiStatus.Location = new Point(190, 22);
+            btnMTMultiStatus.Name = "btnMTMultiStatus";
+            btnMTMultiStatus.Size = new Size(92, 39);
+            btnMTMultiStatus.TabIndex = 1;
+            btnMTMultiStatus.Text = "Status";
+            btnMTMultiStatus.UseVisualStyleBackColor = true;
+            // 
+            // btnMTMultiStart
+            // 
+            btnMTMultiStart.Location = new Point(6, 22);
+            btnMTMultiStart.Name = "btnMTMultiStart";
+            btnMTMultiStart.Size = new Size(176, 39);
+            btnMTMultiStart.TabIndex = 0;
+            btnMTMultiStart.Text = "Start Threads";
+            btnMTMultiStart.UseVisualStyleBackColor = true;
+            btnMTMultiStart.Click += btnMTMultiStart_Click;
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(327, 97);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.ScrollBars = RichTextBoxScrollBars.Vertical;
+            richTextBox1.Size = new Size(261, 316);
+            richTextBox1.TabIndex = 6;
+            richTextBox1.Text = "";
+            // 
             // FormConcurThread
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(richTextBox1);
+            Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(tboxMain);
             Controls.Add(lblMain);
@@ -109,6 +177,7 @@
             Name = "FormConcurThread";
             Text = "ConcurrencyThreads";
             groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -121,5 +190,11 @@
         private Button btnMT02Start;
         private GroupBox groupBox1;
         private Button btnMT02Stop;
+        private GroupBox groupBox2;
+        private Button btnMTMultiStart;
+        private Button btnMTMultiStatus;
+        private Button btnThreadA;
+        private Button btnThreadB;
+        private RichTextBox richTextBox1;
     }
 }
