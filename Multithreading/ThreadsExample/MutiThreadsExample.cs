@@ -40,6 +40,7 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
             btnStatus = _btnStatus;
             lblMain = _lblMain;
             richTextBoxMain = _richTextBoxMain;
+
             btnThreadA.Click += (sender, e) => PausePressedThread(sender, 0);
             btnThreadB.Click += (sender, e) => PausePressedThread(sender, 1);
             btnStatus.Click += (sender, e) => GetThreadsStatus(sender);
@@ -95,19 +96,20 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
 
         protected void UpdateStatusLabel(string msg)
         {
-            // make sure f.lblThreads is not null and (public, default is private)
-            if (f != null)
-                f.Invoke((MethodInvoker)(() => { lblMain.Text = msg; }));
-            else
-                Debug.Print(msg);
+            Debug.Print(msg);
+            (f as FormConcurThread).updateLabelMain(msg);
         }
         protected void PrintMsg(string msg, Color c = default)
         {
+            Debug.Print(msg);
             (f as FormConcurThread).updateRichTextBoxMain(msg, c);
         }
 
         private void EnableButtons(Button btn, bool enable)
         {
+            if (f.IsDisposed || f.Disposing)
+                return; // Prevent invoking on disposed form
+
             f.Invoke((MethodInvoker)(() => {
                 btn.Enabled = enable;
             }));
@@ -115,6 +117,9 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
 
         private void UpdateStatusButtonState(Button btn)
         {
+            if (f.IsDisposed || f.Disposing)
+                return; // Prevent invoking on disposed form
+
             bool enable = isRunning > 0; // Enable the button only if no threads are running
             f.Invoke((MethodInvoker)(() => {
                 btn.Enabled = enable;

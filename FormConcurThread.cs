@@ -31,7 +31,7 @@ namespace CSharpAppPlayground
             {
                 try
                 {
-                    Debug.Print("InvokeRequired for updateTextBox().");
+                    Debug.Print("InvokeRequired for updateRichTextBoxMain().");
                     Invoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
                 }
                 catch (ObjectDisposedException)
@@ -56,10 +56,38 @@ namespace CSharpAppPlayground
 
         public void updateLabelMain(string msg)
         {
-            lblMain.Text = msg;
-            lblMain.Refresh(); // Force the label to refresh immediately
-            // WITHOUT refresh the label might not redraw immediately
-            // GUI.Label doesn't update/redraw as aggressively as GUI.TextBox
+            if (this.IsDisposed || this.Disposing)
+            {
+                // Form is disposed or disposing, do not attempt to update UI
+                Debug.Print("Form is disposed or disposing, skipping updateLabelMain.");
+                return;
+            }
+            if (InvokeRequired)
+            {
+                try
+                {
+                    Debug.Print("InvokeRequired for updateLabelMain().");
+                    Invoke(new Action<string>(updateLabelMain));
+                }
+                catch (ObjectDisposedException)
+                {
+                    Debug.Print("Invoke failed: Form is disposed.");
+                }
+                catch (InvalidOperationException)
+                {
+                    Debug.Print("Invoke failed: Form is disposed or handle is invalid.");
+                }
+            }
+            else
+            {
+                if (lblMain != null && !lblMain.IsDisposed)
+                {
+                    lblMain.Text = msg;
+                    lblMain.Refresh(); // Force the label to refresh immediately
+                                       // WITHOUT refresh the label might not redraw immediately
+                                       // GUI.Label doesn't update/redraw as aggressively as GUI.TextBox
+                }
+            }
         }
 
         /// <summary>
