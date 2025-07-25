@@ -30,7 +30,6 @@
         {
             btnMTExample = new Button();
             lblMain = new Label();
-            tboxMain = new TextBox();
             btnMT02Start = new Button();
             groupBox1 = new GroupBox();
             btnMT02Stop = new Button();
@@ -39,7 +38,7 @@
             btnThreadA = new Button();
             btnMTMultiStatus = new Button();
             btnMTMultiStart = new Button();
-            richTextBox1 = new RichTextBox();
+            richTBoxMain = new RichTextBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -57,20 +56,11 @@
             // lblMain
             // 
             lblMain.AutoSize = true;
-            lblMain.Location = new Point(509, 23);
+            lblMain.Location = new Point(509, 35);
             lblMain.Name = "lblMain";
             lblMain.Size = new Size(32, 15);
             lblMain.TabIndex = 1;
             lblMain.Text = "label";
-            // 
-            // tboxMain
-            // 
-            tboxMain.Location = new Point(635, 97);
-            tboxMain.Multiline = true;
-            tboxMain.Name = "tboxMain";
-            tboxMain.ScrollBars = ScrollBars.Vertical;
-            tboxMain.Size = new Size(122, 316);
-            tboxMain.TabIndex = 2;
             // 
             // btnMT02Start
             // 
@@ -154,24 +144,23 @@
             btnMTMultiStart.UseVisualStyleBackColor = true;
             btnMTMultiStart.Click += btnMTMultiStart_Click;
             // 
-            // richTextBox1
+            // richTBoxMain
             // 
-            richTextBox1.Location = new Point(327, 97);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.ScrollBars = RichTextBoxScrollBars.Vertical;
-            richTextBox1.Size = new Size(261, 316);
-            richTextBox1.TabIndex = 6;
-            richTextBox1.Text = "";
+            richTBoxMain.Location = new Point(509, 78);
+            richTBoxMain.Name = "richTBoxMain";
+            richTBoxMain.ScrollBars = RichTextBoxScrollBars.Vertical;
+            richTBoxMain.Size = new Size(261, 316);
+            richTBoxMain.TabIndex = 6;
+            richTBoxMain.Text = "";
             // 
             // FormConcurThread
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(richTextBox1);
+            Controls.Add(richTBoxMain);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(tboxMain);
             Controls.Add(lblMain);
             Controls.Add(btnMTExample);
             Name = "FormConcurThread";
@@ -186,7 +175,6 @@
 
         private Button btnMTExample;
         private Label lblMain;
-        private TextBox tboxMain;
         private Button btnMT02Start;
         private GroupBox groupBox1;
         private Button btnMT02Stop;
@@ -195,6 +183,6 @@
         private Button btnMTMultiStatus;
         private Button btnThreadA;
         private Button btnThreadB;
-        private RichTextBox richTextBox1;
+        private RichTextBox richTBoxMain;
     }
 }

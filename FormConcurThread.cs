@@ -2,9 +2,12 @@
 using CSharpAppPlayground.Multithreading.ThreadsExample;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {
+    // TO DOCUMENT: richtextbox needs to be force refreshed() compared to textbox,
+    // textbox updates/redraws immediately, richtextbox doesn't => like the label component
     public partial class FormConcurThread : Form
     {
         public FormConcurThread()
@@ -15,13 +18,13 @@ namespace CSharpAppPlayground
 
         // invoking the main UI thread to do it if it is called from another thread
         // This is a workaround to avoid the error:
-        // "Cross-thread operation not valid: Control 'tboxMain' accessed from a thread other than the thread it was created on."
-        public void updateTextBoxMain(string msg)
+        // "Cross-thread operation not valid: Control 'richTBoxMain' accessed from a thread other than the thread it was created on."
+        public void updateRichTextBoxMain(string msg, Color lineColor = default)
         {
             if (this.IsDisposed || this.Disposing)
             {
                 // Form is disposed or disposing, do not attempt to update UI
-                Debug.Print("Form is disposed or disposing, skipping updateTextBoxMain.");
+                Debug.Print("Form is disposed or disposing, skipping updateRichTextBoxMain.");
                 return;
             }
             if (InvokeRequired)
@@ -29,7 +32,7 @@ namespace CSharpAppPlayground
                 try
                 {
                     Debug.Print("InvokeRequired for updateTextBox().");
-                    Invoke(new Action<string>(updateTextBoxMain), msg);
+                    Invoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -42,9 +45,11 @@ namespace CSharpAppPlayground
             }
             else
             {
-                if (tboxMain != null && !tboxMain.IsDisposed)
+                if (richTBoxMain != null && !richTBoxMain.IsDisposed)
                 {
-                    tboxMain.AppendText(msg + Environment.NewLine);
+                    richTBoxMain.SelectionColor = lineColor;
+                    richTBoxMain.AppendText(msg + Environment.NewLine);
+                    richTBoxMain.Refresh(); // Force the rich text box to refresh immediately
                 }
             }
         }
@@ -73,8 +78,8 @@ namespace CSharpAppPlayground
             Debug.Print(resultsStr);
             lblMain.Text = resultsStr;
 
-            updateTextBoxMain(resultsStr);
-            updateTextBoxMain("running threads...");
+            updateRichTextBoxMain(resultsStr);
+            updateRichTextBoxMain("running threads...");
 
             SimpleThreadExampleWithInvokeUsage();
         }
@@ -85,7 +90,7 @@ namespace CSharpAppPlayground
             for (int i = 1; i <= limit; i++)
             {
                 string msg = $"Simple Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
-                updateTextBoxMain(msg);
+                updateRichTextBoxMain(msg);
                 Thread.Sleep(500); // Simulate work, 500 milliseconds
             }
         }
@@ -145,11 +150,11 @@ namespace CSharpAppPlayground
                 string msg = "Cancellation was requested. Performing cleanup...";
                 if (this.InvokeRequired)
                 {
-                    this.Invoke(new Action(() => updateTextBoxMain(msg)));
+                    this.Invoke(new Action(() => updateRichTextBoxMain(msg)));
                 }
                 else
                 {
-                    updateTextBoxMain(msg);
+                    updateRichTextBoxMain(msg);
                 }
                 threadStartStopRunning = false;
             });
@@ -161,7 +166,7 @@ namespace CSharpAppPlayground
             for (int i = 1; i <= limit && !token.IsCancellationRequested; i++)
             {
                 string msg = $"Start/Stop Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
-                updateTextBoxMain(msg);
+                updateRichTextBoxMain(msg);
                 bool cancellationTriggered = token.WaitHandle.WaitOne(500); // Wait for 500 milliseconds or until cancellation is requested
             }
         }
@@ -201,7 +206,7 @@ namespace CSharpAppPlayground
         private void MultiThreadExampleInit()
         {
             if (mte == null)
-                mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus, lblMain, tboxMain);
+                mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus, lblMain, richTBoxMain);
         }
 
         private void btnMTMultiStart_Click(object sender, EventArgs e)

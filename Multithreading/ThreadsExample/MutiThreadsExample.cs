@@ -29,17 +29,17 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
         protected Form f;
         protected Button btnThreadA, btnThreadB, btnStatus;
         protected Label lblMain;
-        protected TextBox textboxMain;
+        protected RichTextBox richTextBoxMain;
 
         public MutiThreadsExample(Form _f, Button _btnThreadA, Button _btnThreadB, Button _btnStatus,
-            Label _lblMain, TextBox _textboxMain)
+            Label _lblMain, RichTextBox _richTextBoxMain)
         {
             f = _f;
             btnThreadA = _btnThreadA;
             btnThreadB = _btnThreadB;
             btnStatus = _btnStatus;
             lblMain = _lblMain;
-            textboxMain = _textboxMain;
+            richTextBoxMain = _richTextBoxMain;
             btnThreadA.Click += (sender, e) => PausePressedThread(sender, 0);
             btnThreadB.Click += (sender, e) => PausePressedThread(sender, 1);
             btnStatus.Click += (sender, e) => GetThreadsStatus(sender);
@@ -101,13 +101,9 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
             else
                 Debug.Print(msg);
         }
-        protected void PrintMsg(string msg)
+        protected void PrintMsg(string msg, Color c = default)
         {
-            // make sure f.textboxMTE is not null and (public, default is private)
-            if (f != null)
-                f.Invoke((MethodInvoker)(() => { textboxMain.Text += msg + Environment.NewLine; }));
-            else
-                Debug.Print(msg);
+            (f as FormConcurThread).updateRichTextBoxMain(msg, c);
         }
 
         private void EnableButtons(Button btn, bool enable)
@@ -137,10 +133,10 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
                 pauseEvents[0].WaitOne(); // Wait until the thread is not paused
                 counters[0]++;
                 string msg = $"Thread A: id {Thread.CurrentThread.ManagedThreadId} - Count: {counters[0]}/{maxCount}";
-                PrintMsg(msg);
+                PrintMsg(msg, Color.Red);
                 Thread.Sleep(500); // Simulate work
             }
-            PrintMsg("Thread A finished.");
+            PrintMsg("Thread A finished.", Color.Red);
             counters[0] = 0; // Reset counter for next run
             isRunning--;
             EnableButtons(btnThreadA, false);
@@ -157,10 +153,10 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
                 pauseEvents[1].WaitOne(); // Wait until the thread is not paused
                 counters[1]++;
                 string msg = $"Thread B: id {Thread.CurrentThread.ManagedThreadId} - Count: {counters[1]}/{maxCount}";
-                PrintMsg(msg);
+                PrintMsg(msg, Color.Green);
                 Thread.Sleep(500); // Simulate work
             }
-            PrintMsg("Thread B finished.");
+            PrintMsg("Thread B finished.", Color.Green);
             counters[1] = 0; // Reset counter for next run
             isRunning--;
             EnableButtons(btnThreadB, false);
