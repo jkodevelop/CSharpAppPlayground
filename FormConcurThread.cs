@@ -14,6 +14,7 @@ namespace CSharpAppPlayground
         {
             InitializeComponent();
             MultiThreadExampleInit();
+            MultiThreadsStartStopInit();
         }
 
         // invoking the main UI thread to do it if it is called from another thread
@@ -67,7 +68,7 @@ namespace CSharpAppPlayground
                 try
                 {
                     Debug.Print("InvokeRequired for updateLabelMain().");
-                    Invoke(new Action<string>(updateLabelMain));
+                    Invoke(new Action<string>(updateLabelMain), msg);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -152,78 +153,54 @@ namespace CSharpAppPlayground
             thread.Start();
         }
 
-        /// <summary>
-        /// Example with CancellationTokenSource and CancellationToken. Shows how to start and stop a thread
-        /// </summary>
-        // sources:
-        // https://www.codeproject.com/Tips/5267935/Use-CancellationToken-not-Thread-Sleep
-        // https://josipmisko.com/posts/c-sharp-stop-thread
-        // CancellationTokenSource tokenSource = new(); // Create a token source. shorthand: new CancellationTokenSource();
-        CancellationTokenSource tokenSource;
-        bool threadStartStopRunning = false;
-        private void startstopExampleInitToken()
+        protected MultiThreadsStartStop mtss;
+        private void MultiThreadsStartStopInit()
         {
-            // -----------------------------------------------------------------------------
-            // TO DOCUMENT, token usage + limitation of having to reset everytime
-            // -----------------------------------------------------------------------------
-            // Initialize the CancellationTokenSource, This needs to be done everytime
-            // BECAUSE the once a token is cancelled, it cannot be reused.
-            // SO we need to create a new CancellationTokenSource for each new operation.
-            tokenSource = new CancellationTokenSource();
-
-            // Register post-cancellation logic ONCE
-            // This is called when the token is cancelled
-            tokenSource.Token.Register(() =>
-            {
-                string msg = "Cancellation was requested. Performing cleanup...";
-                if (this.InvokeRequired)
-                {
-                    this.Invoke(new Action(() => updateRichTextBoxMain(msg)));
-                }
-                else
-                {
-                    updateRichTextBoxMain(msg);
-                }
-                threadStartStopRunning = false;
-            });
-        }
-
-        private void threadStartStopProcess(CancellationToken token, int limit = 10)
-        {
-            // Invoke((MethodInvoker)(() => updateLabelMain("starting now...")));
-            for (int i = 1; i <= limit && !token.IsCancellationRequested; i++)
-            {
-                string msg = $"Start/Stop Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
-                updateRichTextBoxMain(msg);
-                bool cancellationTriggered = token.WaitHandle.WaitOne(500); // Wait for 500 milliseconds or until cancellation is requested
-            }
+            if (mtss == null)
+                mtss = new MultiThreadsStartStop(this);
         }
 
         private void btnMT02Start_Click(object sender, EventArgs e)
         {
             FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
-            startstopExampleInitToken();
-
-            if (threadStartStopRunning)
-            {
-                Debug.Print("!! start/stop thread example already running right now !!");
-                return;
-            }
-            ThreadStart startstopThreadStart = new ThreadStart(() =>
-            {
-                threadStartStopRunning = true;
-                threadStartStopProcess(tokenSource.Token, 5);
-                threadStartStopRunning = false;
-            });
-            Thread thread = new Thread(startstopThreadStart);
-            thread.IsBackground = true;
-            thread.Start();
+            mtss.Run();
         }
 
         private void btnMT02Stop_Click(object sender, EventArgs e)
         {
             FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
-            tokenSource.Cancel(); // Request cancellation of the token
+            mtss.Stop();
+        }
+
+        // this is called by MultiThreadsStartStop()
+        public void ExampleStopped()
+        {
+            if (this.IsDisposed || this.Disposing)
+            {
+                // Form is disposed or disposing, do not attempt to update UI
+                Debug.Print("Form is disposed or disposing, skipping updateRichTextBoxMain.");
+                return;
+            }
+            if (InvokeRequired)
+            {
+                try
+                {
+                    Debug.Print("Buttons Updated");
+                    Invoke(new Action<Button, Button>(FormHelpers.FlipButtons), btnMT02Start, btnMT02Stop);
+                }
+                catch (ObjectDisposedException)
+                {
+                    Debug.Print("Invoke failed: Form is disposed.");
+                }
+                catch (InvalidOperationException)
+                {
+                    Debug.Print("Invoke failed: Form is disposed or handle is invalid.");
+                }
+            }
+            else
+            {
+                FormHelpers.FlipButtons(btnMT02Start, btnMT02Stop);
+            }
         }
 
         /// <summary>
