@@ -5,7 +5,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
     /// <summary>
     /// This example uses async/await to demonstrate parallel processing in C# without blocking the UI thread.
     /// </summary>
-    public class TasksExample
+    public class TaskExample
     {
         public async Task ShowAsync()
         {
