@@ -28,18 +28,13 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
 
         protected Form f;
         protected Button btnThreadA, btnThreadB, btnStatus;
-        protected Label lblMain;
-        protected RichTextBox richTextBoxMain;
 
-        public MutiThreadsExample(Form _f, Button _btnThreadA, Button _btnThreadB, Button _btnStatus,
-            Label _lblMain, RichTextBox _richTextBoxMain)
+        public MutiThreadsExample(Form _f, Button _btnThreadA, Button _btnThreadB, Button _btnStatus)
         {
             f = _f;
             btnThreadA = _btnThreadA;
             btnThreadB = _btnThreadB;
             btnStatus = _btnStatus;
-            lblMain = _lblMain;
-            richTextBoxMain = _richTextBoxMain;
 
             btnThreadA.Click += (sender, e) => PausePressedThread(sender, 0);
             btnThreadB.Click += (sender, e) => PausePressedThread(sender, 1);

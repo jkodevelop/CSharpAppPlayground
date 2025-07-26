@@ -234,7 +234,7 @@ namespace CSharpAppPlayground
         private void MultiThreadExampleInit()
         {
             if (mte == null)
-                mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus, lblMain, richTBoxMain);
+                mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus);
         }
 
         private void btnMTMultiStart_Click(object sender, EventArgs e)
