@@ -26,6 +26,7 @@ namespace CSharpAppPlayground.Multithreading.ThreadsExample
         {
             f = _f;
         }
+
         private void startstopExampleInitToken()
         {
             // -----------------------------------------------------------------------------
