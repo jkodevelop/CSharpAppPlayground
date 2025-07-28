@@ -39,6 +39,7 @@
             btnMTMultiStatus = new Button();
             btnMTMultiStart = new Button();
             richTBoxMain = new RichTextBox();
+            btnBack = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -56,7 +57,7 @@
             // lblMain
             // 
             lblMain.AutoSize = true;
-            lblMain.Location = new Point(509, 35);
+            lblMain.Location = new Point(509, 23);
             lblMain.Name = "lblMain";
             lblMain.Size = new Size(32, 15);
             lblMain.TabIndex = 1;
@@ -146,18 +147,29 @@
             // 
             // richTBoxMain
             // 
-            richTBoxMain.Location = new Point(509, 78);
+            richTBoxMain.Location = new Point(509, 65);
             richTBoxMain.Name = "richTBoxMain";
             richTBoxMain.ScrollBars = RichTextBoxScrollBars.Vertical;
             richTBoxMain.Size = new Size(261, 316);
             richTBoxMain.TabIndex = 6;
             richTBoxMain.Text = "";
             // 
+            // btnBack
+            // 
+            btnBack.Location = new Point(658, 387);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(112, 38);
+            btnBack.TabIndex = 7;
+            btnBack.Text = "Close";
+            btnBack.UseVisualStyleBackColor = true;
+            btnBack.Click += btnBack_Click;
+            // 
             // FormConcurThread
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnBack);
             Controls.Add(richTBoxMain);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -184,5 +196,6 @@
         private Button btnThreadA;
         private Button btnThreadB;
         private RichTextBox richTBoxMain;
+        private Button btnBack;
     }
 }

@@ -18,10 +18,16 @@ namespace CSharpAppPlayground
             InitializeComponent();
         }
 
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         protected ParallelExample pe = new ParallelExample();
         private void btnParallelExample01_Click(object sender, EventArgs e)
         {
             pe.Run();
         }
+
     }
 }

@@ -17,7 +17,6 @@ namespace CSharpAppPlayground.Multithreading.ParallelExample
             {
                 // This lambda will be executed on multiple threads concurrently.
                 Task<string> processingResult = ProcessWorkOrder(workId);
-                // processedResults.Add(processingResult);
                 Debug.Print(processingResult.ToString());
             });
         }

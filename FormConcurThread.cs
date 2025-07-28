@@ -17,6 +17,11 @@ namespace CSharpAppPlayground
             MultiThreadsStartStopInit();
         }
 
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         // invoking the main UI thread to do it if it is called from another thread
         // This is a workaround to avoid the error:
         // "Cross-thread operation not valid: Control 'richTBoxMain' accessed from a thread other than the thread it was created on."
