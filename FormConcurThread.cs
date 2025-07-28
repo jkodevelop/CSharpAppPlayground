@@ -210,6 +210,9 @@ namespace CSharpAppPlayground
         protected MutiThreadsExample mte;
         private void MultiThreadExampleInit()
         {
+            btnThreadA.Enabled = false;
+            btnThreadB.Enabled = false;
+            btnMTMultiStatus.Enabled = false; // disable the status button until threads are started
             if (mte == null)
                 mte = new MutiThreadsExample(this, btnThreadA, btnThreadB, btnMTMultiStatus);
         }

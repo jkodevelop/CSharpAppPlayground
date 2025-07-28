@@ -7,6 +7,12 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
     /// </summary>
     public class TaskExample
     {
+        private Form f;
+
+        public TaskExample(Form _f)
+        {
+            f = _f;
+        }
         public async Task ShowAsync()
         {
             Debug.Print("Processing a collection in parallel with async/await...");
@@ -18,7 +24,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
 
             foreach (string result in results)
             {
-                Debug.Print(result);
+                (f as FormConcurTask).updateRichTextBoxMain(result);
             }
         }
 

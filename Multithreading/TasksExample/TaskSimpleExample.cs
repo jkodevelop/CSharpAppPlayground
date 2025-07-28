@@ -1,8 +1,10 @@
-﻿using System;
+﻿using CSharpAppPlayground.Classes;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +14,13 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
     {
         public BlockingCollection<string> cakeOrders;
 
+        private Form f;
+
+        public TaskSimpleExample(Form _f)
+        {
+            f = _f;
+        }
+
         public void Baker()
         {
             foreach (var order in cakeOrders.GetConsumingEnumerable())
@@ -19,6 +28,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
                 Debug.Print($"Baker is baking {order}...");
                 Thread.Sleep(2000); // Simulate baking time
                 Debug.Print($"Baker has finished baking {order}");
+                (f as FormConcurTask).updateRichTextBoxMain($"Baker has finished baking {order}", System.Drawing.Color.Green);
             }
         }
 

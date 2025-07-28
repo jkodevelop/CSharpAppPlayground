@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.Multithreading.TasksExample
 {
-    // TO DOCUMENT!
+    // TO DOCUMENT! deadlock
+
     public class TaskExampleDeadlock
     {
+        private Form f;
+
+        public TaskExampleDeadlock(Form _f)
+        {
+            f = _f;
+        }
+
         public async Task ShowAsync()
         {
             Debug.Print("Processing a collection in parallel with Parallel.ForEach...");
@@ -20,7 +28,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
             {
                 // This lambda will be executed on multiple threads concurrently.
                 string processingResult = await ProcessWorkOrder(workId).ConfigureAwait(false);
-                Debug.Print(processingResult);
+                (f as FormConcurTask).updateRichTextBoxMain(processingResult);
                 return processingResult;
             });
 
