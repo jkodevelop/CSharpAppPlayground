@@ -18,6 +18,7 @@ namespace CSharpAppPlayground
             tse = new TaskSimpleExample(this);
             te = new TaskExample(this);
             ted = new TaskExampleDeadlock(this);
+            tp = new TaskPausible(this);
         }
 
         private void BtnBack_Click(object sender, EventArgs e)
@@ -100,6 +101,12 @@ namespace CSharpAppPlayground
                     updateRichTextBoxMain($"All tasks from example 2 completed successfully.");
                 }
             });
+        }
+
+        protected TaskPausible tp;
+        private void btnTasksStartPause_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -37,6 +37,11 @@ namespace CSharpAppPlayground
             btnTaskExample01 = new Button();
             btnTaskExample02 = new Button();
             richTBoxMain = new RichTextBox();
+            groupBox1 = new GroupBox();
+            btnTasksStartPause = new Button();
+            btnTask1Pause = new Button();
+            btnTask2Pause = new Button();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // btnBack
@@ -87,9 +92,50 @@ namespace CSharpAppPlayground
             richTBoxMain.TabIndex = 6;
             richTBoxMain.Text = "";
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(btnTask2Pause);
+            groupBox1.Controls.Add(btnTask1Pause);
+            groupBox1.Controls.Add(btnTasksStartPause);
+            groupBox1.Location = new Point(345, 24);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(169, 293);
+            groupBox1.TabIndex = 7;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Tasks With Pause";
+            // 
+            // btnTasksStartPause
+            // 
+            btnTasksStartPause.Location = new Point(6, 22);
+            btnTasksStartPause.Name = "btnTasksStartPause";
+            btnTasksStartPause.Size = new Size(157, 23);
+            btnTasksStartPause.TabIndex = 0;
+            btnTasksStartPause.Text = "Start Tasks";
+            btnTasksStartPause.UseVisualStyleBackColor = true;
+            btnTasksStartPause.Click += btnTasksStartPause_Click;
+            // 
+            // btnTask1Pause
+            // 
+            btnTask1Pause.Location = new Point(6, 57);
+            btnTask1Pause.Name = "btnTask1Pause";
+            btnTask1Pause.Size = new Size(77, 43);
+            btnTask1Pause.TabIndex = 1;
+            btnTask1Pause.Text = "Pause Task 1";
+            btnTask1Pause.UseVisualStyleBackColor = true;
+            // 
+            // btnTask2Pause
+            // 
+            btnTask2Pause.Location = new Point(89, 57);
+            btnTask2Pause.Name = "btnTask2Pause";
+            btnTask2Pause.Size = new Size(74, 43);
+            btnTask2Pause.TabIndex = 2;
+            btnTask2Pause.Text = "Pause Task 2";
+            btnTask2Pause.UseVisualStyleBackColor = true;
+            // 
             // FormConcurTask
             // 
             ClientSize = new Size(810, 389);
+            Controls.Add(groupBox1);
             Controls.Add(richTBoxMain);
             Controls.Add(btnTaskExample02);
             Controls.Add(btnTaskExample01);
@@ -97,11 +143,16 @@ namespace CSharpAppPlayground
             Controls.Add(btnBack);
             Name = "FormConcurTask";
             Text = "Other Concurrency Examples";
+            groupBox1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private RichTextBox richTBoxMain;
+        private GroupBox groupBox1;
+        private Button btnTasksStartPause;
+        private Button btnTask2Pause;
+        private Button btnTask1Pause;
     }
 }
