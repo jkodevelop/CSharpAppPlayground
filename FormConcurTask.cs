@@ -68,7 +68,7 @@ namespace CSharpAppPlayground
         protected TaskSimpleExample tse;
         private void btnStartTaskSimple_Click(object sender, EventArgs e)
         {
-            tse.Run();
+            tse.ShowAsync();
         }
 
         protected TaskExample te;
@@ -106,7 +106,17 @@ namespace CSharpAppPlayground
         protected TaskPausible tp;
         private void btnTasksStartPause_Click(object sender, EventArgs e)
         {
-
+            tp.ShowAsync().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    updateRichTextBoxMain($"Error: {t.Exception?.Message}");
+                }
+                else
+                {
+                    updateRichTextBoxMain($"All tasks from example 3 completed successfully.");
+                }
+            });
         }
     }
 }

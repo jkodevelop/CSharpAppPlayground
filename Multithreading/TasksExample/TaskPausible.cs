@@ -18,13 +18,14 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
         public TaskPausible(Form _f)
         {
             f = _f;
+            init();
         }
 
         public void init()
         {
             for(int i = 0; i < mres.Length; i++)
             {
-                mres[i] = new ManualResetEventSlim(true); // Initialize each ManualResetEventSlim
+                mres[i] = new ManualResetEventSlim(false); // Initialize each ManualResetEventSlim
             }
         }
         public async Task ShowAsync()
@@ -35,7 +36,10 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
                 return;
             }
             isRunning = true; // Set the running flag to true
-            init();
+
+            // what is a signaled ManualResetEventSlim?
+            // A ManualResetEventSlim that is in a signaled state allows threads to proceed.
+            // to unsignal it, you call Reset() on it, which blocks threads that are waiting on it.
 
             Debug.Print("Processing a collection in parallel with async/await...");
             List<int> workOrderIds = Enumerable.Range(1, 2).ToList();
@@ -54,7 +58,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
         {
             mres[orderId - 1] = new ManualResetEventSlim(true); // Initialize the ManualResetEventSlim for each order
             Debug.Print($"      -> Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(1000);
+            await Task.Delay(5000);
             Debug.Print($"      -> Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
             await Task.Delay(500);
             return $"Result for order {orderId}";

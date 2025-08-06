@@ -38,9 +38,9 @@ namespace CSharpAppPlayground
             btnTaskExample02 = new Button();
             richTBoxMain = new RichTextBox();
             groupBox1 = new GroupBox();
-            btnTasksStartPause = new Button();
-            btnTask1Pause = new Button();
             btnTask2Pause = new Button();
+            btnTask1Pause = new Button();
+            btnTasksStartPause = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -104,15 +104,14 @@ namespace CSharpAppPlayground
             groupBox1.TabStop = false;
             groupBox1.Text = "Tasks With Pause";
             // 
-            // btnTasksStartPause
+            // btnTask2Pause
             // 
-            btnTasksStartPause.Location = new Point(6, 22);
-            btnTasksStartPause.Name = "btnTasksStartPause";
-            btnTasksStartPause.Size = new Size(157, 23);
-            btnTasksStartPause.TabIndex = 0;
-            btnTasksStartPause.Text = "Start Tasks";
-            btnTasksStartPause.UseVisualStyleBackColor = true;
-            btnTasksStartPause.Click += btnTasksStartPause_Click;
+            btnTask2Pause.Location = new Point(89, 57);
+            btnTask2Pause.Name = "btnTask2Pause";
+            btnTask2Pause.Size = new Size(74, 43);
+            btnTask2Pause.TabIndex = 2;
+            btnTask2Pause.Text = "Pause Task 2";
+            btnTask2Pause.UseVisualStyleBackColor = true;
             // 
             // btnTask1Pause
             // 
@@ -123,14 +122,15 @@ namespace CSharpAppPlayground
             btnTask1Pause.Text = "Pause Task 1";
             btnTask1Pause.UseVisualStyleBackColor = true;
             // 
-            // btnTask2Pause
+            // btnTasksStartPause
             // 
-            btnTask2Pause.Location = new Point(89, 57);
-            btnTask2Pause.Name = "btnTask2Pause";
-            btnTask2Pause.Size = new Size(74, 43);
-            btnTask2Pause.TabIndex = 2;
-            btnTask2Pause.Text = "Pause Task 2";
-            btnTask2Pause.UseVisualStyleBackColor = true;
+            btnTasksStartPause.Location = new Point(6, 22);
+            btnTasksStartPause.Name = "btnTasksStartPause";
+            btnTasksStartPause.Size = new Size(157, 23);
+            btnTasksStartPause.TabIndex = 0;
+            btnTasksStartPause.Text = "Start Tasks";
+            btnTasksStartPause.UseVisualStyleBackColor = true;
+            btnTasksStartPause.Click += btnTasksStartPause_Click;
             // 
             // FormConcurTask
             // 

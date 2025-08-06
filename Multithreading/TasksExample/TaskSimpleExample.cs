@@ -32,7 +32,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
             }
         }
 
-        public async void Run()
+        public async void ShowAsync()
         {
             cakeOrders = new BlockingCollection<string>(boundedCapacity: 5); // Initialize the collection with a bounded capacity
 
