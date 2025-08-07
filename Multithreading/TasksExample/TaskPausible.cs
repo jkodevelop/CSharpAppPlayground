@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpAppPlayground.Classes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,14 +11,24 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
     public class TaskPausible
     {
         private Form f;
+        private Button btnPauseT1, btnPauseT2;
 
-        private ManualResetEventSlim[] mres = new ManualResetEventSlim[2];
+        // cannot use ManualResetEvent because it is not awaitable, this will block the UI thread
+        // since this example "Tasks" are run by async/await so it is not running on a separate thread
+        // private ManualResetEventSlim[] mres = new ManualResetEventSlim[2];
+        // instead use AsyncManualResetEvent
+        private AsyncManualResetEvent[] mres = new AsyncManualResetEvent[2];
 
         bool isRunning = false; // Flag to control the running state of the task    
+        int maxCount = 5;
 
-        public TaskPausible(Form _f)
+        public TaskPausible(Form _f, Button _btnPauseT1, Button _btnPauseT2)
         {
             f = _f;
+            btnPauseT1 = _btnPauseT1;
+            btnPauseT2 = _btnPauseT2;
+            btnPauseT1.Click += (sender, e) => PausePressedTask(sender, 0);
+            btnPauseT2.Click += (sender, e) => PausePressedTask(sender, 1);
             init();
         }
 
@@ -25,7 +36,8 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
         {
             for(int i = 0; i < mres.Length; i++)
             {
-                mres[i] = new ManualResetEventSlim(false); // Initialize each ManualResetEventSlim
+                // mres[i] = new ManualResetEventSlim(true); // Initialize each ManualResetEventSlim, true means it's unpaused
+                mres[i] = new AsyncManualResetEvent(true); // true = unpaused
             }
         }
         public async Task ShowAsync()
@@ -52,15 +64,20 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
             {
                 (f as FormConcurTask).updateRichTextBoxMain(result);
             }
+            isRunning = false; // Reset the running flag
         }
 
         protected async Task<string> ProcessWorkOrderAsync(int orderId)
         {
-            mres[orderId - 1] = new ManualResetEventSlim(true); // Initialize the ManualResetEventSlim for each order
+            int taskIdx = orderId - 1;
             Debug.Print($"      -> Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(5000);
-            Debug.Print($"      -> Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(500);
+            for (int i=0; i<maxCount; i++)
+            {
+                Debug.Print($"      -> Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+                // mres[taskIdx].Wait(); // UI thread blocking, this will turn into Deadlock
+                await mres[taskIdx].WaitAsync();
+                await Task.Delay(500);
+            }
             return $"Result for order {orderId}";
         }
 

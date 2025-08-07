@@ -102,5 +102,11 @@ namespace CSharpAppPlayground
         {
             _formConcurParallel.Open();
         }
+
+        protected FormFactory _formTmpTest = new FormFactory("CSharpAppPlayground.TmpTestForm, CSharpAppPlayground");
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _formTmpTest.Open();
+        }
     }
 }
