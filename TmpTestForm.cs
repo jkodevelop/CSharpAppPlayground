@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpAppPlayground.UIClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CSharpAppPlayground.UIClasses;    
 
 namespace CSharpAppPlayground
 {
@@ -15,7 +15,14 @@ namespace CSharpAppPlayground
     {
         public TmpTestForm()
         {
+            // base.InitializeComponent(); // I don't need to call this as it is already called in the constructor of FormWithRichText
             InitializeComponent();
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            updateRichTextBoxMain("testing richtext box");
+            updateLabelMain("testing label");
         }
     }
 }
