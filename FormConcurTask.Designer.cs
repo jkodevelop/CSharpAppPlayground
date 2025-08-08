@@ -2,7 +2,6 @@ namespace CSharpAppPlayground
 {
     partial class FormConcurTask
     {
-        private Button btnBack;
         private Button btnStartTaskSimple;
         private Button btnTaskExample01;
         private Button btnTaskExample02;
@@ -32,26 +31,15 @@ namespace CSharpAppPlayground
         /// </summary>
         private void InitializeComponent()
         {
-            btnBack = new Button();
             btnStartTaskSimple = new Button();
             btnTaskExample01 = new Button();
             btnTaskExample02 = new Button();
-            richTBoxMain = new RichTextBox();
             groupBox1 = new GroupBox();
             btnTask2Pause = new Button();
             btnTask1Pause = new Button();
             btnTasksStartPause = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
-            // 
-            // btnBack
-            // 
-            btnBack.Location = new Point(687, 335);
-            btnBack.Name = "btnBack";
-            btnBack.Size = new Size(111, 42);
-            btnBack.TabIndex = 0;
-            btnBack.Text = "Close";
-            btnBack.Click += BtnBack_Click;
             // 
             // btnStartTaskSimple
             // 
@@ -82,15 +70,6 @@ namespace CSharpAppPlayground
             btnTaskExample02.Text = "Task Example 2";
             btnTaskExample02.UseVisualStyleBackColor = true;
             btnTaskExample02.Click += btnTaskExample02_Click;
-            // 
-            // richTBoxMain
-            // 
-            richTBoxMain.Location = new Point(532, 24);
-            richTBoxMain.Name = "richTBoxMain";
-            richTBoxMain.ScrollBars = RichTextBoxScrollBars.Vertical;
-            richTBoxMain.Size = new Size(266, 293);
-            richTBoxMain.TabIndex = 6;
-            richTBoxMain.Text = "";
             // 
             // groupBox1
             // 
@@ -134,13 +113,11 @@ namespace CSharpAppPlayground
             // 
             // FormConcurTask
             // 
-            ClientSize = new Size(810, 389);
+            ClientSize = new Size(810, 462);
             Controls.Add(groupBox1);
-            Controls.Add(richTBoxMain);
             Controls.Add(btnTaskExample02);
             Controls.Add(btnTaskExample01);
             Controls.Add(btnStartTaskSimple);
-            Controls.Add(btnBack);
             Name = "FormConcurTask";
             Text = "Other Concurrency Examples";
             groupBox1.ResumeLayout(false);
@@ -148,8 +125,6 @@ namespace CSharpAppPlayground
         }
 
         #endregion
-
-        private RichTextBox richTBoxMain;
         private GroupBox groupBox1;
         private Button btnTasksStartPause;
         private Button btnTask2Pause;

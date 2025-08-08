@@ -7,8 +7,6 @@ using CSharpAppPlayground.GenericTypeExample;
 using CSharpAppPlayground.Loggers;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using CSharpAppPlayground.Multithreading.ParallelExample;
-using CSharpAppPlayground.Multithreading.TasksExample;
 
 namespace CSharpAppPlayground
 {
@@ -101,12 +99,6 @@ namespace CSharpAppPlayground
         private void btnConcurParallel_Click(object sender, EventArgs e)
         {
             _formConcurParallel.Open();
-        }
-
-        protected FormFactory _formTmpTest = new FormFactory("CSharpAppPlayground.TmpTestForm, CSharpAppPlayground");
-        private void button1_Click(object sender, EventArgs e)
-        {
-            _formTmpTest.Open();
         }
     }
 }

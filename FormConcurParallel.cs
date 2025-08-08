@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.Multithreading.ParallelExample;
+using CSharpAppPlayground.UIClasses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,21 +12,18 @@ using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {
-    public partial class FormConcurParallel : Form
+    public partial class FormConcurParallel : FormWithRichText
     {
         public FormConcurParallel()
         {
             InitializeComponent();
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         protected ParallelExample pe = new ParallelExample();
         private void btnParallelExample01_Click(object sender, EventArgs e)
         {
+            updateRichTextBoxMain("testing richtext box");
+            updateLabelMain("testing label");
             pe.Run();
         }
 

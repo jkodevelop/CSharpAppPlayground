@@ -1,11 +1,12 @@
 using CSharpAppPlayground.Multithreading.TasksExample;
+using CSharpAppPlayground.UIClasses;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {
-    public partial class FormConcurTask : Form
+    public partial class FormConcurTask : FormWithRichText
     {
         public FormConcurTask()
         {
@@ -19,50 +20,6 @@ namespace CSharpAppPlayground
             te = new TaskExample(this);
             ted = new TaskExampleDeadlock(this);
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
-        }
-
-        private void BtnBack_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        public void updateRichTextBoxMain(string msg, Color lineColor = default)
-        {
-            if (this.IsDisposed || this.Disposing)
-            {
-                // Form is disposed or disposing, do not attempt to update UI
-                Debug.Print("Form is disposed or disposing, skipping updateRichTextBoxMain.");
-                return;
-            }
-            if (InvokeRequired)
-            {
-                try
-                {
-                    Debug.Print("InvokeRequired for updateRichTextBoxMain().");
-                    Invoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
-                }
-                catch (ObjectDisposedException)
-                {
-                    Debug.Print("Invoke failed: Form is disposed.");
-                }
-                catch (InvalidOperationException)
-                {
-                    Debug.Print("Invoke failed: Form is disposed or handle is invalid.");
-                }
-            }
-            else
-            {
-                if (richTBoxMain != null && !richTBoxMain.IsDisposed)
-                {
-                    richTBoxMain.SelectionColor = lineColor;
-                    richTBoxMain.AppendText(msg + Environment.NewLine);
-                    richTBoxMain.Refresh(); // Force the rich text box to refresh immediately
-                }
-                else
-                {
-                    Debug.Print(msg);
-                }
-            }
         }
 
         protected TaskSimpleExample tse;
