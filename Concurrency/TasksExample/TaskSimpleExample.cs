@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.Multithreading.TasksExample
+namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     public class TaskSimpleExample
     {

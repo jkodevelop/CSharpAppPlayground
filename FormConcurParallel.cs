@@ -1,4 +1,4 @@
-﻿using CSharpAppPlayground.Multithreading.ParallelExample;
+﻿using CSharpAppPlayground.Concurrency.ParallelExample;
 using CSharpAppPlayground.UIClasses;
 using System;
 using System.Collections.Generic;

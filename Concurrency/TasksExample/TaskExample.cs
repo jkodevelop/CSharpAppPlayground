@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace CSharpAppPlayground.Multithreading.TasksExample
+namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     /// <summary>
     /// This example uses async/await to demonstrate parallel processing in C# without blocking the UI thread.

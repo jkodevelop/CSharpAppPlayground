@@ -7,7 +7,7 @@ using System.Diagnostics;
 using CSharpAppPlayground.UIClasses;
 using System.DirectoryServices.ActiveDirectory;
 
-namespace CSharpAppPlayground.Multithreading.TasksExample
+namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     public class TaskStoppable
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.Multithreading.TasksExample
+namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     // DOCUMENT, using ManualResetEventSlim won't work in this Tasks example, because this is running on the UI thread
     // the task example isn't truly multithreaded, it is just using async/await

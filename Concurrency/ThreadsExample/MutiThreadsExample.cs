@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.Multithreading.ThreadsExample
+namespace CSharpAppPlayground.Concurrency.ThreadsExample
 {
     /// <summary>
     /// This example uses Threads() to demonstrate multithreading in C#.

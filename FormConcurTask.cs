@@ -1,8 +1,5 @@
-using CSharpAppPlayground.Multithreading.TasksExample;
+using CSharpAppPlayground.Concurrency.TasksExample;
 using CSharpAppPlayground.UIClasses;
-using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {

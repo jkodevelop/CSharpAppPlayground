@@ -1,8 +1,6 @@
 ﻿using CSharpAppPlayground.Classes;
-using CSharpAppPlayground.Multithreading.ThreadsExample;
+using CSharpAppPlayground.Concurrency.ThreadsExample;
 using System.Diagnostics;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {

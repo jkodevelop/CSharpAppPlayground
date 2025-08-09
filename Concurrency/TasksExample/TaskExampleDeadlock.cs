@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.Multithreading.TasksExample
+namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     // TO DOCUMENT! deadlock
 

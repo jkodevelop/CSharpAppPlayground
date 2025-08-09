@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpAppPlayground.Multithreading.ThreadsExample
+namespace CSharpAppPlayground.Concurrency.ThreadsExample
 {
     /// <summary>
     /// Example with CancellationTokenSource and CancellationToken. Shows how to start and stop a thread
