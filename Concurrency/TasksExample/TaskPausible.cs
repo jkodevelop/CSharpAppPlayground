@@ -88,7 +88,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
 
         protected void PausePressedTask(object sender, int taskIndex)
         {
-            if (!isRunning) { return;  }
+            if (!isRunning) { return; }
             if (taskIndex < 0 || taskIndex >= mres.Length)
                 throw new ArgumentOutOfRangeException(nameof(taskIndex), "Invalid task index.");
             string taskName = taskIndex == 0 ? "1" : "2";

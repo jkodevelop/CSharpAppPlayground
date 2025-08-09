@@ -17,7 +17,7 @@ namespace CSharpAppPlayground
             te = new TaskExample(this);
             ted = new TaskExampleDeadlock(this);
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
-            ts = new TaskStoppable(this, btnCancel1, btnCancel2);
+            ts = new TaskStoppable(this, btnCancel);
         }
 
         protected TaskSimpleExample tse;

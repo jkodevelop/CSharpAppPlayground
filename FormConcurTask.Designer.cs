@@ -39,11 +39,17 @@ namespace CSharpAppPlayground
             btnTask1Pause = new Button();
             btnTasksStartPause = new Button();
             groupBox2 = new GroupBox();
+            btnCancel = new Button();
             btnTasksStartStop = new Button();
+            groupBox3 = new GroupBox();
+            btnTasksCancellable = new Button();
             btnCancel1 = new Button();
             btnCancel2 = new Button();
+            btnCancel3 = new Button();
+            btnCancelAll = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // btnStartTaskSimple
@@ -81,7 +87,7 @@ namespace CSharpAppPlayground
             groupBox1.Controls.Add(btnTask2Pause);
             groupBox1.Controls.Add(btnTask1Pause);
             groupBox1.Controls.Add(btnTasksStartPause);
-            groupBox1.Location = new Point(345, 24);
+            groupBox1.Location = new Point(365, 24);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(169, 115);
             groupBox1.TabIndex = 7;
@@ -118,15 +124,24 @@ namespace CSharpAppPlayground
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(btnCancel2);
-            groupBox2.Controls.Add(btnCancel1);
+            groupBox2.Controls.Add(btnCancel);
             groupBox2.Controls.Add(btnTasksStartStop);
-            groupBox2.Location = new Point(345, 154);
+            groupBox2.Location = new Point(190, 24);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(169, 131);
+            groupBox2.Size = new Size(169, 102);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Tasks with cancel";
+            groupBox2.Text = "Task with cancel";
+            // 
+            // btnCancel
+            // 
+            btnCancel.Enabled = false;
+            btnCancel.Location = new Point(6, 65);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(157, 29);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "Cancel Task";
+            btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnTasksStartStop
             // 
@@ -138,30 +153,70 @@ namespace CSharpAppPlayground
             btnTasksStartStop.UseVisualStyleBackColor = true;
             btnTasksStartStop.Click += btnTasksStartStop_Click;
             // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(btnCancelAll);
+            groupBox3.Controls.Add(btnCancel3);
+            groupBox3.Controls.Add(btnCancel2);
+            groupBox3.Controls.Add(btnCancel1);
+            groupBox3.Controls.Add(btnTasksCancellable);
+            groupBox3.Location = new Point(190, 132);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(169, 215);
+            groupBox3.TabIndex = 9;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Tasks with Cancel";
+            // 
+            // btnTasksCancellable
+            // 
+            btnTasksCancellable.Location = new Point(6, 22);
+            btnTasksCancellable.Name = "btnTasksCancellable";
+            btnTasksCancellable.Size = new Size(157, 37);
+            btnTasksCancellable.TabIndex = 0;
+            btnTasksCancellable.Text = "Start Tasks";
+            btnTasksCancellable.UseVisualStyleBackColor = true;
+            // 
             // btnCancel1
             // 
-            btnCancel1.Enabled = false;
-            btnCancel1.Location = new Point(6, 64);
+            btnCancel1.Location = new Point(5, 73);
             btnCancel1.Name = "btnCancel1";
-            btnCancel1.Size = new Size(157, 23);
+            btnCancel1.Size = new Size(158, 23);
             btnCancel1.TabIndex = 1;
             btnCancel1.Text = "Cancel Task 1";
             btnCancel1.UseVisualStyleBackColor = true;
             // 
             // btnCancel2
             // 
-            btnCancel2.Enabled = false;
-            btnCancel2.Location = new Point(6, 93);
+            btnCancel2.Location = new Point(5, 102);
             btnCancel2.Name = "btnCancel2";
-            btnCancel2.Size = new Size(157, 23);
+            btnCancel2.Size = new Size(158, 23);
             btnCancel2.TabIndex = 2;
-            btnCancel2.Text = "Cancel Task 2";
+            btnCancel2.Text = "Cancel Task 1";
             btnCancel2.UseVisualStyleBackColor = true;
+            // 
+            // btnCancel3
+            // 
+            btnCancel3.Location = new Point(5, 131);
+            btnCancel3.Name = "btnCancel3";
+            btnCancel3.Size = new Size(158, 23);
+            btnCancel3.TabIndex = 3;
+            btnCancel3.Text = "Cancel Task 1";
+            btnCancel3.UseVisualStyleBackColor = true;
+            // 
+            // btnCancelAll
+            // 
+            btnCancelAll.Location = new Point(5, 171);
+            btnCancelAll.Name = "btnCancelAll";
+            btnCancelAll.Size = new Size(158, 38);
+            btnCancelAll.TabIndex = 4;
+            btnCancelAll.Text = "Cancel All";
+            btnCancelAll.UseVisualStyleBackColor = true;
             // 
             // FormConcurTask
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(810, 462);
+            Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(btnTaskExample02);
@@ -174,8 +229,10 @@ namespace CSharpAppPlayground
             Controls.SetChildIndex(btnTaskExample02, 0);
             Controls.SetChildIndex(groupBox1, 0);
             Controls.SetChildIndex(groupBox2, 0);
+            Controls.SetChildIndex(groupBox3, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -187,7 +244,12 @@ namespace CSharpAppPlayground
         private Button btnTask1Pause;
         private GroupBox groupBox2;
         private Button btnTasksStartStop;
-        public Button btnCancel2;
-        public Button btnCancel1;
+        public Button btnCancel;
+        private GroupBox groupBox3;
+        private Button btnCancelAll;
+        private Button btnCancel3;
+        private Button btnCancel2;
+        private Button btnCancel1;
+        private Button btnTasksCancellable;
     }
 }
