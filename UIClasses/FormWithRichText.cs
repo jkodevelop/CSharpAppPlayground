@@ -131,6 +131,10 @@ namespace CSharpAppPlayground.UIClasses
                     richTBoxMain.AppendText(msg + Environment.NewLine);
                     richTBoxMain.Refresh(); // Force the rich text box to refresh immediately
                 }
+                else
+                {
+                    Debug.Print($"text: {msg}");
+                }
             }
         }
 
@@ -166,6 +170,10 @@ namespace CSharpAppPlayground.UIClasses
                     lblMain.Refresh(); // Force the label to refresh immediately
                                        // WITHOUT refresh the label might not redraw immediately
                                        // GUI.Label doesn't update/redraw as aggressively as GUI.TextBox
+                }
+                else
+                {
+                    Debug.Print($"label: {msg}");
                 }
             }
         }

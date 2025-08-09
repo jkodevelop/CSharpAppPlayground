@@ -38,7 +38,12 @@ namespace CSharpAppPlayground
             btnTask2Pause = new Button();
             btnTask1Pause = new Button();
             btnTasksStartPause = new Button();
+            groupBox2 = new GroupBox();
+            btnTasksStartStop = new Button();
+            btnCancel1 = new Button();
+            btnCancel2 = new Button();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // btnStartTaskSimple
@@ -78,7 +83,7 @@ namespace CSharpAppPlayground
             groupBox1.Controls.Add(btnTasksStartPause);
             groupBox1.Location = new Point(345, 24);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(169, 293);
+            groupBox1.Size = new Size(169, 115);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Tasks With Pause";
@@ -111,17 +116,68 @@ namespace CSharpAppPlayground
             btnTasksStartPause.UseVisualStyleBackColor = true;
             btnTasksStartPause.Click += btnTasksStartPause_Click;
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(btnCancel2);
+            groupBox2.Controls.Add(btnCancel1);
+            groupBox2.Controls.Add(btnTasksStartStop);
+            groupBox2.Location = new Point(345, 154);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(169, 131);
+            groupBox2.TabIndex = 8;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Tasks with cancel";
+            // 
+            // btnTasksStartStop
+            // 
+            btnTasksStartStop.Location = new Point(6, 20);
+            btnTasksStartStop.Name = "btnTasksStartStop";
+            btnTasksStartStop.Size = new Size(157, 35);
+            btnTasksStartStop.TabIndex = 0;
+            btnTasksStartStop.Text = "Start";
+            btnTasksStartStop.UseVisualStyleBackColor = true;
+            btnTasksStartStop.Click += btnTasksStartStop_Click;
+            // 
+            // btnCancel1
+            // 
+            btnCancel1.Enabled = false;
+            btnCancel1.Location = new Point(6, 64);
+            btnCancel1.Name = "btnCancel1";
+            btnCancel1.Size = new Size(157, 23);
+            btnCancel1.TabIndex = 1;
+            btnCancel1.Text = "Cancel Task 1";
+            btnCancel1.UseVisualStyleBackColor = true;
+            // 
+            // btnCancel2
+            // 
+            btnCancel2.Enabled = false;
+            btnCancel2.Location = new Point(6, 93);
+            btnCancel2.Name = "btnCancel2";
+            btnCancel2.Size = new Size(157, 23);
+            btnCancel2.TabIndex = 2;
+            btnCancel2.Text = "Cancel Task 2";
+            btnCancel2.UseVisualStyleBackColor = true;
+            // 
             // FormConcurTask
             // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(810, 462);
+            Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(btnTaskExample02);
             Controls.Add(btnTaskExample01);
             Controls.Add(btnStartTaskSimple);
             Name = "FormConcurTask";
             Text = "Other Concurrency Examples";
+            Controls.SetChildIndex(btnStartTaskSimple, 0);
+            Controls.SetChildIndex(btnTaskExample01, 0);
+            Controls.SetChildIndex(btnTaskExample02, 0);
+            Controls.SetChildIndex(groupBox1, 0);
+            Controls.SetChildIndex(groupBox2, 0);
             groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -129,5 +185,9 @@ namespace CSharpAppPlayground
         private Button btnTasksStartPause;
         private Button btnTask2Pause;
         private Button btnTask1Pause;
+        private GroupBox groupBox2;
+        private Button btnTasksStartStop;
+        public Button btnCancel2;
+        public Button btnCancel1;
     }
 }

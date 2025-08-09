@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.UIClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.Multithreading.TasksExample
 {
+    // DOCUMENT, using ManualResetEventSlim won't work in this Tasks example, because this is running on the UI thread
+    // the task example isn't truly multithreaded, it is just using async/await
     public class TaskPausible
     {
         private Form f;
@@ -21,6 +24,8 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
 
         bool isRunning = false; // Flag to control the running state of the task    
         int maxCount = 5;
+
+        Color[] colors = new Color[] { Color.Green, Color.Blue, Color.Purple };
 
         public TaskPausible(Form _f, Button _btnPauseT1, Button _btnPauseT2)
         {
@@ -62,34 +67,35 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
 
             foreach (string result in results)
             {
-                (f as FormConcurTask).updateRichTextBoxMain(result);
+                (f as FormWithRichText).updateRichTextBoxMain(result);
             }
             isRunning = false; // Reset the running flag
         }
 
         protected async Task<string> ProcessWorkOrderAsync(int orderId)
         {
-            int taskIdx = orderId - 1;
-            Debug.Print($"      -> Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            int taskIndex = orderId - 1;
+            (f as FormWithRichText).updateRichTextBoxMain($"starting task:{orderId}, thread:{Environment.CurrentManagedThreadId}", colors[taskIndex]);
             for (int i=0; i<maxCount; i++)
             {
-                Debug.Print($"      -> Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
                 // mres[taskIdx].Wait(); // UI thread blocking, this will turn into Deadlock
-                await mres[taskIdx].WaitAsync();
+                await mres[taskIndex].WaitAsync();
                 await Task.Delay(500);
+                (f as FormWithRichText).updateRichTextBoxMain($"WIP task:{orderId}, thread:{Environment.CurrentManagedThreadId}", colors[taskIndex]);
             }
             return $"Result for order {orderId}";
         }
 
         protected void PausePressedTask(object sender, int taskIndex)
         {
+            if (!isRunning) { return;  }
             if (taskIndex < 0 || taskIndex >= mres.Length)
                 throw new ArgumentOutOfRangeException(nameof(taskIndex), "Invalid task index.");
             string taskName = taskIndex == 0 ? "1" : "2";
             if (mres[taskIndex].IsSet)
             {
                 mres[taskIndex].Reset(); // Pause the task
-                Debug.Print($"Task {taskName} paused.");
+                (f as FormWithRichText).updateRichTextBoxMain($"Task {taskName} paused.", colors[taskIndex]);
                 string btnText = (sender as Button)?.Text ?? string.Empty;
                 string newText = btnText.Replace("Pause", "Resume");
                 (sender as Button).Text = newText; // Replace 'Pause' with 'Resume'
@@ -97,7 +103,7 @@ namespace CSharpAppPlayground.Multithreading.TasksExample
             else
             {
                 mres[taskIndex].Set(); // Resume the task
-                Debug.Print($"Task {taskName} resumed.");
+                (f as FormWithRichText).updateRichTextBoxMain($"Task {taskName} resumed.", colors[taskIndex]);
                 string btnText = (sender as Button)?.Text ?? string.Empty;
                 string newText = btnText.Replace("Resume", "Pause");
                 (sender as Button).Text = newText; // Replace 'Resume' with 'Pause'
