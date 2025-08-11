@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.UIClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,7 +43,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             tokenSource.Token.Register(() =>
             {
                 string msg = "Cancellation was requested. Performing cleanup...";
-                (f as FormConcurThread).updateRichTextBoxMain(msg);
+                (f as FormWithRichText).updateRichTextBoxMain(msg);
                 threadStartStopRunning = false;
             });
         }
@@ -53,7 +54,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             for (int i = 1; i <= limit && !token.IsCancellationRequested; i++)
             {
                 string msg = $"Start/Stop Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
-                (f as FormConcurThread).updateRichTextBoxMain(msg);
+                (f as FormWithRichText).updateRichTextBoxMain(msg);
                 bool cancellationTriggered = token.WaitHandle.WaitOne(500); // Wait for 500 milliseconds or until cancellation is requested
             }
             if (!token.IsCancellationRequested)

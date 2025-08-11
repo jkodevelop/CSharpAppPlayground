@@ -184,7 +184,7 @@ namespace CSharpAppPlayground
             btnCancel3.Name = "btnCancel3";
             btnCancel3.Size = new Size(158, 23);
             btnCancel3.TabIndex = 3;
-            btnCancel3.Text = "Cancel Task 1";
+            btnCancel3.Text = "Cancel Task 3";
             btnCancel3.UseVisualStyleBackColor = true;
             // 
             // btnCancel2
@@ -194,7 +194,7 @@ namespace CSharpAppPlayground
             btnCancel2.Name = "btnCancel2";
             btnCancel2.Size = new Size(158, 23);
             btnCancel2.TabIndex = 2;
-            btnCancel2.Text = "Cancel Task 1";
+            btnCancel2.Text = "Cancel Task 2";
             btnCancel2.UseVisualStyleBackColor = true;
             // 
             // btnCancel1

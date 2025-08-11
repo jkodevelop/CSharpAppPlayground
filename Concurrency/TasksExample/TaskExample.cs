@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using CSharpAppPlayground.UIClasses;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {
@@ -24,15 +25,15 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
 
             foreach (string result in results)
             {
-                (f as FormConcurTask).updateRichTextBoxMain(result);
+                (f as FormWithRichText).updateRichTextBoxMain(result);
             }
         }
 
         protected async Task<string> ProcessWorkOrderAsync(int orderId)
         {
-            Debug.Print($"      -> Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(1000);
-            Debug.Print($"      -> Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            (f as FormWithRichText).updateRichTextBoxMain($"Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            await Task.Delay(2000);
+            (f as FormWithRichText).updateRichTextBoxMain($"Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
             await Task.Delay(500);
             return $"Result for order {orderId}";
         }

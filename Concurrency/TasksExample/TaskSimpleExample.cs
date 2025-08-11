@@ -1,12 +1,7 @@
 ﻿using CSharpAppPlayground.Classes;
-using System;
+using CSharpAppPlayground.UIClasses;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {
@@ -28,7 +23,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                 Debug.Print($"Baker is baking {order}...");
                 Thread.Sleep(2000); // Simulate baking time
                 Debug.Print($"Baker has finished baking {order}");
-                (f as FormConcurTask).updateRichTextBoxMain($"Baker has finished baking {order}", System.Drawing.Color.Green);
+                (f as FormWithRichText).updateRichTextBoxMain($"Baker has finished baking {order}", System.Drawing.Color.Green);
             }
         }
 

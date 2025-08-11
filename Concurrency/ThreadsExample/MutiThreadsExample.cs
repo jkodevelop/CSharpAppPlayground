@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpAppPlayground.UIClasses;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -92,12 +93,12 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
         protected void UpdateStatusLabel(string msg)
         {
             Debug.Print(msg);
-            (f as FormConcurThread).updateLabelMain(msg);
+            (f as FormWithRichText).updateLabelMain(msg);
         }
         protected void PrintMsg(string msg, Color c = default)
         {
             Debug.Print(msg);
-            (f as FormConcurThread).updateRichTextBoxMain(msg, c);
+            (f as FormWithRichText).updateRichTextBoxMain(msg, c);
         }
 
         private void EnableButtons(Button btn, bool enable)
