@@ -18,6 +18,7 @@ namespace CSharpAppPlayground
             ted = new TaskExampleDeadlock(this);
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
             ts = new TaskStoppable(this, btnCancel);
+            tsm = new TaskStopMore(this, btnCancel1, btnCancel2, btnCancel3, btnCancelAll);
         }
 
         protected TaskSimpleExample tse;
@@ -78,6 +79,22 @@ namespace CSharpAppPlayground
         private async void btnTasksStartStop_Click(object sender, EventArgs e)
         {
             await ts.ShowAsync().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    updateRichTextBoxMain($"Error: {t.Exception?.Message}");
+                }
+                else
+                {
+                    updateRichTextBoxMain($"All tasks from example 3 completed successfully.");
+                }
+            });
+        }
+
+        protected TaskStopMore tsm;
+        private async void btnTasksCancellable_Click(object sender, EventArgs e)
+        {
+            await tsm.ShowAsync().ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {
