@@ -11,6 +11,12 @@ using System.Windows.Forms;
 
 namespace CSharpAppPlayground.UIClasses
 {
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // DOCUMENT THIS: Invoke vs BeginInvoke
+    // invoke can create cyclic dependencies, causing deadlocks
+    // beginInvoke is asynchronous and does not block the calling thread
+    // document why this happens and when to use each
+
     public partial class FormWithRichText : Form
     {
         /// <summary>
@@ -112,7 +118,7 @@ namespace CSharpAppPlayground.UIClasses
                 try
                 {
                     Debug.Print("InvokeRequired for updateRichTextBoxMain().");
-                    Invoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
+                    BeginInvoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -151,7 +157,7 @@ namespace CSharpAppPlayground.UIClasses
                 try
                 {
                     Debug.Print("InvokeRequired for updateLabelMain().");
-                    Invoke(new Action<string>(updateLabelMain), msg);
+                    BeginInvoke(new Action<string>(updateLabelMain), msg);
                 }
                 catch (ObjectDisposedException)
                 {

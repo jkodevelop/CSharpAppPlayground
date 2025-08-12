@@ -17,16 +17,7 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
 
         private void updateRichTextBoxMain(string txt)
         {
-            // (f as FormWithRichText).updateRichTextBoxMain(txt);
-            if (f.InvokeRequired)
-            {
-                // Invoke vs BeginInvoke
-                f.BeginInvoke(new Action(() => (f as FormWithRichText).updateRichTextBoxMain(txt)));
-            }
-            else
-            {
-                (f as FormWithRichText).updateRichTextBoxMain(txt);
-            }
+            (f as FormWithRichText).updateRichTextBoxMain(txt);
         }
 
         private void updateLabelMain(string txt)
