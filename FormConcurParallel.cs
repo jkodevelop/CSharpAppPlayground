@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,14 +18,17 @@ namespace CSharpAppPlayground
         public FormConcurParallel()
         {
             InitializeComponent();
+            pe = new ParallelExample(this);
         }
 
-        protected ParallelExample pe = new ParallelExample();
+        protected ParallelExample pe;
         private void btnParallelExample01_Click(object sender, EventArgs e)
         {
             updateRichTextBoxMain("testing richtext box");
             updateLabelMain("testing label");
+            Debug.Print("Starting Parallel Example...");
             pe.Run();
+            Debug.Print("DONE");
         }
 
     }
