@@ -118,7 +118,8 @@ namespace CSharpAppPlayground.UIClasses
                 try
                 {
                     Debug.Print("InvokeRequired for updateRichTextBoxMain().");
-                    BeginInvoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor);
+                    // Invoke() is synchronous and blocks until the UI thread processes the request, so using BeginInvoke()
+                    BeginInvoke(new Action<string, Color>(updateRichTextBoxMain), msg, lineColor); 
                 }
                 catch (ObjectDisposedException)
                 {
@@ -157,6 +158,7 @@ namespace CSharpAppPlayground.UIClasses
                 try
                 {
                     Debug.Print("InvokeRequired for updateLabelMain().");
+                    // Invoke() is synchronous and blocks until the UI thread processes the request, so using BeginInvoke()
                     BeginInvoke(new Action<string>(updateLabelMain), msg);
                 }
                 catch (ObjectDisposedException)
