@@ -31,11 +31,13 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
             // List<int> workOrderIds = Enumerable.Range(1, 10).ToList();
             int[] workerIds = Enumerable.Range(1, 5).ToArray();
 
-            Parallel.ForEach(workerIds, workId =>
+            Parallel.ForEach(workerIds, async(workId) =>
             {
                 // This lambda will be executed on multiple threads concurrently.
                 Task<string> processingResult = ProcessWorkOrder(workId);
-                Debug.Print(processingResult.ToString());
+                string resMsg = await processingResult; // + Environment.NewLine;
+                Debug.Print(resMsg);
+                updateRichTextBoxMain(resMsg);
             });
         }
 

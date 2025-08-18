@@ -36,7 +36,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             });
 
             // Wait for all tasks to complete
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            await Task.WhenAll(tasks);
         }
 
         // Keep the original synchronous method for backward compatibility
@@ -51,11 +51,15 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
         {
             // Simulate work for this specific item
             (f as FormWithRichText).updateRichTextBoxMain($"Another Example: Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(1000).ConfigureAwait(false); // Use Task.Delay instead of Thread.Sleep for non-blocking
+
             // Thread.Sleep(1000); // Simulate work, 1000 milliseconds
+
+            await Task.Delay(1000).ConfigureAwait(false); // Use Task.Delay instead of Thread.Sleep for non-blocking
             (f as FormWithRichText).updateRichTextBoxMain($"Another Example: Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
             await Task.Delay(500).ConfigureAwait(false); // Use Task.Delay instead of Thread.Sleep for non-blocking
+            
             // Thread.Sleep(500); // Simulate work, 500 milliseconds
+
             return $"Result for order {orderId}";
         }
     }

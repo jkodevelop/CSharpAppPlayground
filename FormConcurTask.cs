@@ -19,6 +19,7 @@ namespace CSharpAppPlayground
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
             ts = new TaskStoppable(this, btnCancel);
             tsm = new TaskStopMore(this, btnCancel1, btnCancel2, btnCancel3, btnCancelAll);
+            tsimp = new TaskSimple();
         }
 
         protected TaskSimpleExample tse;
@@ -105,6 +106,23 @@ namespace CSharpAppPlayground
                     updateRichTextBoxMain($"All tasks from example 3 completed successfully.");
                 }
             });
+        }
+
+        protected TaskSimple tsimp;
+        private async void btnTaskSimpleAlt_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Starting simple alt task");
+
+            // 1
+            // Task<string> result = tsimp.ProcessOrderAsync(1); // DOES NOT DELAY
+
+            // 2
+            // string result = tsimp.ProcessOrderAsync(1).Result; // DEADLOCK
+
+            // 3 
+            string result = await tsimp.ProcessOrderAsync(1); // Use await to avoid deadlock and get the result
+
+            updateRichTextBoxMain($"Simple alt task completed with result: {result}");
         }
     }
 }
