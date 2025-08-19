@@ -1,5 +1,6 @@
 using CSharpAppPlayground.Concurrency.TasksExample;
 using CSharpAppPlayground.UIClasses;
+using System.Windows.Forms.Design;
 
 namespace CSharpAppPlayground
 {
@@ -19,7 +20,7 @@ namespace CSharpAppPlayground
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
             ts = new TaskStoppable(this, btnCancel);
             tsm = new TaskStopMore(this, btnCancel1, btnCancel2, btnCancel3, btnCancelAll);
-            tsimp = new TaskSimple();
+            tbasic = new TaskBasic();
         }
 
         protected TaskSimpleExample tse;
@@ -95,34 +96,38 @@ namespace CSharpAppPlayground
         protected TaskStopMore tsm;
         private async void btnTasksCancellable_Click(object sender, EventArgs e)
         {
-            await tsm.ShowAsync().ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                {
-                    updateRichTextBoxMain($"Error: {t.Exception?.Message}");
-                }
-                else
-                {
-                    updateRichTextBoxMain($"All tasks from example 3 completed successfully.");
-                }
-            });
+            await tsm.ShowAsync();
+            updateRichTextBoxMain($"All tasks from example 3 completed successfully.");
         }
 
-        protected TaskSimple tsimp;
-        private async void btnTaskSimpleAlt_Click(object sender, EventArgs e)
+        protected TaskBasic tbasic;
+        private async void btnTaskBasic_Click(object sender, EventArgs e)
         {
             updateLabelMain("Starting simple alt task");
 
-            // 1
-            // Task<string> result = tsimp.ProcessOrderAsync(1); // DOES NOT DELAY
+            // 1 - DOES NOT DELAY
+            // Task<string> result = tsimp.ShowAsync(); // DOES NOT DELAY
 
-            // 2
-            // string result = tsimp.ProcessOrderAsync(1).Result; // DEADLOCK
+            // 2 - DEADLOCK, because ShowAsync() has an await Task.Delay() inside
+            // string result = tsimp.ShowAsync().Result; // DEADLOCK
 
-            // 3 
-            string result = await tsimp.ProcessOrderAsync(1); // Use await to avoid deadlock and get the result
+            // 3 - await all the way down
+            string result = await tbasic.ShowAsync(); // Use await to avoid deadlock and get the result
 
             updateRichTextBoxMain($"Simple alt task completed with result: {result}");
+
+            // Example of handling a faulted task
+            await tbasic.SimulateFaultedTask().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    updateRichTextBoxMain($"Error in faulted task: {t.Exception?.Message}");
+                }
+                else
+                {
+                    updateRichTextBoxMain("Faulted task completed successfully.");
+                }
+            });
         }
     }
 }

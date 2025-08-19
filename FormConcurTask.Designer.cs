@@ -47,7 +47,7 @@ namespace CSharpAppPlayground
             btnCancel2 = new Button();
             btnCancel1 = new Button();
             btnTasksCancellable = new Button();
-            btnTaskSimpleAlt = new Button();
+            btnTaskBasic = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -55,7 +55,7 @@ namespace CSharpAppPlayground
             // 
             // btnStartTaskSimple
             // 
-            btnStartTaskSimple.Location = new Point(12, 24);
+            btnStartTaskSimple.Location = new Point(14, 71);
             btnStartTaskSimple.Name = "btnStartTaskSimple";
             btnStartTaskSimple.Size = new Size(166, 29);
             btnStartTaskSimple.TabIndex = 3;
@@ -65,7 +65,7 @@ namespace CSharpAppPlayground
             // 
             // btnTaskExample01
             // 
-            btnTaskExample01.Location = new Point(12, 72);
+            btnTaskExample01.Location = new Point(14, 119);
             btnTaskExample01.Name = "btnTaskExample01";
             btnTaskExample01.Size = new Size(166, 32);
             btnTaskExample01.TabIndex = 4;
@@ -75,7 +75,7 @@ namespace CSharpAppPlayground
             // 
             // btnTaskExample02
             // 
-            btnTaskExample02.Location = new Point(12, 124);
+            btnTaskExample02.Location = new Point(14, 171);
             btnTaskExample02.Name = "btnTaskExample02";
             btnTaskExample02.Size = new Size(164, 30);
             btnTaskExample02.TabIndex = 5;
@@ -218,21 +218,21 @@ namespace CSharpAppPlayground
             btnTasksCancellable.UseVisualStyleBackColor = true;
             btnTasksCancellable.Click += btnTasksCancellable_Click;
             // 
-            // btnTaskSimpleAlt
+            // btnTaskBasic
             // 
-            btnTaskSimpleAlt.Location = new Point(12, 179);
-            btnTaskSimpleAlt.Name = "btnTaskSimpleAlt";
-            btnTaskSimpleAlt.Size = new Size(164, 28);
-            btnTaskSimpleAlt.TabIndex = 10;
-            btnTaskSimpleAlt.Text = "Start Another Simple";
-            btnTaskSimpleAlt.UseVisualStyleBackColor = true;
-            btnTaskSimpleAlt.Click += btnTaskSimpleAlt_Click;
+            btnTaskBasic.Location = new Point(14, 24);
+            btnTaskBasic.Name = "btnTaskBasic";
+            btnTaskBasic.Size = new Size(164, 28);
+            btnTaskBasic.TabIndex = 10;
+            btnTaskBasic.Text = "Start Basic Task";
+            btnTaskBasic.UseVisualStyleBackColor = true;
+            btnTaskBasic.Click += btnTaskBasic_Click;
             // 
             // FormConcurTask
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(810, 462);
-            Controls.Add(btnTaskSimpleAlt);
+            Controls.Add(btnTaskBasic);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -247,7 +247,7 @@ namespace CSharpAppPlayground
             Controls.SetChildIndex(groupBox1, 0);
             Controls.SetChildIndex(groupBox2, 0);
             Controls.SetChildIndex(groupBox3, 0);
-            Controls.SetChildIndex(btnTaskSimpleAlt, 0);
+            Controls.SetChildIndex(btnTaskBasic, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
@@ -269,6 +269,6 @@ namespace CSharpAppPlayground
         public Button btnCancel3;
         public Button btnCancel2;
         public Button btnCancel1;
-        private Button btnTaskSimpleAlt;
+        private Button btnTaskBasic;
     }
 }
