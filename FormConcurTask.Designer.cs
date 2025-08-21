@@ -3,8 +3,8 @@ namespace CSharpAppPlayground
     partial class FormConcurTask
     {
         private Button btnStartTaskSimple;
-        private Button btnTaskExample01;
-        private Button btnTaskExample02;
+        private Button btnTaskExampleA;
+        private Button btnTaskExampleB;
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -32,8 +32,8 @@ namespace CSharpAppPlayground
         private void InitializeComponent()
         {
             btnStartTaskSimple = new Button();
-            btnTaskExample01 = new Button();
-            btnTaskExample02 = new Button();
+            btnTaskExampleA = new Button();
+            btnTaskExampleB = new Button();
             groupBox1 = new GroupBox();
             btnTask2Pause = new Button();
             btnTask1Pause = new Button();
@@ -57,31 +57,31 @@ namespace CSharpAppPlayground
             // 
             btnStartTaskSimple.Location = new Point(14, 71);
             btnStartTaskSimple.Name = "btnStartTaskSimple";
-            btnStartTaskSimple.Size = new Size(166, 29);
+            btnStartTaskSimple.Size = new Size(166, 32);
             btnStartTaskSimple.TabIndex = 3;
             btnStartTaskSimple.Text = "Start Task Simple";
             btnStartTaskSimple.UseVisualStyleBackColor = true;
             btnStartTaskSimple.Click += btnStartTaskSimple_Click;
             // 
-            // btnTaskExample01
+            // btnTaskExampleA
             // 
-            btnTaskExample01.Location = new Point(14, 119);
-            btnTaskExample01.Name = "btnTaskExample01";
-            btnTaskExample01.Size = new Size(166, 32);
-            btnTaskExample01.TabIndex = 4;
-            btnTaskExample01.Text = "Task Example";
-            btnTaskExample01.UseVisualStyleBackColor = true;
-            btnTaskExample01.Click += btnTaskExample01_Click;
+            btnTaskExampleA.Location = new Point(14, 119);
+            btnTaskExampleA.Name = "btnTaskExampleA";
+            btnTaskExampleA.Size = new Size(166, 35);
+            btnTaskExampleA.TabIndex = 4;
+            btnTaskExampleA.Text = "Task Example A";
+            btnTaskExampleA.UseVisualStyleBackColor = true;
+            btnTaskExampleA.Click += btnTaskExampleA_Click;
             // 
-            // btnTaskExample02
+            // btnTaskExampleB
             // 
-            btnTaskExample02.Location = new Point(14, 171);
-            btnTaskExample02.Name = "btnTaskExample02";
-            btnTaskExample02.Size = new Size(164, 30);
-            btnTaskExample02.TabIndex = 5;
-            btnTaskExample02.Text = "Task Example 2";
-            btnTaskExample02.UseVisualStyleBackColor = true;
-            btnTaskExample02.Click += btnTaskExample02_Click;
+            btnTaskExampleB.Location = new Point(14, 171);
+            btnTaskExampleB.Name = "btnTaskExampleB";
+            btnTaskExampleB.Size = new Size(164, 30);
+            btnTaskExampleB.TabIndex = 5;
+            btnTaskExampleB.Text = "Task Example B";
+            btnTaskExampleB.UseVisualStyleBackColor = true;
+            btnTaskExampleB.Click += btnTaskExampleB_Click;
             // 
             // groupBox1
             // 
@@ -236,14 +236,14 @@ namespace CSharpAppPlayground
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(btnTaskExample02);
-            Controls.Add(btnTaskExample01);
+            Controls.Add(btnTaskExampleB);
+            Controls.Add(btnTaskExampleA);
             Controls.Add(btnStartTaskSimple);
             Name = "FormConcurTask";
             Text = "Other Concurrency Examples";
             Controls.SetChildIndex(btnStartTaskSimple, 0);
-            Controls.SetChildIndex(btnTaskExample01, 0);
-            Controls.SetChildIndex(btnTaskExample02, 0);
+            Controls.SetChildIndex(btnTaskExampleA, 0);
+            Controls.SetChildIndex(btnTaskExampleB, 0);
             Controls.SetChildIndex(groupBox1, 0);
             Controls.SetChildIndex(groupBox2, 0);
             Controls.SetChildIndex(groupBox3, 0);
