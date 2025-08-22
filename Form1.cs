@@ -1,4 +1,3 @@
-using CSharpAppPlayground;
 using CSharpAppPlayground.Classes;
 using CSharpAppPlayground.DIExample.advance;
 using CSharpAppPlayground.DIExample.median;

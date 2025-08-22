@@ -1,8 +1,6 @@
 ﻿using CSharpAppPlayground.Concurrency.ParallelExample;
 using CSharpAppPlayground.UIClasses;
-using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {

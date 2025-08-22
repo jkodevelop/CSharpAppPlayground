@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using CSharpAppPlayground.UIClasses;
-using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {

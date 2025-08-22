@@ -1,5 +1,4 @@
 ﻿using CSharpAppPlayground.UIClasses;
-using System;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground.Concurrency.ThreadsExample

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace CSharpAppPlayground.Concurrency.TasksExample
+﻿namespace CSharpAppPlayground.Concurrency.TasksExample
 {
     public class TaskBasic
     {
