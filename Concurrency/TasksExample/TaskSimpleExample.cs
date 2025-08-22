@@ -1,5 +1,4 @@
-﻿using CSharpAppPlayground.Classes;
-using CSharpAppPlayground.UIClasses;
+﻿using CSharpAppPlayground.UIClasses;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 

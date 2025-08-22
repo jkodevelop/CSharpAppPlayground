@@ -1,11 +1,5 @@
-﻿using CSharpAppPlayground.Classes;
-using CSharpAppPlayground.UIClasses;
-using System;
-using System.Collections.Generic;
+﻿using CSharpAppPlayground.UIClasses;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.Concurrency.ThreadsExample
 {
