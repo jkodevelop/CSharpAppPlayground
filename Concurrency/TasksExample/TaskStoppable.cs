@@ -9,9 +9,9 @@ using System.DirectoryServices.ActiveDirectory;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {
-    public class TaskStoppable
+    public class TaskStoppable : UIFormRichTextBoxHelper
     {
-        private Form f;
+        // private Form f;
         private Button btnStopT1;
 
         private CancellationTokenSource cts;
@@ -38,7 +38,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             // This could involve setting a cancellation token or flag that the task checks periodically
             // For example, if using CancellationToken:
             // cancellationTokenSource.Cancel();
-            (f as FormWithRichText).updateRichTextBoxMain("Task has been requested to stop.");
+            this.RichTextbox("Task has been requested to stop.");
         }
 
         public async Task ShowAsync()
@@ -54,7 +54,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                 {
                     for (int i = 1; i <= max; i++)
                     {
-                        (f as FormWithRichText).updateRichTextBoxMain($"A task is running... {i}/{max}");
+                        this.RichTextbox($"A task is running... {i}/{max}");
                         token.ThrowIfCancellationRequested();
                         // Simulate work
                         Task.Delay(2000, token).Wait();
@@ -63,7 +63,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                 Task.Run(() =>
                 {
                     token.WaitHandle.WaitOne(5000);
-                    (f as FormWithRichText).updateRichTextBoxMain($"A secret task is running... ", Color.DarkBlue);
+                    this.RichTextbox($"A secret task is running... ", Color.DarkBlue);
                     if (token.IsCancellationRequested)
                         throw new OperationCanceledException(token);
                 }, token)
@@ -72,16 +72,16 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             try
             {
                 await Task.WhenAll(tasks);
-                (f as FormWithRichText).updateRichTextBoxMain("A tasks are done.");
+                this.RichTextbox("A tasks are done.");
             }
             catch (AggregateException ae)
             {
                 foreach (var ee in ae.InnerExceptions)
                 {
                     if (ee is TaskCanceledException)
-                        (f as FormWithRichText).updateRichTextBoxMain("A task was canceled.");
+                        this.RichTextbox("A task was canceled.");
                     else
-                        (f as FormWithRichText).updateRichTextBoxMain($"Task faulted: {ee.Message}");
+                        this.RichTextbox($"Task faulted: {ee.Message}");
                 }
             }
             finally

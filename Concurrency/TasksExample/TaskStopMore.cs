@@ -9,9 +9,9 @@ using System.Xml.Linq;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {
-    public class TaskStopMore
+    public class TaskStopMore : UIFormRichTextBoxHelper
     {
-        private Form f;
+        // private Form f;
         private Button btnStopT1;
         private Button btnStopT2;
         private Button btnStopT3;
@@ -73,7 +73,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
         private void StopTask(int taskIndex)
         {
             // Logic to stop the specified task
-            (f as FormWithRichText).updateRichTextBoxMain($"Stopping Task {taskIndex+1}", colors[taskIndex]);
+            this.RichTextbox($"Stopping Task {taskIndex+1}", colors[taskIndex]);
             // Here you would implement the actual stopping logic for the task
             // For example, if you have a CancellationTokenSource for each task, you would call Cancel on it.
             linkedTokens[taskIndex].Cancel();
@@ -82,7 +82,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
         private void StopAllTasks()
         {
             // Logic to stop all tasks
-            (f as FormWithRichText).updateRichTextBoxMain("Stopping all tasks");
+            this.RichTextbox("Stopping all tasks");
             globalCTS.Cancel();
         }
 
@@ -119,7 +119,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
 
             await Task.WhenAll(wrappedTasks);
 
-            (f as FormWithRichText).updateRichTextBoxMain("All tasks complete or cancelled.");
+            this.RichTextbox("All tasks complete or cancelled.");
 
             // end of tasks, dispose all tokens
             disposeAllTokens();
@@ -132,22 +132,22 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             string name = $"Task {idx+1}";
             try
             {
-                (f as FormWithRichText).updateRichTextBoxMain($"{name} started.", colors[idx]);
+                this.RichTextbox($"{name} started.", colors[idx]);
                 for(int i = 0; i < delaySec; i++)
                 {
                     if (token.IsCancellationRequested)
                     {
-                        (f as FormWithRichText).updateRichTextBoxMain($"{name} was cancelled.", colors[idx]);
+                        this.RichTextbox($"{name} was cancelled.", colors[idx]);
                         return;
                     }
-                    (f as FormWithRichText).updateRichTextBoxMain($"{name} is running... {i}/{delaySec}", colors[idx]);
+                    this.RichTextbox($"{name} is running... {i}/{delaySec}", colors[idx]);
                     await Task.Delay(1000, token); // Simulate work
                 }
                 Console.WriteLine($"{name} completed successfully.", colors[idx]);
             }
             catch (OperationCanceledException)
             {
-                (f as FormWithRichText).updateRichTextBoxMain($"{name} was cancelled.", colors[idx]);
+                this.RichTextbox($"{name} was cancelled.", colors[idx]);
             }
             catch (Exception ex)
             {

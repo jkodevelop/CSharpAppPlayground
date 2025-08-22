@@ -12,9 +12,9 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
     // example: calling ShowAsync().Wait() or ShowAsync().GetAwaiter().GetResult() can cause a deadlock in some contexts, especially in UI applications.
     // example: using Thread.Sleep will block cause this is using UI thread, its not a parallel processing
 
-    public class TaskExampleDeadlock
+    public class TaskExampleDeadlock : UIFormRichTextBoxHelper
     {
-        private Form f;
+        // protected Form f; // inherited from UIFormRichTextBoxHelper
 
         public TaskExampleDeadlock(Form _f)
         {
@@ -30,8 +30,11 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             var tasks = workOrderIds.Select(async workId =>
             {
                 // This lambda will be executed on multiple threads concurrently.
-                string processingResult = await ProcessWorkOrder(workId).ConfigureAwait(false);
-                (f as FormWithRichText).updateRichTextBoxMain(processingResult);
+                //string processingResult = await ProcessWorkOrder(workId).ConfigureAwait(false);
+                string processingResult = await ProcessWorkOrder(workId);
+
+                this.RichTextbox(processingResult); // replacing // (f as FormWithRichText).updateRichTextBoxMain(processingResult);
+
                 return processingResult;
             });
 
@@ -50,13 +53,15 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
         protected async Task<string> ProcessWorkOrder(int orderId)
         {
             // Simulate work for this specific item
-            (f as FormWithRichText).updateRichTextBoxMain($"Another Example: Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            this.RichTextbox($"Another Example: Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+
+            // (f as FormWithRichText).updateRichTextBoxMain($"Another Example: Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
 
             // Thread.Sleep(1000); // Simulate work, 1000 milliseconds
 
-            await Task.Delay(1000).ConfigureAwait(false); // Use Task.Delay instead of Thread.Sleep for non-blocking
-            (f as FormWithRichText).updateRichTextBoxMain($"Another Example: Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(500).ConfigureAwait(false); // Use Task.Delay instead of Thread.Sleep for non-blocking
+            await Task.Delay(1000); // Use Task.Delay instead of Thread.Sleep for non-blocking
+            this.RichTextbox($"Another Example: Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            await Task.Delay(500); // Use Task.Delay instead of Thread.Sleep for non-blocking
             
             // Thread.Sleep(500); // Simulate work, 500 milliseconds
 

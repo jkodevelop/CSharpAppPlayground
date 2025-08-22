@@ -14,7 +14,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
     /// Lots of INVOKE functions because only UI thread can update UI controls.
     /// So update UI controls from other threads, we need to use Invoke or BeginInvoke.
     /// </summary>
-    public class MutiThreadsExample
+    public class MutiThreadsExample : UIFormRichTextBoxHelper
     {
         private Thread[] threads = new Thread[2];
         private ThreadStart[] threadProcess = new ThreadStart[2];
@@ -27,7 +27,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
 
         private int isRunning = 0; // Flag to control the running state of the threads
 
-        protected Form f;
+        // protected Form f; // replaced by base class
         protected Button btnThreadA, btnThreadB, btnStatus;
 
         public MutiThreadsExample(Form _f, Button _btnThreadA, Button _btnThreadB, Button _btnStatus)
@@ -55,7 +55,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             {
                 pauseEvents[threadIndex].Set(); // Resume the thread
                 isPaused[threadIndex] = false;
-                PrintMsg($"Thread {threadName} resumed.");
+                this.RichTextbox($"Thread {threadName} resumed.");
                 string btnText = (sender as Button)?.Text ?? string.Empty;
                 string newText = btnText.Replace("Resume", "Pause");
                 (sender as Button).Text = newText; // Replace 'Resume' with 'Pause'
@@ -68,7 +68,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             {
                 isPaused[threadIndex] = true;
                 pauseEvents[threadIndex].Reset(); // Pause the thread
-                PrintMsg($"Thread {threadName} paused.");
+                this.RichTextbox($"Thread {threadName} paused.");
                 string btnText = (sender as Button)?.Text ?? string.Empty;
                 string newText = btnText.Replace("Pause", "Resume");
                 (sender as Button).Text = newText; // Replace 'Resume' with 'Pause'
@@ -86,10 +86,12 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
                 threadStatusSummary += (threads[1].IsAlive ? "Thread B is alive." : "Thread B is done.");
             }
             string summary = $"Status: {threadStatusSummary}";
-            Debug.Print(summary + Environment.NewLine);
-            UpdateStatusLabel(summary);
+            
+            this.Label(summary, true);
         }
 
+        // replaced: UIFormRichTextBoxHelper
+        /*
         protected void UpdateStatusLabel(string msg)
         {
             Debug.Print(msg);
@@ -100,6 +102,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             Debug.Print(msg);
             (f as FormWithRichText).updateRichTextBoxMain(msg, c);
         }
+        */
 
         private void EnableButtons(Button btn, bool enable)
         {
@@ -121,7 +124,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
                 btn.Enabled = enable;
             }));
             if (!enable)
-                UpdateStatusLabel("Status: ");
+                this.Label("Status: ");
         }
 
         protected void ThreadMethodOne()
@@ -134,10 +137,10 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
                 pauseEvents[0].WaitOne(); // Wait until the thread is not paused
                 counters[0]++;
                 string msg = $"Thread A: id {Thread.CurrentThread.ManagedThreadId} - Count: {counters[0]}/{maxCount}";
-                PrintMsg(msg, Color.Red);
+                this.RichTextbox(msg, Color.Red);
                 Thread.Sleep(500); // Simulate work
             }
-            PrintMsg("Thread A finished.", Color.Red);
+            this.RichTextbox("Thread A finished.", Color.Red);
             counters[0] = 0; // Reset counter for next run
             isRunning--;
             EnableButtons(btnThreadA, false);
@@ -154,10 +157,10 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
                 pauseEvents[1].WaitOne(); // Wait until the thread is not paused
                 counters[1]++;
                 string msg = $"Thread B: id {Thread.CurrentThread.ManagedThreadId} - Count: {counters[1]}/{maxCount}";
-                PrintMsg(msg, Color.Green);
+                this.RichTextbox(msg, Color.Green);
                 Thread.Sleep(500); // Simulate work
             }
-            PrintMsg("Thread B finished.", Color.Green);
+            this.RichTextbox("Thread B finished.", Color.Green);
             counters[1] = 0; // Reset counter for next run
             isRunning--;
             EnableButtons(btnThreadB, false);
@@ -166,13 +169,13 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
 
         public void Run()
         {
-            Debug.Print("Multithreading other example started.");
+            this.Label("Multithreading other example started.", true);
             if(isRunning > 0)
             {
                 Debug.Print("Threads Examples are already running.");
                 return;
             }
-            PrintMsg("starting ...");
+            this.RichTextbox("starting ...");
             if (threadProcess[0] == null)
                 threadProcess[0] = new ThreadStart(ThreadMethodOne);
             if (threadProcess[1] == null)

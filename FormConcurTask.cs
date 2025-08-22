@@ -56,23 +56,27 @@ namespace CSharpAppPlayground
         }
 
         protected TaskSimpleExample tse;
-        private void btnStartTaskSimple_Click(object sender, EventArgs e)
+        private async void btnStartTaskSimple_Click(object sender, EventArgs e)
         {
-            tse.ShowAsync();
+            await tse.ShowAsync();
+            updateLabelMain("Simple Task Example ended");
         }
 
         protected TaskExample te;
         private async void btnTaskExampleA_Click(object sender, EventArgs e)
         {
+            // Pure parallel task example
             await te.ShowAsync();
-            updateRichTextBoxMain($"All tasks from example 1 completed successfully.");
+            updateRichTextBoxMain($"All tasks from example A completed successfully.");
         }
 
         protected TaskExampleDeadlock ted;
         private async void btnTaskExampleB_Click(object sender, EventArgs e)
         {
-            await ted.ShowAsync();
-            updateRichTextBoxMain($"All tasks from example 2 completed successfully.");
+            // Task example with deadlock
+            ted.Show();
+            // await ted.ShowAsync();
+            updateRichTextBoxMain($"All tasks from example B completed successfully.");
         }
 
         protected TaskStoppable ts;

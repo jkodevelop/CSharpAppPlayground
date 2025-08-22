@@ -16,12 +16,12 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
     // https://www.codeproject.com/Tips/5267935/Use-CancellationToken-not-Thread-Sleep
     // https://josipmisko.com/posts/c-sharp-stop-thread
     // CancellationTokenSource tokenSource = new(); // Create a token source. shorthand: new CancellationTokenSource();
-    public class MultiThreadsStartStop
+    public class MultiThreadsStartStop : UIFormRichTextBoxHelper
     {
         CancellationTokenSource tokenSource;
         bool threadStartStopRunning = false;
 
-        protected Form f;
+        // protected Form f;
 
         public MultiThreadsStartStop(Form _f)
         {
@@ -43,7 +43,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             tokenSource.Token.Register(() =>
             {
                 string msg = "Cancellation was requested. Performing cleanup...";
-                (f as FormWithRichText).updateRichTextBoxMain(msg);
+                this.RichTextbox(msg);
                 threadStartStopRunning = false;
             });
         }
@@ -54,7 +54,7 @@ namespace CSharpAppPlayground.Concurrency.ThreadsExample
             for (int i = 1; i <= limit && !token.IsCancellationRequested; i++)
             {
                 string msg = $"Start/Stop Example: Thread {Thread.CurrentThread.ManagedThreadId} - Count: {i}/{limit}";
-                (f as FormWithRichText).updateRichTextBoxMain(msg);
+                this.RichTextbox(msg);
                 bool cancellationTriggered = token.WaitHandle.WaitOne(500); // Wait for 500 milliseconds or until cancellation is requested
             }
             if (!token.IsCancellationRequested)
