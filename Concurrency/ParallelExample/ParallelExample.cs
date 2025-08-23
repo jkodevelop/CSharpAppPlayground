@@ -6,23 +6,13 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
     /// <summary>
     /// This example uses Parallel to demonstrate parallel processing in C#.
     /// </summary>
-    public class ParallelExample
+    public class ParallelExample : UIFormRichTextBoxHelper
     {
-        private Form f;
+        // private Form f;
 
         public ParallelExample(Form _f)
         {
             f = _f;
-        }
-
-        private void updateRichTextBoxMain(string txt)
-        {
-            (f as FormWithRichText).updateRichTextBoxMain(txt);
-        }
-
-        private void updateLabelMain(string txt)
-        {
-            (f as FormWithRichText).updateLabelMain(txt);
         }
 
         public async void Run()
@@ -37,21 +27,21 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                 Task<string> processingResult = ProcessWorkOrder(workId);
                 string resMsg = await processingResult; // + Environment.NewLine;
                 Debug.Print(resMsg);
-                updateRichTextBoxMain(resMsg);
+                this.RichTextbox(resMsg);
             });
         }
 
         protected async Task<string> ProcessWorkOrder(int orderId)
         {
             // Simulate work for this specific item
-            //updateRichTextBoxMain($"Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            //this.RichTextbox($"Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
             // Thread.Sleep(100);
             //await Task.Delay(1000); // Simulate async work
-            
+
             // Thread.Sleep(50);
             //await Task.Delay(500); // Simulate async work
-            updateRichTextBoxMain($"Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
-            await Task.Delay(500); // Simulate async work
+            this.RichTextbox($"Still Processing order {orderId} on thread {Environment.CurrentManagedThreadId}...");
+            await Task.Delay(1000); // Simulate async work
 
             Debug.Print($"Result for order {orderId}");
             return $"Result for order {orderId}";

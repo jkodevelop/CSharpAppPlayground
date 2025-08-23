@@ -10,6 +10,8 @@ namespace CSharpAppPlayground
         {
             InitializeComponent();
             pe = new ParallelExample(this);
+            ppn = new ParallelPrimeNumbers(this);
+            ppnCompare = new ParallelPrimeNumbers(this);
         }
 
         protected ParallelExample pe;
@@ -22,5 +24,21 @@ namespace CSharpAppPlayground
             Debug.Print("DONE");
         }
 
+        protected ParallelPrimeNumbers ppn;
+        private void btnParallelPrimeNumbers_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Using Parallel to get prime numbers...");
+            ppn.Run();
+            updateLabelMain("DONE");
+        }
+
+        protected ParallelPrimeNumbers ppnCompare;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("NOT! using Parallel to get prime numbers...");
+            ppnCompare.Compare();
+            updateLabelMain("DONE");
+        }
     }
 }

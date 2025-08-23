@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace CSharpAppPlayground.Classes
+﻿namespace CSharpAppPlayground.Classes
 {
     public class AsyncManualResetEvent
     {

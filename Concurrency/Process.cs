@@ -1,7 +1,6 @@
-﻿
-
-namespace CSharpAppPlayground.Concurrency
+﻿namespace CSharpAppPlayground.Concurrency
 {
+    // NOT IN USE
     public class Process
     {
         public void Run()
