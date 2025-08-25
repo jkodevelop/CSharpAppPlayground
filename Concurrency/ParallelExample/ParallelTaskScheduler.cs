@@ -7,6 +7,8 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
 {
     public class ParallelTaskScheduler : UIFormRichTextBoxHelper
     {
+        private List<string> items = new List<string> { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+
         public ParallelTaskScheduler(Form _f)
         {
             f = _f;
@@ -22,9 +24,8 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                 // Simulate some work
                 Thread.Sleep(1000);
 
-                // This will now execute on the UI thread
                 string itemStr = $"{item} - Processed on UI Thread: {Thread.CurrentThread.ManagedThreadId}{Environment.NewLine}";
-                // RACE Conidition here if using a regular string
+                //---- RACE Conidition here if using a regular string
                 // result += itemStr;
 
                 results.Add(itemStr);
@@ -33,25 +34,54 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
             return result;
         }
 
-        [Time("Parallel TaskScheduler Run()")]
+        [Time("Parallel Run()")]
         public void Run()
         {
-            List<string> items = new List<string> { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-
-            // 1. Get the UI thread's TaskScheduler
-            //TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            //ParallelOptions parallelOptions = new ParallelOptions { TaskScheduler = uiScheduler };
-
-            // 2. no TaskScheduler specified, will use ThreadPool threads
+            // no TaskScheduler specified, will use ThreadPool threads
+            // using additional threads from the pool so it should finish in about 1 second
             ParallelOptions parallelOptions = new ParallelOptions();
-
-            // 3. Custom TaskScheduler (not recommended for UI updates)
-            // SynchronizationContext sc = new SynchronizationContext();
-
             string result = Process(items, parallelOptions); 
+            Label("Processing complete.");
+            RichTextbox(result);
+        }
+
+        // This will run the parallel tasks on the UI thread (thread 1)
+        [Time("Parallel RunWithTaskScheduler()")]
+        public void RunWithTaskScheduler()
+        {
+            // Get the UI thread's TaskScheduler
+            // since its queuing to the UI thread, it will take about 5 seconds to complete (5items x 1second)
+            TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            ParallelOptions parallelOptions = new ParallelOptions { TaskScheduler = uiScheduler };
+            string result = Process(items, parallelOptions);
+            Label("Processing complete.");
+            RichTextbox(result);
+        }
+
+        private void ProcessOnSpecifiedThread()
+        {
+            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+
+            // Get a TaskScheduler associated with this SynchronizationContext
+            //TaskScheduler customScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            //ParallelOptions parallelOptions = new ParallelOptions { TaskScheduler = customScheduler };
+
+            ParallelOptions parallelOptions = new ParallelOptions();
+            string result = Process(items, parallelOptions);
+            Debug.Print(result);
 
             Label("Processing complete.");
             RichTextbox(result);
+        }
+
+        [Time("Parallel RunOnSpecifiedThread()")]
+        public void RunOnSpecifiedThread()
+        {
+            ThreadStart tprocess = new ThreadStart(ProcessOnSpecifiedThread);
+            Thread thread = new Thread(tprocess);
+
+            thread.IsBackground = true;
+            thread.Start();
         }
     }
 }

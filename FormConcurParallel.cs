@@ -52,7 +52,9 @@ namespace CSharpAppPlayground
         private void btnParallelTaskScheduler_Click(object sender, EventArgs e)
         {
             updateLabelMain("Using Parallel with Task Scheduler...");
-            pts.Run();
+            // pts.Run();
+            // pts.RunWithTaskScheduler();
+            pts.RunOnSpecifiedThread();
             updateLabelMain("DONE");
         }
     }
