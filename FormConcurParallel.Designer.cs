@@ -30,7 +30,9 @@
         {
             btnParallelExample01 = new Button();
             btnParallelPrimeNumbers = new Button();
-            button1 = new Button();
+            btnParallelPrimeNumCompare = new Button();
+            btnParallelInvoke = new Button();
+            btnParallelTaskScheduler = new Button();
             SuspendLayout();
             // 
             // btnParallelExample01
@@ -53,29 +55,53 @@
             btnParallelPrimeNumbers.UseVisualStyleBackColor = true;
             btnParallelPrimeNumbers.Click += btnParallelPrimeNumbers_Click;
             // 
-            // button1
+            // btnParallelPrimeNumCompare
             // 
-            button1.Location = new Point(25, 138);
-            button1.Name = "button1";
-            button1.Size = new Size(170, 35);
-            button1.TabIndex = 4;
-            button1.Text = "Prime Numbers (linear)";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnParallelPrimeNumCompare.Location = new Point(25, 138);
+            btnParallelPrimeNumCompare.Name = "btnParallelPrimeNumCompare";
+            btnParallelPrimeNumCompare.Size = new Size(170, 35);
+            btnParallelPrimeNumCompare.TabIndex = 4;
+            btnParallelPrimeNumCompare.Text = "Prime Numbers (linear)";
+            btnParallelPrimeNumCompare.UseVisualStyleBackColor = true;
+            btnParallelPrimeNumCompare.Click += btnParallelPrimeNumCompare_Click;
+            // 
+            // btnParallelInvoke
+            // 
+            btnParallelInvoke.Location = new Point(25, 195);
+            btnParallelInvoke.Name = "btnParallelInvoke";
+            btnParallelInvoke.Size = new Size(167, 34);
+            btnParallelInvoke.TabIndex = 5;
+            btnParallelInvoke.Text = "Parallel Invoke";
+            btnParallelInvoke.UseVisualStyleBackColor = true;
+            btnParallelInvoke.Click += btnParallelInvoke_Click;
+            // 
+            // btnParallelTaskScheduler
+            // 
+            btnParallelTaskScheduler.Location = new Point(25, 251);
+            btnParallelTaskScheduler.Name = "btnParallelTaskScheduler";
+            btnParallelTaskScheduler.Size = new Size(167, 34);
+            btnParallelTaskScheduler.TabIndex = 6;
+            btnParallelTaskScheduler.Text = "TaskScheduler ";
+            btnParallelTaskScheduler.UseVisualStyleBackColor = true;
+            btnParallelTaskScheduler.Click += btnParallelTaskScheduler_Click;
             // 
             // FormConcurParallel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button1);
+            Controls.Add(btnParallelTaskScheduler);
+            Controls.Add(btnParallelInvoke);
+            Controls.Add(btnParallelPrimeNumCompare);
             Controls.Add(btnParallelPrimeNumbers);
             Controls.Add(btnParallelExample01);
             Name = "FormConcurParallel";
             Text = "FormConcurParallel";
             Controls.SetChildIndex(btnParallelExample01, 0);
             Controls.SetChildIndex(btnParallelPrimeNumbers, 0);
-            Controls.SetChildIndex(button1, 0);
+            Controls.SetChildIndex(btnParallelPrimeNumCompare, 0);
+            Controls.SetChildIndex(btnParallelInvoke, 0);
+            Controls.SetChildIndex(btnParallelTaskScheduler, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -84,6 +110,8 @@
 
         private Button btnParallelExample01;
         private Button btnParallelPrimeNumbers;
-        private Button button1;
+        private Button btnParallelPrimeNumCompare;
+        private Button btnParallelInvoke;
+        private Button btnParallelTaskScheduler;
     }
 }

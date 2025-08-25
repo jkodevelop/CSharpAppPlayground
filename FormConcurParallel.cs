@@ -12,6 +12,8 @@ namespace CSharpAppPlayground
             pe = new ParallelExample(this);
             ppn = new ParallelPrimeNumbers(this);
             ppnCompare = new ParallelPrimeNumbers(this);
+            pvi = new ParallelInvoke(this);
+            pts = new ParallelTaskScheduler(this);
         }
 
         protected ParallelExample pe;
@@ -33,11 +35,24 @@ namespace CSharpAppPlayground
         }
 
         protected ParallelPrimeNumbers ppnCompare;
-
-        private void button1_Click(object sender, EventArgs e)
+        private void btnParallelPrimeNumCompare_Click(object sender, EventArgs e)
         {
             updateLabelMain("NOT! using Parallel to get prime numbers...");
             ppnCompare.Compare();
+            updateLabelMain("DONE");
+        }
+
+        protected ParallelInvoke pvi;
+        private void btnParallelInvoke_Click(object sender, EventArgs e)
+        {
+            pvi.Run();
+        }
+
+        protected ParallelTaskScheduler pts;
+        private void btnParallelTaskScheduler_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Using Parallel with Task Scheduler...");
+            pts.Run();
             updateLabelMain("DONE");
         }
     }
