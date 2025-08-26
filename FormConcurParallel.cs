@@ -14,6 +14,7 @@ namespace CSharpAppPlayground
             ppnCompare = new ParallelPrimeNumbers(this);
             pvi = new ParallelInvoke(this);
             pts = new ParallelTaskScheduler(this);
+            pl = new ParallelLimit(this);
         }
 
         protected ParallelExample pe;
@@ -51,11 +52,37 @@ namespace CSharpAppPlayground
         protected ParallelTaskScheduler pts;
         private void btnParallelTaskScheduler_Click(object sender, EventArgs e)
         {
-            updateLabelMain("Using Parallel with Task Scheduler...");
-            // pts.Run();
-            // pts.RunWithTaskScheduler();
-            pts.RunOnSpecifiedThread();
+            updateLabelMain("Using Parallel with not using Task Scheduler...");
+            pts.Run();
             updateLabelMain("DONE");
+        }
+
+        private void btnParallelTaskSchedulerA_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Using Parallel with Task Scheduler...");
+            pts.RunWithTaskScheduler();
+            updateLabelMain("DONE");
+        }
+
+        private void btnParallelTaskSchedulerB_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Using Parallel with a Separate Thread + Task Scheduler...");
+            pts.RunOnSpecifiedThread(true);
+            updateLabelMain("DONE");
+        }
+
+        private void btnParallelTaskSchedulerC_Click(object sender, EventArgs e)
+        {
+            updateLabelMain("Using Parallel with a Separate Thread without Task Scheduler...");
+            pts.RunOnSpecifiedThread(false);
+            updateLabelMain("DONE");
+        }
+
+
+        protected ParallelLimit pl;
+        private void btnParallelLimit_Click(object sender, EventArgs e)
+        {
+            pl.Run();
         }
     }
 }
