@@ -38,12 +38,17 @@
             btnParallelTaskSchedulerC = new Button();
             btnParallelTaskSchedulerA = new Button();
             btnParallelLimit = new Button();
+            groupBox2 = new GroupBox();
+            btnParallelStop = new Button();
+            btnParallelPause = new Button();
+            btnParallelRun = new Button();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // btnParallelExample01
             // 
-            btnParallelExample01.Location = new Point(25, 30);
+            btnParallelExample01.Location = new Point(12, 12);
             btnParallelExample01.Name = "btnParallelExample01";
             btnParallelExample01.Size = new Size(170, 33);
             btnParallelExample01.TabIndex = 0;
@@ -53,7 +58,7 @@
             // 
             // btnParallelPrimeNumbers
             // 
-            btnParallelPrimeNumbers.Location = new Point(25, 80);
+            btnParallelPrimeNumbers.Location = new Point(12, 62);
             btnParallelPrimeNumbers.Name = "btnParallelPrimeNumbers";
             btnParallelPrimeNumbers.Size = new Size(170, 34);
             btnParallelPrimeNumbers.TabIndex = 3;
@@ -63,7 +68,7 @@
             // 
             // btnParallelPrimeNumCompare
             // 
-            btnParallelPrimeNumCompare.Location = new Point(25, 132);
+            btnParallelPrimeNumCompare.Location = new Point(12, 114);
             btnParallelPrimeNumCompare.Name = "btnParallelPrimeNumCompare";
             btnParallelPrimeNumCompare.Size = new Size(170, 35);
             btnParallelPrimeNumCompare.TabIndex = 4;
@@ -73,7 +78,7 @@
             // 
             // btnParallelInvoke
             // 
-            btnParallelInvoke.Location = new Point(25, 185);
+            btnParallelInvoke.Location = new Point(12, 167);
             btnParallelInvoke.Name = "btnParallelInvoke";
             btnParallelInvoke.Size = new Size(167, 34);
             btnParallelInvoke.TabIndex = 5;
@@ -97,7 +102,7 @@
             groupBox1.Controls.Add(btnParallelTaskSchedulerC);
             groupBox1.Controls.Add(btnParallelTaskSchedulerA);
             groupBox1.Controls.Add(btnParallelTaskScheduler);
-            groupBox1.Location = new Point(25, 234);
+            groupBox1.Location = new Point(188, 12);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(167, 204);
             groupBox1.TabIndex = 7;
@@ -136,19 +141,62 @@
             // 
             // btnParallelLimit
             // 
-            btnParallelLimit.Location = new Point(213, 30);
+            btnParallelLimit.Location = new Point(12, 223);
             btnParallelLimit.Name = "btnParallelLimit";
-            btnParallelLimit.Size = new Size(155, 33);
+            btnParallelLimit.Size = new Size(167, 33);
             btnParallelLimit.TabIndex = 8;
             btnParallelLimit.Text = "Limited Concurrency";
             btnParallelLimit.UseVisualStyleBackColor = true;
             btnParallelLimit.Click += btnParallelLimit_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(btnParallelStop);
+            groupBox2.Controls.Add(btnParallelPause);
+            groupBox2.Controls.Add(btnParallelRun);
+            groupBox2.Location = new Point(188, 223);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(167, 149);
+            groupBox2.TabIndex = 9;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Pause/Stop Example";
+            // 
+            // btnParallelStop
+            // 
+            btnParallelStop.Enabled = false;
+            btnParallelStop.Location = new Point(6, 109);
+            btnParallelStop.Name = "btnParallelStop";
+            btnParallelStop.Size = new Size(155, 35);
+            btnParallelStop.TabIndex = 2;
+            btnParallelStop.Text = "Stop";
+            btnParallelStop.UseVisualStyleBackColor = true;
+            // 
+            // btnParallelPause
+            // 
+            btnParallelPause.Enabled = false;
+            btnParallelPause.Location = new Point(6, 64);
+            btnParallelPause.Name = "btnParallelPause";
+            btnParallelPause.Size = new Size(155, 30);
+            btnParallelPause.TabIndex = 1;
+            btnParallelPause.Text = "Pause";
+            btnParallelPause.UseVisualStyleBackColor = true;
+            // 
+            // btnParallelRun
+            // 
+            btnParallelRun.Location = new Point(6, 22);
+            btnParallelRun.Name = "btnParallelRun";
+            btnParallelRun.Size = new Size(155, 33);
+            btnParallelRun.TabIndex = 0;
+            btnParallelRun.Text = "Run";
+            btnParallelRun.UseVisualStyleBackColor = true;
+            btnParallelRun.Click += btnParallelRun_Click;
             // 
             // FormConcurParallel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(groupBox2);
             Controls.Add(btnParallelLimit);
             Controls.Add(groupBox1);
             Controls.Add(btnParallelInvoke);
@@ -163,7 +211,9 @@
             Controls.SetChildIndex(btnParallelInvoke, 0);
             Controls.SetChildIndex(groupBox1, 0);
             Controls.SetChildIndex(btnParallelLimit, 0);
+            Controls.SetChildIndex(groupBox2, 0);
             groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -180,5 +230,9 @@
         private Button btnParallelTaskSchedulerB;
         private Button btnParallelTaskSchedulerC;
         private Button btnParallelLimit;
+        private GroupBox groupBox2;
+        private Button btnParallelStop;
+        private Button btnParallelPause;
+        private Button btnParallelRun;
     }
 }

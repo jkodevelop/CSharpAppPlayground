@@ -15,6 +15,7 @@ namespace CSharpAppPlayground
             pvi = new ParallelInvoke(this);
             pts = new ParallelTaskScheduler(this);
             pl = new ParallelLimit(this);
+            pwp = new ParallelWithPause(this, btnParallelPause, btnParallelStop);
         }
 
         protected ParallelExample pe;
@@ -83,6 +84,12 @@ namespace CSharpAppPlayground
         private void btnParallelLimit_Click(object sender, EventArgs e)
         {
             pl.Run();
+        }
+
+        protected ParallelWithPause pwp;
+        private void btnParallelRun_Click(object sender, EventArgs e)
+        {
+            pwp.Run();
         }
     }
 }
