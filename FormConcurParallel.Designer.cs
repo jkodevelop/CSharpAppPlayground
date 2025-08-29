@@ -42,8 +42,13 @@
             btnParallelStop = new Button();
             btnParallelPause = new Button();
             btnParallelRun = new Button();
+            numParallelLimit = new NumericUpDown();
+            btnParallelControlLimit = new Button();
+            groupBox3 = new GroupBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numParallelLimit).BeginInit();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // btnParallelExample01
@@ -191,11 +196,40 @@
             btnParallelRun.UseVisualStyleBackColor = true;
             btnParallelRun.Click += btnParallelRun_Click;
             // 
+            // numParallelLimit
+            // 
+            numParallelLimit.Location = new Point(6, 62);
+            numParallelLimit.Name = "numParallelLimit";
+            numParallelLimit.Size = new Size(155, 23);
+            numParallelLimit.TabIndex = 10;
+            // 
+            // btnParallelControlLimit
+            // 
+            btnParallelControlLimit.Location = new Point(6, 22);
+            btnParallelControlLimit.Name = "btnParallelControlLimit";
+            btnParallelControlLimit.Size = new Size(155, 30);
+            btnParallelControlLimit.TabIndex = 11;
+            btnParallelControlLimit.Text = "Controled Limit Run";
+            btnParallelControlLimit.UseVisualStyleBackColor = true;
+            btnParallelControlLimit.Click += btnParallelControlLimit_Click;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(btnParallelControlLimit);
+            groupBox3.Controls.Add(numParallelLimit);
+            groupBox3.Location = new Point(12, 278);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(167, 94);
+            groupBox3.TabIndex = 12;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "SemaphoreSlim  Example";
+            // 
             // FormConcurParallel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(btnParallelLimit);
             Controls.Add(groupBox1);
@@ -212,8 +246,11 @@
             Controls.SetChildIndex(groupBox1, 0);
             Controls.SetChildIndex(btnParallelLimit, 0);
             Controls.SetChildIndex(groupBox2, 0);
+            Controls.SetChildIndex(groupBox3, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numParallelLimit).EndInit();
+            groupBox3.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -234,5 +271,8 @@
         private Button btnParallelStop;
         private Button btnParallelPause;
         private Button btnParallelRun;
+        private NumericUpDown numParallelLimit;
+        private Button btnParallelControlLimit;
+        private GroupBox groupBox3;
     }
 }

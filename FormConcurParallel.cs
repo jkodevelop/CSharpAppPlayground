@@ -91,5 +91,10 @@ namespace CSharpAppPlayground
         {
             pwp.Run();
         }
+
+        private void btnParallelControlLimit_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
