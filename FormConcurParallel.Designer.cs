@@ -42,12 +42,12 @@
             btnParallelStop = new Button();
             btnParallelPause = new Button();
             btnParallelRun = new Button();
-            numParallelLimit = new NumericUpDown();
-            btnParallelControlLimit = new Button();
             groupBox3 = new GroupBox();
+            btnParallelStopAlt = new Button();
+            btnParallelPauseAlt = new Button();
+            btnParallelRunAlt = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numParallelLimit).BeginInit();
             groupBox3.SuspendLayout();
             SuspendLayout();
             // 
@@ -159,7 +159,7 @@
             groupBox2.Controls.Add(btnParallelStop);
             groupBox2.Controls.Add(btnParallelPause);
             groupBox2.Controls.Add(btnParallelRun);
-            groupBox2.Location = new Point(188, 223);
+            groupBox2.Location = new Point(361, 176);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(167, 149);
             groupBox2.TabIndex = 9;
@@ -196,33 +196,47 @@
             btnParallelRun.UseVisualStyleBackColor = true;
             btnParallelRun.Click += btnParallelRun_Click;
             // 
-            // numParallelLimit
-            // 
-            numParallelLimit.Location = new Point(6, 62);
-            numParallelLimit.Name = "numParallelLimit";
-            numParallelLimit.Size = new Size(155, 23);
-            numParallelLimit.TabIndex = 10;
-            // 
-            // btnParallelControlLimit
-            // 
-            btnParallelControlLimit.Location = new Point(6, 22);
-            btnParallelControlLimit.Name = "btnParallelControlLimit";
-            btnParallelControlLimit.Size = new Size(155, 30);
-            btnParallelControlLimit.TabIndex = 11;
-            btnParallelControlLimit.Text = "Controled Limit Run";
-            btnParallelControlLimit.UseVisualStyleBackColor = true;
-            btnParallelControlLimit.Click += btnParallelControlLimit_Click;
-            // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(btnParallelControlLimit);
-            groupBox3.Controls.Add(numParallelLimit);
-            groupBox3.Location = new Point(12, 278);
+            groupBox3.Controls.Add(btnParallelStopAlt);
+            groupBox3.Controls.Add(btnParallelPauseAlt);
+            groupBox3.Controls.Add(btnParallelRunAlt);
+            groupBox3.Location = new Point(361, 12);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(167, 94);
-            groupBox3.TabIndex = 12;
+            groupBox3.Size = new Size(167, 149);
+            groupBox3.TabIndex = 10;
             groupBox3.TabStop = false;
-            groupBox3.Text = "SemaphoreSlim  Example";
+            groupBox3.Text = "Pause/Stop Alt Example";
+            // 
+            // btnParallelStopAlt
+            // 
+            btnParallelStopAlt.Enabled = false;
+            btnParallelStopAlt.Location = new Point(6, 109);
+            btnParallelStopAlt.Name = "btnParallelStopAlt";
+            btnParallelStopAlt.Size = new Size(155, 35);
+            btnParallelStopAlt.TabIndex = 2;
+            btnParallelStopAlt.Text = "Stop";
+            btnParallelStopAlt.UseVisualStyleBackColor = true;
+            // 
+            // btnParallelPauseAlt
+            // 
+            btnParallelPauseAlt.Enabled = false;
+            btnParallelPauseAlt.Location = new Point(6, 64);
+            btnParallelPauseAlt.Name = "btnParallelPauseAlt";
+            btnParallelPauseAlt.Size = new Size(155, 30);
+            btnParallelPauseAlt.TabIndex = 1;
+            btnParallelPauseAlt.Text = "Pause";
+            btnParallelPauseAlt.UseVisualStyleBackColor = true;
+            // 
+            // btnParallelRunAlt
+            // 
+            btnParallelRunAlt.Location = new Point(6, 22);
+            btnParallelRunAlt.Name = "btnParallelRunAlt";
+            btnParallelRunAlt.Size = new Size(155, 33);
+            btnParallelRunAlt.TabIndex = 0;
+            btnParallelRunAlt.Text = "Run";
+            btnParallelRunAlt.UseVisualStyleBackColor = true;
+            btnParallelRunAlt.Click += btnParallelRunAlt_Click;
             // 
             // FormConcurParallel
             // 
@@ -249,7 +263,6 @@
             Controls.SetChildIndex(groupBox3, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)numParallelLimit).EndInit();
             groupBox3.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -271,8 +284,9 @@
         private Button btnParallelStop;
         private Button btnParallelPause;
         private Button btnParallelRun;
-        private NumericUpDown numParallelLimit;
-        private Button btnParallelControlLimit;
         private GroupBox groupBox3;
+        private Button btnParallelStopAlt;
+        private Button btnParallelPauseAlt;
+        private Button btnParallelRunAlt;
     }
 }
