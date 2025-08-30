@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace CSharpAppPlayground.Classes
@@ -58,6 +59,28 @@ namespace CSharpAppPlayground.Classes
         {
             A.Enabled = !A.Enabled;
             B.Enabled = !B.Enabled;
+        }
+
+        public static void ToggleButtonsPauseAndStop(bool reset, Form form, 
+            Button btnPause, Button btnStop)
+        {
+            if (form.InvokeRequired)
+            {
+                form.BeginInvoke(() =>
+                {
+                    btnPause.Enabled = !btnPause.Enabled;
+                    btnStop.Enabled = !btnStop.Enabled;
+                    if (reset)
+                    {
+                        btnPause.Text = "Pause";
+                    }
+                });
+            }
+            else
+            {
+                btnPause.Enabled = !btnPause.Enabled;
+                btnStop.Enabled = !btnStop.Enabled;
+            }
         }
     }
 }

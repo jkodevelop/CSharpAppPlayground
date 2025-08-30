@@ -1,7 +1,8 @@
+using CSharpAppPlayground.Classes;
 using CSharpAppPlayground.UIClasses;
+using MethodTimer;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using MethodTimer;
 
 namespace CSharpAppPlayground.Concurrency.ParallelExample
 {
@@ -30,23 +31,7 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
 
         public void ToggleButtons(bool reset)
         {
-            if (f.InvokeRequired)
-            {
-                f.BeginInvoke(() =>
-                {
-                    btnPause.Enabled = !btnPause.Enabled;
-                    btnStop.Enabled = !btnStop.Enabled;
-                    if (reset)
-                    {
-                        btnPause.Text = "Pause";
-                    }
-                });
-            }
-            else
-            {
-                btnPause.Enabled = !btnPause.Enabled;
-                btnStop.Enabled = !btnStop.Enabled;
-            }    
+            FormHelpers.ToggleButtonsPauseAndStop(reset, f, btnPause, btnStop);
         }
 
         public void Run()
