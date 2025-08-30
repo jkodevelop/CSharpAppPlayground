@@ -111,25 +111,6 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                     ToggleButtons(true);
                 }
             });
-
-            // Control loop
-            //while (true)
-            //{
-            //    Debug.Print("\nCommands: p = pause, r = resume, s = stop");
-                
-            //    pauser.Reset();
-            //    Debug.Print("Paused...");
-                
-            //    pauser.Set();
-            //    Debug.Print("Resumed...");
-                
-            //    cancelToken.Cancel();
-            //    Debug.Print("Stopping...");
-
-            //    break;
-            //}
-            //Debug.Print("Main finished.");
-            
         }
 
         protected void PausePressed(object sender)

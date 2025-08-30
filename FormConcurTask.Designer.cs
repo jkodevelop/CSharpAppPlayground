@@ -48,6 +48,7 @@ namespace CSharpAppPlayground
             btnCancel1 = new Button();
             btnTasksCancellable = new Button();
             btnTaskBasic = new Button();
+            btnTaskRampUp = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -228,10 +229,21 @@ namespace CSharpAppPlayground
             btnTaskBasic.UseVisualStyleBackColor = true;
             btnTaskBasic.Click += btnTaskBasic_Click;
             // 
+            // btnTaskRampUp
+            // 
+            btnTaskRampUp.Location = new Point(14, 225);
+            btnTaskRampUp.Name = "btnTaskRampUp";
+            btnTaskRampUp.Size = new Size(164, 32);
+            btnTaskRampUp.TabIndex = 11;
+            btnTaskRampUp.Text = "Tasks Ramp Up";
+            btnTaskRampUp.UseVisualStyleBackColor = true;
+            btnTaskRampUp.Click += btnTaskRampUp_Click;
+            // 
             // FormConcurTask
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(810, 462);
+            Controls.Add(btnTaskRampUp);
             Controls.Add(btnTaskBasic);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -248,6 +260,7 @@ namespace CSharpAppPlayground
             Controls.SetChildIndex(groupBox2, 0);
             Controls.SetChildIndex(groupBox3, 0);
             Controls.SetChildIndex(btnTaskBasic, 0);
+            Controls.SetChildIndex(btnTaskRampUp, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
@@ -270,5 +283,6 @@ namespace CSharpAppPlayground
         public Button btnCancel2;
         public Button btnCancel1;
         private Button btnTaskBasic;
+        private Button btnTaskRampUp;
     }
 }

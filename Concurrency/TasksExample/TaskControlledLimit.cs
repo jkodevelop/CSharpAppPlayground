@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.UIClasses;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground.Concurrency.TasksExample
 {
@@ -8,13 +9,21 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
         // A padding interval to make the output more orderly.
         private static int padding;
 
+        private int maxParallelism = 3;
+        private int totalTasks = 5;
+
+        public TaskControlledLimit(Form _f)
+        {
+            f = _f;
+        }
+
         public async Task ShowAsync()
         {
             // Create the semaphore.
-            semaphore = new SemaphoreSlim(0, 3);
-            Console.WriteLine("{0} tasks can enter the semaphore.",
+            semaphore = new SemaphoreSlim(0, maxParallelism);
+            Debug.Print("{0} tasks can enter the semaphore.",
                               semaphore.CurrentCount);
-            Task[] tasks = new Task[5];
+            Task[] tasks = new Task[totalTasks];
 
             // Create and start five numbered tasks.
             for (int i = 0; i <= 4; i++)
@@ -22,7 +31,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                 tasks[i] = Task.Run(() =>
                 {
                     // Each task begins by requesting the semaphore.
-                    Console.WriteLine("Task {0} begins and waits for the semaphore.",
+                    Debug.Print("Task {0} begins and waits for the semaphore.",
                                       Task.CurrentId);
 
                     int semaphoreCount;
@@ -31,7 +40,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                     {
                         Interlocked.Add(ref padding, 100);
 
-                        Console.WriteLine("Task {0} enters the semaphore.", Task.CurrentId);
+                        Debug.Print("Task {0} enters the semaphore.", Task.CurrentId);
 
                         // The task just sleeps for 1+ seconds.
                         Thread.Sleep(1000 + padding);
@@ -40,7 +49,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                     {
                         semaphoreCount = semaphore.Release();
                     }
-                    Console.WriteLine("Task {0} releases the semaphore; previous count: {1}.",
+                    Debug.Print("Task {0} releases the semaphore; previous count: {1}.",
                                       Task.CurrentId, semaphoreCount);
                 });
             }
@@ -50,13 +59,13 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
 
             // Restore the semaphore count to its maximum value.
             Console.Write("Main thread calls Release(3) --> ");
-            semaphore.Release(3);
-            Console.WriteLine("{0} tasks can enter the semaphore.",
+            semaphore.Release(maxParallelism);
+            Debug.Print("{0} tasks can enter the semaphore.",
                               semaphore.CurrentCount);
             // Main thread waits for the tasks to complete.
             Task.WaitAll(tasks);
 
-            Console.WriteLine("Main thread exits.");
+            Debug.Print("Main thread exits.");
         }
 
     }
