@@ -77,7 +77,7 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                     cancellationToken.ThrowIfCancellationRequested();
 
                     string line = $"Task {i} started on thread {Thread.CurrentThread.ManagedThreadId}";
-                    Debug.Print(line);
+                    RichTextbox(line);
                     results.Add(line);
 
                     // Simulate work with pause checks, j < 5 = 5 seconds because of Thread.Sleep(1000) = 1 second x 5
@@ -93,14 +93,14 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                     }
 
                     line = $"Task {i} completed on thread {Thread.CurrentThread.ManagedThreadId}";
-                    Debug.Print(line);
+                    RichTextbox(line);
                     results.Add(line);
                 });
 
                 // Update UI on completion
                 
                 string result = string.Join(Environment.NewLine, results);
-                RichTextbox(result);
+                Debug.Print(result);
                 Label("Processing complete.");
                 isRunning = false;
             }

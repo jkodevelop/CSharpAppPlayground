@@ -73,7 +73,7 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                         // Wait if paused
                         pauser.Wait(cancelToken.Token);
 
-                        Debug.Print($"[{Task.CurrentId}] Processing item {item}, threadId: {Thread.CurrentThread.ManagedThreadId}");
+                        RichTextbox($"[{Task.CurrentId}] Processing item {item}, threadId: {Thread.CurrentThread.ManagedThreadId}");
                         Thread.Sleep(simulatedWorkTime); // Simulate work
                     });
                 }
@@ -91,7 +91,7 @@ namespace CSharpAppPlayground.Concurrency.ParallelExample
                 }
                 finally
                 {
-                    Debug.Print("Processing complete or cancelled.");
+                    Label("Processing complete or cancelled.");
                     isRunning = false;
                     ToggleButtons(true);
                 }

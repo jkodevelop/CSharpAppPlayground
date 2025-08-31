@@ -159,7 +159,7 @@
             groupBox2.Controls.Add(btnParallelStop);
             groupBox2.Controls.Add(btnParallelPause);
             groupBox2.Controls.Add(btnParallelRun);
-            groupBox2.Location = new Point(361, 176);
+            groupBox2.Location = new Point(361, 12);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(167, 149);
             groupBox2.TabIndex = 9;
@@ -201,7 +201,7 @@
             groupBox3.Controls.Add(btnParallelStopAlt);
             groupBox3.Controls.Add(btnParallelPauseAlt);
             groupBox3.Controls.Add(btnParallelRunAlt);
-            groupBox3.Location = new Point(361, 12);
+            groupBox3.Location = new Point(361, 176);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(167, 149);
             groupBox3.TabIndex = 10;
