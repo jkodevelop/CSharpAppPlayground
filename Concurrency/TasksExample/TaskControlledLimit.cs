@@ -28,6 +28,7 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             }
             isRunning = true;
 
+            Label("Starting");
             // Create the semaphore.
             semaphore = new SemaphoreSlim(0, maxParallelism);
             RichTextbox($"{semaphore.CurrentCount} tasks can enter the semaphore.");

@@ -49,9 +49,15 @@ namespace CSharpAppPlayground
             btnTasksCancellable = new Button();
             btnTaskBasic = new Button();
             btnTaskRampUp = new Button();
+            groupBox4 = new GroupBox();
+            btnStartControlLimit = new Button();
+            lblNumOfProc = new Label();
+            limitProcUpDown = new NumericUpDown();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)limitProcUpDown).BeginInit();
             SuspendLayout();
             // 
             // btnStartTaskSimple
@@ -68,7 +74,7 @@ namespace CSharpAppPlayground
             // 
             btnTaskExampleA.Location = new Point(14, 119);
             btnTaskExampleA.Name = "btnTaskExampleA";
-            btnTaskExampleA.Size = new Size(166, 35);
+            btnTaskExampleA.Size = new Size(166, 31);
             btnTaskExampleA.TabIndex = 4;
             btnTaskExampleA.Text = "Task Example A";
             btnTaskExampleA.UseVisualStyleBackColor = true;
@@ -76,7 +82,7 @@ namespace CSharpAppPlayground
             // 
             // btnTaskExampleB
             // 
-            btnTaskExampleB.Location = new Point(14, 171);
+            btnTaskExampleB.Location = new Point(14, 169);
             btnTaskExampleB.Name = "btnTaskExampleB";
             btnTaskExampleB.Size = new Size(164, 30);
             btnTaskExampleB.TabIndex = 5;
@@ -231,19 +237,60 @@ namespace CSharpAppPlayground
             // 
             // btnTaskRampUp
             // 
-            btnTaskRampUp.Location = new Point(14, 225);
+            btnTaskRampUp.Location = new Point(365, 158);
             btnTaskRampUp.Name = "btnTaskRampUp";
-            btnTaskRampUp.Size = new Size(164, 32);
+            btnTaskRampUp.Size = new Size(169, 41);
             btnTaskRampUp.TabIndex = 11;
-            btnTaskRampUp.Text = "Tasks Ramp Up";
+            btnTaskRampUp.Text = "Tasks with Ramp Up";
             btnTaskRampUp.UseVisualStyleBackColor = true;
             btnTaskRampUp.Click += btnTaskRampUp_Click;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(btnStartControlLimit);
+            groupBox4.Controls.Add(lblNumOfProc);
+            groupBox4.Controls.Add(limitProcUpDown);
+            groupBox4.Location = new Point(365, 216);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(169, 125);
+            groupBox4.TabIndex = 12;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Tasks Limit Control";
+            // 
+            // btnStartControlLimit
+            // 
+            btnStartControlLimit.Location = new Point(6, 81);
+            btnStartControlLimit.Name = "btnStartControlLimit";
+            btnStartControlLimit.Size = new Size(157, 34);
+            btnStartControlLimit.TabIndex = 2;
+            btnStartControlLimit.Text = "Start Tasks";
+            btnStartControlLimit.UseVisualStyleBackColor = true;
+            btnStartControlLimit.Click += btnStartControlLimit_Click;
+            // 
+            // lblNumOfProc
+            // 
+            lblNumOfProc.AutoSize = true;
+            lblNumOfProc.Location = new Point(8, 26);
+            lblNumOfProc.Name = "lblNumOfProc";
+            lblNumOfProc.Size = new Size(108, 15);
+            lblNumOfProc.TabIndex = 1;
+            lblNumOfProc.Text = "Number of Process";
+            // 
+            // limitProcUpDown
+            // 
+            limitProcUpDown.AllowDrop = true;
+            limitProcUpDown.Location = new Point(6, 44);
+            limitProcUpDown.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
+            limitProcUpDown.Name = "limitProcUpDown";
+            limitProcUpDown.Size = new Size(157, 23);
+            limitProcUpDown.TabIndex = 0;
             // 
             // FormConcurTask
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(810, 462);
             Controls.Add(btnTaskRampUp);
+            Controls.Add(groupBox4);
             Controls.Add(btnTaskBasic);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -260,10 +307,14 @@ namespace CSharpAppPlayground
             Controls.SetChildIndex(groupBox2, 0);
             Controls.SetChildIndex(groupBox3, 0);
             Controls.SetChildIndex(btnTaskBasic, 0);
+            Controls.SetChildIndex(groupBox4, 0);
             Controls.SetChildIndex(btnTaskRampUp, 0);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)limitProcUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -284,5 +335,10 @@ namespace CSharpAppPlayground
         public Button btnCancel1;
         private Button btnTaskBasic;
         private Button btnTaskRampUp;
+        private GroupBox groupBox4;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private NumericUpDown limitProcUpDown;
+        private Button btnStartControlLimit;
+        private Label lblNumOfProc;
     }
 }

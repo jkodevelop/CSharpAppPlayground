@@ -1,6 +1,7 @@
 using CSharpAppPlayground.Concurrency.TasksExample;
 using CSharpAppPlayground.UIClasses;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {
@@ -25,6 +26,7 @@ namespace CSharpAppPlayground
             tp = new TaskPausible(this, btnTask1Pause, btnTask2Pause);
 
             tcl = new TaskControlledLimit(this);
+            tla = new TaskLimitAdjustable(this, limitProcUpDown);
         }
 
         protected TaskBasic tbasic;
@@ -107,6 +109,13 @@ namespace CSharpAppPlayground
         {
             await tcl.ShowAsync();
             updateRichTextBoxMain($"All tasks from Ramp Up completed successfully.");
+        }
+
+        protected TaskLimitAdjustable tla;
+        private async void btnStartControlLimit_Click(object sender, EventArgs e)
+        {
+            await tla.ShowAsync();
+            updateRichTextBoxMain($"All tasks from Adjustable Limit completed successfully.");
         }
     }
 }
