@@ -14,12 +14,14 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
 
         bool isRunning = false;
 
+        Color[] colors;
+
         public TaskLimitAdjustable(Form _f, NumericUpDown _procNumbers)
         {
             f = _f;
             procNumbers = _procNumbers;
-
             procNumbers.ValueChanged += (sender, e) => ProcNumbers_ValueChanged(sender, e);
+            colors = new Color[] { Color.Green, Color.Blue, Color.Purple, Color.Orange, Color.Brown, Color.Cyan, Color.Magenta };
         }
 
         private void init()
@@ -79,14 +81,17 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             {
                 tasks[i] = Task.Run(() =>
                 {
+                    // Get a random integer between 0 and maxParallelism - 1
+                    int colorIndex = new Random().Next(0, maxParallelism);
+                    Color c = colors[colorIndex];
                     // Each task begins by requesting the semaphore.
-                    RichTextbox($"Task {Task.CurrentId} begins and waits for the semaphore.");
+                    RichTextbox($"Task {Task.CurrentId} begins and waits for the semaphore.", c);
                     int semaphoreCount;
                     semaphore.Wait();
                     try
                     {
                         Interlocked.Add(ref padding, 50);
-                        RichTextbox($"Task {Task.CurrentId} enters the semaphore.", Color.Green);
+                        RichTextbox($"Task {Task.CurrentId} enters the semaphore.", c);
                         // The task just sleeps for 1+ seconds.
                         Thread.Sleep(1000 + padding);
                     }
@@ -94,13 +99,14 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
                     {
                         semaphoreCount = semaphore.Release();
                     }
-                    RichTextbox($"Task {Task.CurrentId} releases the semaphore; previous count: {semaphoreCount}.");
+                    RichTextbox($"Task {Task.CurrentId} releases the semaphore; previous count: {semaphoreCount}.", c);
                 });
             }
             // Wait for all tasks to complete.
             await Task.WhenAll(tasks);
             Label("All tasks complete.");
             isRunning = false;
+            semaphore.Dispose();
         }
     }
 }
