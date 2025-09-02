@@ -31,6 +31,9 @@ namespace CSharpAppPlayground.Concurrency.TasksExample
             semaphore = new SemaphoreSlim(0, maxParallelism);
         }
 
+        // this function could have just check for limit then increment by 1
+        // what it is doing instead is maybe the user increased more then 1 so just get the difference from
+        // existing process number and release the difference
         private void ReleaseMoreSlots(int count)
         {
             if (semaphore.CurrentCount >= maxParallelism)
