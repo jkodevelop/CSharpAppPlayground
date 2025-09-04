@@ -149,8 +149,13 @@ namespace CSharpAppPlayground.UIClasses
                 try
                 {
                     Debug.Print("InvokeRequired for updateLabelMain().");
-                    // Invoke() is synchronous and blocks until the UI thread processes the request, so using BeginInvoke()
-                    BeginInvoke(new Action<string>(updateLabelMain), msg);
+                    
+                    // BeginInvoke(new Action<string>(updateLabelMain), msg); // slowest
+                    // BeginInvoke(new MethodInvoker(() => updateLabelMain(msg))); // slower
+                    // BeginInvoke((MethodInvoker)(() => updateLabelMain(msg))); // medium
+                    // BeginInvoke(() => updateLabelMain(msg)); // fastest + modern way
+                    
+                    BeginInvoke(() => updateLabelMain(msg));
                 }
                 catch (ObjectDisposedException)
                 {
