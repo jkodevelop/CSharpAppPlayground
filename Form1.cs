@@ -99,5 +99,10 @@ namespace CSharpAppPlayground
         {
             _formConcurParallel.Open();
         }
+
+        private void btnDBs_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

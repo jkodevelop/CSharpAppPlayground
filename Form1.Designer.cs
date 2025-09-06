@@ -36,13 +36,14 @@
             btnUIForm = new Button();
             btnConcurThread = new Button();
             btnConcurParallel = new Button();
+            btnDBs = new Button();
             SuspendLayout();
             // 
             // btnRun
             // 
-            btnRun.Location = new Point(26, 28);
+            btnRun.Location = new Point(12, 12);
             btnRun.Name = "btnRun";
-            btnRun.Size = new Size(197, 104);
+            btnRun.Size = new Size(183, 77);
             btnRun.TabIndex = 0;
             btnRun.Text = "RUN";
             btnRun.UseVisualStyleBackColor = true;
@@ -50,9 +51,9 @@
             // 
             // btnFoo
             // 
-            btnFoo.Location = new Point(26, 163);
+            btnFoo.Location = new Point(12, 108);
             btnFoo.Name = "btnFoo";
-            btnFoo.Size = new Size(197, 35);
+            btnFoo.Size = new Size(183, 35);
             btnFoo.TabIndex = 1;
             btnFoo.Text = "Foo";
             btnFoo.UseVisualStyleBackColor = true;
@@ -60,19 +61,19 @@
             // 
             // btnDI
             // 
-            btnDI.Location = new Point(26, 204);
+            btnDI.Location = new Point(12, 149);
             btnDI.Name = "btnDI";
-            btnDI.Size = new Size(197, 40);
+            btnDI.Size = new Size(183, 40);
             btnDI.TabIndex = 2;
-            btnDI.Text = "Dependency Injection Examples";
+            btnDI.Text = "Dependency Injection";
             btnDI.UseVisualStyleBackColor = true;
             btnDI.Click += btnDI_Click;
             // 
             // btnGeneric
             // 
-            btnGeneric.Location = new Point(26, 250);
+            btnGeneric.Location = new Point(12, 195);
             btnGeneric.Name = "btnGeneric";
-            btnGeneric.Size = new Size(197, 33);
+            btnGeneric.Size = new Size(183, 33);
             btnGeneric.TabIndex = 3;
             btnGeneric.Text = "Generic Types";
             btnGeneric.UseVisualStyleBackColor = true;
@@ -80,9 +81,9 @@
             // 
             // btnConcurTask
             // 
-            btnConcurTask.Location = new Point(26, 367);
+            btnConcurTask.Location = new Point(212, 55);
             btnConcurTask.Name = "btnConcurTask";
-            btnConcurTask.Size = new Size(197, 33);
+            btnConcurTask.Size = new Size(183, 33);
             btnConcurTask.TabIndex = 16;
             btnConcurTask.Text = "Task()";
             btnConcurTask.UseVisualStyleBackColor = true;
@@ -90,9 +91,9 @@
             // 
             // btnUIForm
             // 
-            btnUIForm.Location = new Point(26, 289);
+            btnUIForm.Location = new Point(12, 234);
             btnUIForm.Name = "btnUIForm";
-            btnUIForm.Size = new Size(197, 35);
+            btnUIForm.Size = new Size(183, 35);
             btnUIForm.TabIndex = 18;
             btnUIForm.Text = "WinForms UI";
             btnUIForm.UseVisualStyleBackColor = true;
@@ -100,9 +101,9 @@
             // 
             // btnConcurThread
             // 
-            btnConcurThread.Location = new Point(26, 331);
+            btnConcurThread.Location = new Point(212, 12);
             btnConcurThread.Name = "btnConcurThread";
-            btnConcurThread.Size = new Size(197, 30);
+            btnConcurThread.Size = new Size(183, 35);
             btnConcurThread.TabIndex = 19;
             btnConcurThread.Text = "Thread()";
             btnConcurThread.UseVisualStyleBackColor = true;
@@ -110,19 +111,30 @@
             // 
             // btnConcurParallel
             // 
-            btnConcurParallel.Location = new Point(247, 367);
+            btnConcurParallel.Location = new Point(212, 96);
             btnConcurParallel.Name = "btnConcurParallel";
-            btnConcurParallel.Size = new Size(197, 33);
+            btnConcurParallel.Size = new Size(183, 33);
             btnConcurParallel.TabIndex = 20;
             btnConcurParallel.Text = "Parallel()";
             btnConcurParallel.UseVisualStyleBackColor = true;
             btnConcurParallel.Click += btnConcurParallel_Click;
             // 
+            // btnDBs
+            // 
+            btnDBs.Location = new Point(12, 295);
+            btnDBs.Name = "btnDBs";
+            btnDBs.Size = new Size(183, 44);
+            btnDBs.TabIndex = 21;
+            btnDBs.Text = "Databases";
+            btnDBs.UseVisualStyleBackColor = true;
+            btnDBs.Click += btnDBs_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 426);
+            Controls.Add(btnDBs);
             Controls.Add(btnConcurParallel);
             Controls.Add(btnConcurThread);
             Controls.Add(btnUIForm);
@@ -146,5 +158,6 @@
         private Button btnUIForm;
         private Button btnConcurThread;
         private Button btnConcurParallel;
+        private Button btnDBs;
     }
 }

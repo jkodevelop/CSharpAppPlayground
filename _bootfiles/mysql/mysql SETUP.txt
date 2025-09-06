@@ -1,0 +1,19 @@
+﻿// localhost only
+// this is for testing only
+// do not use this in any non local/testing env
+
+1. add database
+database: testdb
+
+2. add user
+username: testuser
+password: testpassword
+
+3. grant all privileges to user on database
+GRANT ALL PRIVILEGES ON testdb.* TO 'testuser'@'%' IDENTIFIED BY 'testpassword';
+
+4. flush privileges
+FLUSH PRIVILEGES;
+
+5. exit
+exit
