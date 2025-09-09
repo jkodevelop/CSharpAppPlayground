@@ -100,9 +100,10 @@ namespace CSharpAppPlayground
             _formConcurParallel.Open();
         }
 
+        protected FormFactory _formDBs = new FormFactory("CSharpAppPlayground.FormDBsMenu, CSharpAppPlayground");
         private void btnDBs_Click(object sender, EventArgs e)
         {
-
+            _formDBs.Open();
         }
     }
 }

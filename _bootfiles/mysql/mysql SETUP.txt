@@ -17,3 +17,12 @@ FLUSH PRIVILEGES;
 
 5. exit
 exit
+
+//////////////
+// clean up instructions
+
+1. delete the schema/database
+DROP DATABASE testdb;
+
+2. delete the user
+DROP USER 'testuser'@'%';

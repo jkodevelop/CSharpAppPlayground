@@ -8,8 +8,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+
   <ItemGroup>
-    <Compile Include="_bootfiles\mysql\run.sql" />
+    <!-- ignore these files from preprocessing and compiling step -->
+    <Compile Remove="_bootfiles\**\*" />
+
+    <!-- this is removing it completely from project view and everything else -->
+    <!-- <None Remove="_bootfiles\**\*" /> -->
+
+    <!-- this is useful for Web Server, to ignore publish these files to server or including them -->
+    <!-- <Content Remove="_bootfiles\**\*" /> -->
   </ItemGroup>
 
   <ItemGroup>
@@ -24,16 +32,15 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.6" />
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
+    
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="version.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DBClasses\MysqlExamples\" />
+    
   </ItemGroup>
 
 </Project>
