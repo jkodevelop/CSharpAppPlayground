@@ -1,4 +1,4 @@
-﻿CREATE DATABASE testdb;
+CREATE DATABASE testdb;
 
 CREATE USER testuser WITH ENCRYPTED PASSWORD 'testpassword';
 
