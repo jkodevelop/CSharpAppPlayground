@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 // TO DOCUMENT:
 // Form.Show() - non-blocking diy of the form, allows the main thread to continue processing other events

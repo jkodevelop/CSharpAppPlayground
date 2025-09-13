@@ -1,3 +1,6 @@
+-- to run this in postgres cmd
+-- \i 'PATH with \\ or / and single quotes, double quotes an \ slash will not work'
+
 CREATE DATABASE testdb;
 
 CREATE USER testuser WITH ENCRYPTED PASSWORD 'testpassword';

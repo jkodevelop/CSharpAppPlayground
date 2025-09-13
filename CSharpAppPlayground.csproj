@@ -43,8 +43,4 @@
     
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="_bootfiles\postgres\" />
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,33 @@
+﻿// localhost only
+// this is for testing only
+// do not use this in any non local/testing env
+
+// to run this in postgres cmd
+$ \i 'PATH with \\ or / and single quotes, double quotes an \ slash will not work'
+
+// example
+$ \i 'C:/myfolder/myscript.sql'
+
+1. add database
+database: testdb
+
+2. add user
+username: testuser
+password: testpassword
+
+3. disconnect testdb from PUBLIC role
+
+4. grant all privileges to user on database
+
+5. exit
+\q
+
+//////////////
+// clean up instructions
+
+1. delete the schema/database
+DROP DATABASE testdb;
+
+2. delete the user
+DROP USER 'testuser'@'%';
+

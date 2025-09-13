@@ -18,7 +18,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         public _connMysql()
         {
             // Get connection string from App.config
-            string connectionStr = ConfigurationManager.ConnectionStrings["MysqlKeyDBTest"].ConnectionString;
+            string connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             conn = new MySqlConnection(connectionStr);
 
             /*
