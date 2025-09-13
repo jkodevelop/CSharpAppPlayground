@@ -13,10 +13,10 @@
     <!-- ignore these files from preprocessing and compiling step -->
     <Compile Remove="_bootfiles\**\*" />
 
-    <!-- this is removing it completely from project view and everything else -->
+    <!-- this is removing it completely from project view and everything else. So it's bad -->
     <!-- <None Remove="_bootfiles\**\*" /> -->
 
-    <!-- this is useful for Web Server, to ignore publish these files to server or including them -->
+    <!-- this is useful for Web Server, to ignore these files for publishing to server or including them -->
     <!-- <Content Remove="_bootfiles\**\*" /> -->
   </ItemGroup>
 
@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.6" />
     <PackageReference Include="MySql.Data" Version="9.4.0" />
+    <PackageReference Include="Npgsql" Version="9.0.3" />
     
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
