@@ -21,9 +21,10 @@ namespace CSharpAppPlayground
             _formPostgres.Open();
         }
 
+        protected FormFactory _formMongo = new FormFactory("CSharpAppPlayground.FormDBMongo, CSharpAppPlayground");
         private void btnMongoDB_Click(object sender, EventArgs e)
         {
-
+            _formMongo.Open();
         }
     }
 }
