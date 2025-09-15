@@ -1,0 +1,50 @@
+use testdb
+db.createUser(
+   {
+     user: "testuser",
+     pwd: passwordPrompt(), // or specify the password directly
+     roles: [ { role: "readWrite", db: "testdb" }, { role: "read", db: "reporting" } ]
+   }
+);
+
+db.createUser(
+   {
+     user: "testuser",
+     pwd: "testpassword",
+     roles: [ { role: "readWrite", db: "testdb" } ]
+   }
+);
+
+
+////////// cleanup
+
+use testdb
+db.dropUser('testuser')
+db.dropDatabase()
+
+
+////////// usage 
+// run in 
+// mongosh> load('runScript.js'); 
+
+// Switch to the 'testdb' database (or create it if it doesn't exist)
+use('testdb');
+
+// Insert sample documents into the 'users' collection
+db.users.insertMany([
+  { name: "Alice", age: 30, email: "alice@example.com" },
+  { name: "Bob", age: 25, email: "bob@example.com" },
+  { name: "Charlie", age: 35, email: "charlie@example.com" }
+]);
+
+// Query and print all users
+print("All users:");
+const users = db.users.find().toArray();
+users.forEach(user => {
+  printjson(user);
+});
+
+// Optional: Create an index
+db.users.createIndex({ email: 1 });
+
+print("Script completed.");
