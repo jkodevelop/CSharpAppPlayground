@@ -101,19 +101,22 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
             }
             */
 
-            // Create a new connection object
-            using (NpgsqlConnection conn = new NpgsqlConnection(connectionStr))
+            try
             {
-                try
+                using (NpgsqlConnection c = new NpgsqlConnection(connectionStr))
                 {
-                    conn.Open();
-                    serverVersion = conn.PostgreSqlVersion.ToString();
+                    c.Open();
+                    serverVersion = c.PostgreSqlVersion.ToString();
                     // Debug.Print($"PostgreSQL Version: {conn.PostgreSqlVersion}");
                 }
-                catch (Exception ex)
-                {
-                    Debug.Print($"Error retrieving PostgreSQL version: {ex.Message}");
-                }
+            }
+            catch (NpgsqlException pex)
+            {
+                Debug.Print($"Error PostgreSQL NpgsqlException: {pex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error PostgreSQL Exception: {ex.Message}");
             }
             return $"Postgres server version: {serverVersion}";
         }

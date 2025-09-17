@@ -48,6 +48,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
             return client;
         }
 
+        // TO DOCUMENT: as of 2025+ MongoDB.Driver v3+, it is recommended to creat 1 MongoClient instance and reuse it throughout the app
+        // because it manages connection pooling internally, and it is thread-safe.
         public string getServerVersion()
         {
             string serverVersion = "N/A";
@@ -63,10 +65,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
                     BsonDocument result = adminDatabase.RunCommand<BsonDocument>(pingCommand);
 
                     Debug.Print($"Successfully connected to MongoDB.");
-                    Debug.Print($"MongoDB Server Version: {client.Settings.Server}");
 
                     // Get server info
-                    BsonDocument serverInfo = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("buildInfo", 1));
+                    BsonDocument serverInfo = client.GetDatabase("testdb").RunCommand<BsonDocument>(new BsonDocument("buildInfo", 1));
                     if (serverInfo.Contains("version"))
                     {
                         serverVersion = serverInfo["version"].AsString;

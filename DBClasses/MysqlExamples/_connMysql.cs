@@ -81,7 +81,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             connected = false;
         }
 
-        // this also helps confirm mysql connection works
+
+        // TO DOCUMENT: 2025+ MySql.Data.MySqlClient is not thread-safe, so create and use a new MySqlConnection instance for each operation
+        // and encapsulate it in a using statement to ensure proper disposal.
         public string getServerVersion()
         {
             string serverVersion = "N/A";
@@ -100,21 +102,24 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             */
 
-            using (MySqlConnection c = new MySqlConnection(connectionStr))
+            try
             {
-                try
+                using (MySqlConnection c = new MySqlConnection(connectionStr))
                 {
                     c.Open();
                     serverVersion = c.ServerVersion;
-                    // Debug.Print($"Mysql Version: {serverVersion}");
+                    // Debug.Print($"Mysql Version: {serverVersion}");   
                 }
-                catch (Exception ex)
-                {
-                    Debug.Print($"Error retrieving Mysql version: {ex.Message}");
-                }
+            }
+            catch(MySqlException myex)
+            {
+                Debug.Print($"Error with Mysql connectionm, MySqlException: {myex.Message}");
+            }
+            catch(Exception ex)
+            {
+                Debug.Print($"Error with Mysql connection, Exception: {ex.Message}");
             }
             return $"Mysql server version: {serverVersion}";
         }
-
     }
 }
