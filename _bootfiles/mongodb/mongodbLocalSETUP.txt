@@ -23,7 +23,7 @@ db.dropUser('testuser')
 db.dropDatabase()
 
 
-////////// usage 
+////////// usage, create a script file named 'runScript.js'
 // run in 
 // mongosh> load('runScript.js'); 
 

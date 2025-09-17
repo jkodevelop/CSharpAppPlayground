@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.DBClasses.PostgresExamples;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground
 {
@@ -18,7 +19,8 @@ namespace CSharpAppPlayground
 
         private void btnPostgresStatus_Click(object sender, EventArgs e)
         {
-            connPostgres.connect();
+            string serverVersion = connPostgres.getServerVersion();
+            Debug.Print($"{serverVersion}");
         }
     }
 }

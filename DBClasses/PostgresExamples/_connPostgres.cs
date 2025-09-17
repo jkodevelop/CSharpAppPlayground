@@ -1,6 +1,7 @@
-﻿using System.Configuration;
-using System.Diagnostics;
+﻿using MySql.Data.MySqlClient;
 using Npgsql;
+using System.Configuration;
+using System.Diagnostics;
 
 /// <summary>
 /// Required library for this Postgres connection example
@@ -12,13 +13,28 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 {
     public class _connPostgres
     {
+        private NpgsqlConnection conn;
+        private bool connected = false;
+        private string connectionStr = string.Empty;
+
         public _connPostgres()
         {
-            connect();
+            // Get connection string from App.config
+            connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
+            conn = new NpgsqlConnection(connectionStr);
         }
 
-        public void connect()
+        public NpgsqlConnection getConn()
         {
+            if (!connected)
+                connect();
+
+            return conn;
+        }
+
+        public bool connect()
+        {
+            /*
             // Connection string to connect to PostgreSQL
             string connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
 
@@ -28,6 +44,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
                 try
                 {
                     conn.Open();
+                    connected = true;
 
                     Debug.Print($"Successfully connected to PostgreSQL.");
                     Debug.Print($"PostgreSQL Version: {conn.PostgreSqlVersion}");
@@ -37,20 +54,61 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
                     Debug.Print($"Error connecting to PostgreSQL: {ex.Message}");
                 }
             }
+            */
+
+            try
+            {
+                conn.Open();
+                connected = true;
+            }
+            catch (NpgsqlException ex)
+            {
+                Debug.Print($"postgres.Connect() ex: {ex.Message}");
+                connected = false;
+            }
+            return connected;
+        }
+
+        public void closeConnection()
+        {
+            try
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            catch (NpgsqlException ex)
+            {
+                Debug.Print($"postgres closeConnection() ex: {ex.Message}");
+            }
+            connected = false;
         }
 
         public string getServerVersion()
         {
             string serverVersion = "N/A";
-            // Connection string to connect to PostgreSQL
-            string connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
+
+            /*
+            try
+            {
+                if (connect())
+                    serverVersion = this.conn.ServerVersion;
+                
+                closeConnection();
+            }
+            catch (NpgsqlConnection ex)
+            {
+                Debug.Print($"postgres closeConnection() ex: {ex.Message}");
+            }
+            */
+
             // Create a new connection object
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionStr))
             {
                 try
                 {
                     conn.Open();
-                    Debug.Print($"PostgreSQL Version: {conn.PostgreSqlVersion}");
+                    serverVersion = conn.PostgreSqlVersion.ToString();
+                    // Debug.Print($"PostgreSQL Version: {conn.PostgreSqlVersion}");
                 }
                 catch (Exception ex)
                 {

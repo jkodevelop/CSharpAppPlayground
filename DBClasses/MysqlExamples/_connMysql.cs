@@ -1,6 +1,7 @@
-﻿using System.Configuration;
+﻿using MySql.Data.MySqlClient;
+using Npgsql;
+using System.Configuration;
 using System.Diagnostics;
-using MySql.Data.MySqlClient;
 
 /// <summary>
 /// Required library for this MySQL connection example
@@ -14,11 +15,12 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
     {
         private MySqlConnection conn;
         private bool connected = false;
+        private string connectionStr = string.Empty;
 
         public _connMysql()
         {
             // Get connection string from App.config
-            string connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             conn = new MySqlConnection(connectionStr);
 
             /*
@@ -83,6 +85,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         public string getServerVersion()
         {
             string serverVersion = "N/A";
+
+            /*
             try
             {
                 if (connect())
@@ -93,6 +97,21 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             catch (MySqlException ex)
             {
                 Debug.Print($"mysql closeConnection() ex: {ex.Message}");
+            }
+            */
+
+            using (MySqlConnection c = new MySqlConnection(connectionStr))
+            {
+                try
+                {
+                    c.Open();
+                    serverVersion = c.ServerVersion;
+                    // Debug.Print($"Mysql Version: {serverVersion}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print($"Error retrieving Mysql version: {ex.Message}");
+                }
             }
             return $"Mysql server version: {serverVersion}";
         }

@@ -1,9 +1,6 @@
 ﻿using CSharpAppPlayground.DBClasses.MongoDBExamples;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics;
+
 namespace CSharpAppPlayground
 {
     public partial class FormDBMongo : Form
@@ -22,7 +19,8 @@ namespace CSharpAppPlayground
 
         private void btnMongoStatus_Click(object sender, EventArgs e)
         {
-            mongo.connect();
+            string serverVersion = mongo.getServerVersion();
+            Debug.Print($"{serverVersion}");
         }
     }
 }
