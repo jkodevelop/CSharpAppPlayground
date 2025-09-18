@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using Npgsql;
+﻿using Npgsql;
 using System.Configuration;
 using System.Diagnostics;
 
