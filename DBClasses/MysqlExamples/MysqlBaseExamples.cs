@@ -179,6 +179,40 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             return null;
         }
 
+        //public List<SqlDBObject> GetAll()
+        //{
+        //    var objects = new List<SqlDBObject>();
+
+        //    try
+        //    {
+        //        using (var connection = new MySqlConnection(connectionStr))
+        //        {
+        //            connection.Open();
+        //            string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+
+        //            using (var command = new MySqlCommand(query, connection))
+        //            using (var reader = command.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    objects.Add(new SqlDBObject
+        //                    {
+        //                        Id = reader.GetInt32("Id"),
+        //                        Name = reader.GetString("Name"),
+        //                        CreatedAt = reader.GetDateTime("CreatedAt")
+        //                    });
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+        //    }
+
+        //    return objects;
+        //}
+
         public List<SqlDBObject> GetAll()
         {
             List<SqlDBObject> objects = new List<SqlDBObject>();
