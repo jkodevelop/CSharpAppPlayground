@@ -284,6 +284,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
                     command.Parameters.AddWithValue("@Id", obj.Id);
                     command.Parameters.AddWithValue("@Name", obj.Name);
                     command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+
                     int rowsAffected = command.ExecuteNonQuery();
                     return rowsAffected > 0;
                 }, query);
@@ -299,26 +300,22 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
+                return await mysqlBase.WithSqlCommandAsync(async command =>
                 {
-                    await connection.OpenAsync();
-                    string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Id", obj.Id);
-                        command.Parameters.AddWithValue("@Name", obj.Name);
-                        command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-                        
-                        int rowsAffected = await command.ExecuteNonQueryAsync();
-                        return rowsAffected > 0;
-                    }
-                }
+                    command.Parameters.AddWithValue("@Id", obj.Id);
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error updating SqlDBObject: {ex.Message}", ex);
+                Debug.Print($"UpdateSqlDBObjectAsync(): {ex.Message}");
             }
+            return false;
         }
 
         #endregion
@@ -329,72 +326,57 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
+                mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Id", id);
-                        
-                        int rowsAffected = command.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
+                    command.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error deleting SqlDBObject by ID: {ex.Message}", ex);
+                Debug.Print($"DeleteById({id}): {ex.Message}");
             }
+            return false;
         }
 
         public bool DeleteByName(string name)
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "DELETE FROM SqlDBObjects WHERE Name = @Name";
+                mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "DELETE FROM SqlDBObjects WHERE Name = @Name";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Name", name);
-                        
-                        int rowsAffected = command.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
+                    command.Parameters.AddWithValue("@Name", name);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error deleting SqlDBObject by name: {ex.Message}", ex);
+                Debug.Print($"DeleteByName({name}): {ex.Message}");
             }
+            return false;
         }
 
         public async Task<bool> DeleteByIdAsync(int id)
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
+                return await mysqlBase.WithSqlCommandAsync(async command =>
                 {
-                    await connection.OpenAsync();
-                    string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Id", id);
-                        
-                        int rowsAffected = await command.ExecuteNonQueryAsync();
-                        return rowsAffected > 0;
-                    }
-                }
+                    command.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error deleting SqlDBObject by ID: {ex.Message}", ex);
+                Debug.Print($"DeleteByIdAsync({id}): {ex.Message}", ex);
             }
+            return false;
         }
 
         #endregion
@@ -405,42 +387,34 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "SELECT COUNT(*) FROM SqlDBObjects";
+                return mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "SELECT COUNT(*) FROM SqlDBObjects";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        return Convert.ToInt32(command.ExecuteScalar());
-                    }
-                }
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting record count: {ex.Message}", ex);
+                Debug.Print($"GetRecordCount(): {ex.Message}");
             }
+            return -1;
         }
 
         public bool TableExists()
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'SqlDBObjects'";
+                return mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'SqlDBObjects'";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        return Convert.ToInt32(command.ExecuteScalar()) > 0;
-                    }
-                }
+                    return Convert.ToInt32(command.ExecuteScalar()) > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error checking if table exists: {ex.Message}", ex);
+                Debug.Print($"TableExists(): {ex.Message}");
             }
+            return false;
         }
 
         #endregion
