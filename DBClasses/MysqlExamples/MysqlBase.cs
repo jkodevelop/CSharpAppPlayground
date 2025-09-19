@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using CSharpAppPlayground.DBClasses.Data;
+using MySql.Data.MySqlClient;
 using System.Configuration;
 
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
@@ -29,7 +30,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                throw new Exception($"Database operation failed: {ex.Message}", ex);
+                throw new Exception($"MySQL operation failed: {ex.Message}", ex);
             }
         }
 
@@ -49,7 +50,70 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                throw new Exception($"Database operation failed: {ex.Message}", ex);
+                throw new Exception($"MySQL operation failed: {ex.Message}", ex);
+            }
+        }
+
+        // USAGE EXAMPLE:
+        // 
+        //public int InsertSqlDBObject(SqlDBObject obj)
+        //{
+        //    return mysqlBase.WithConnection(connection =>
+        //    {
+        //        string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+        //        using (var command = new MySqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@Name", obj.Name);
+        //            command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+        //            var result = command.ExecuteScalar();
+        //            return Convert.ToInt32(result);
+        //        }
+        //    });
+        //}
+
+        public T WithSqlCommand<T>(Func<MySqlCommand, T> func, string query)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionStr))
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        return func(command);
+                    }
+                }
+            }
+            catch (MySqlException sqlEx)
+            {
+                throw new Exception($"MySQL error {sqlEx.Number}: {sqlEx.Message}", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"MySQL operation failed: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<T> WithSqlCommandAsync<T>(Func<MySqlCommand, Task<T>> func, string query)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionStr))
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        await connection.OpenAsync();
+                        return await func(command);
+                    }
+                }
+            }
+            catch (MySqlException sqlEx)
+            {
+                throw new Exception($"MySQL error {sqlEx.Number}: {sqlEx.Message}", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"MySQL operation failed: {ex.Message}", ex);
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
 {
@@ -74,32 +75,42 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
 
         public int InsertSqlDBObject(SqlDBObject obj)
         {
-            return mysqlBase.WithConnection(connection =>
+            try
             {
                 string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
-                using (var command = new MySqlCommand(query, connection))
+                return mysqlBase.WithSqlCommand((command =>
                 {
                     command.Parameters.AddWithValue("@Name", obj.Name);
                     command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
                     var result = command.ExecuteScalar();
                     return Convert.ToInt32(result);
-                }
-            });
+                }), query);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"InsertSqlDBObject(): {ex.Message}");
+            }
+            return -1;
         }
 
         public Task<int> InsertSqlDBObjectAsync(SqlDBObject obj)
         {
-            return mysqlBase.WithConnectionAsync(async connection =>
+            try 
             {
                 string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
-                using (var command = new MySqlCommand(query, connection))
+                return mysqlBase.WithSqlCommandAsync(async command =>
                 {
                     command.Parameters.AddWithValue("@Name", obj.Name);
                     command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
                     var result = await command.ExecuteScalarAsync();
                     return Convert.ToInt32(result);
-                }
-            });
+                }, query);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"InsertSqlDBObjectAsync(): {ex.Message}");
+            }
+            return Task.FromResult(-1);
         }
 
         #endregion
@@ -108,51 +119,105 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
 
         public SqlDBObject? GetById(int id)
         {
+            SqlDBObject? obj = null;
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Id = @Id";
+                obj = mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Id = @Id";
-                    
-                    using (var command = new MySqlCommand(query, connection))
+                    SqlDBObject? res = null;
+                    command.Parameters.AddWithValue("@Id", id);
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@Id", id);
-                        
-                        using (var reader = command.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            res = new SqlDBObject
                             {
-                                return new SqlDBObject
-                                {
-                                    Id = reader.GetInt32("Id"),
-                                    Name = reader.GetString("Name"),
-                                    CreatedAt = reader.GetDateTime("CreatedAt")
-                                };
-                            }
+                                Id = reader.GetInt32("Id"),
+                                Name = reader.GetString("Name"),
+                                CreatedAt = reader.GetDateTime("CreatedAt")
+                            };
                         }
                     }
-                }
-                return null;
+                    return res;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error retrieving SqlDBObject by ID: {ex.Message}", ex);
+                Debug.Print($"GetById({id}): {ex.Message}");
             }
+            return obj;
+        }
+
+        public SqlDBObject? GetLastInserted()
+        {
+            try
+            {
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY Id DESC LIMIT 1";
+                return mysqlBase.WithSqlCommand(command =>
+                {
+                    SqlDBObject? res = null;
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            res = new SqlDBObject
+                            {
+                                Id = reader.GetInt32("Id"),
+                                Name = reader.GetString("Name"),
+                                CreatedAt = reader.GetDateTime("CreatedAt")
+                            };
+                        }
+                    }
+                    return res;
+                }, query);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"GetLastInserted(): {ex.Message}");
+            }
+            return null;
         }
 
         public List<SqlDBObject> GetAll()
         {
-            var objects = new List<SqlDBObject>();
-            
+            List<SqlDBObject> objects = new List<SqlDBObject>();
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+                mysqlBase.WithSqlCommand<object>(command =>
                 {
-                    connection.Open();
-                    string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
-                    
-                    using (var command = new MySqlCommand(query, connection))
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objects.Add(new SqlDBObject
+                            {
+                                Id = reader.GetInt32("Id"),
+                                Name = reader.GetString("Name"),
+                                CreatedAt = reader.GetDateTime("CreatedAt")
+                            });
+                        }
+                    }
+                    return true; // doesn't matter cause objects is populated by reference
+                }, query);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"GetAll(): Error retrieving all SqlDBObjects: {ex.Message}");
+            }
+            return objects;
+        }
+
+        public List<SqlDBObject> GetByName(string name)
+        {
+            var objects = new List<SqlDBObject>();
+            try
+            {
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Name LIKE @Name ORDER BY CreatedAt DESC";
+                mysqlBase.WithSqlCommand<object>(command =>
+                {
+                    command.Parameters.AddWithValue("@Name", $"%{name}%");
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -165,67 +230,25 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
                             });
                         }
                     }
-                }
+                    return true; // doesn't matter cause objects is populated by reference
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+                Debug.Print($"GetByName({name}): Error retrieving SqlDBObjects by name: {ex.Message}");
             }
-            
-            return objects;
-        }
-
-        public List<SqlDBObject> GetByName(string name)
-        {
-            var objects = new List<SqlDBObject>();
-            
-            try
-            {
-                using (var connection = new MySqlConnection(connectionStr))
-                {
-                    connection.Open();
-                    string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Name LIKE @Name ORDER BY CreatedAt DESC";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Name", $"%{name}%");
-                        
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                objects.Add(new SqlDBObject
-                                {
-                                    Id = reader.GetInt32("Id"),
-                                    Name = reader.GetString("Name"),
-                                    CreatedAt = reader.GetDateTime("CreatedAt")
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving SqlDBObjects by name: {ex.Message}", ex);
-            }
-            
             return objects;
         }
 
         public async Task<List<SqlDBObject>> GetAllAsync()
         {
-            var objects = new List<SqlDBObject>();
-            
+            List<SqlDBObject> objects = new List<SqlDBObject>();
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+                await mysqlBase.WithSqlCommandAsync<object>(async command =>
                 {
-                    await connection.OpenAsync();
-                    string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
@@ -237,13 +260,13 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
                             });
                         }
                     }
-                }
+                    return true; // doesn't matter cause objects is populated by reference
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+                Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObjects: {ex.Message}");
             }
-            
             return objects;
         }
 
@@ -255,26 +278,21 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
+                return mysqlBase.WithSqlCommand(command =>
                 {
-                    connection.Open();
-                    string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Id", obj.Id);
-                        command.Parameters.AddWithValue("@Name", obj.Name);
-                        command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-                        
-                        int rowsAffected = command.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
+                    command.Parameters.AddWithValue("@Id", obj.Id);
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }, query);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error updating SqlDBObject: {ex.Message}", ex);
+                Debug.Print($"UpdateSqlDBObject(): {ex.Message}");
             }
+            return false;
         }
 
         public async Task<bool> UpdateSqlDBObjectAsync(SqlDBObject obj)
