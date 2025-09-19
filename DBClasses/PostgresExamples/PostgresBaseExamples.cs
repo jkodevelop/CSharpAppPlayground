@@ -1,23 +1,21 @@
 using Npgsql;
 using CSharpAppPlayground.DBClasses.Data;
-using System.Configuration;
-using System.Data;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses.PostgresExamples
 {
 	public class PostgresBaseExamples
 	{
-		private string connectionStr = string.Empty;
+		//private string connectionStr = string.Empty;
+		//private SqlDBObject? dbObject;
 
-		private SqlDBObject? dbObject;
+		private PostgresBase psqlBase;
 
-		public PostgresBaseExamples()
+        public PostgresBaseExamples()
 		{
-			connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
-		}
+            //connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
+            psqlBase = new PostgresBase();
+        }
 
 		#region INSERT Operations
 
@@ -25,51 +23,44 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					connection.Open();
-					string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+                string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+				return psqlBase.WithSqlCommand(command => {
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Name", obj.Name);
-						command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
 
-						var result = command.ExecuteScalar();
-						return Convert.ToInt32(result);
-					}
-				}
+                    var result = command.ExecuteScalar();
+                    return Convert.ToInt32(result);
+
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
+				Debug.Print($"InsertSqlDBObject(): {ex.Message}");
 			}
+			return -1;
 		}
 
 		public async Task<int> InsertSqlDBObjectAsync(SqlDBObject obj)
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					await connection.OpenAsync();
-					string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+                string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+				return await psqlBase.WithSqlCommandAsync(async command => {
+					command.Parameters.AddWithValue("@Name", obj.Name);
+					command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Name", obj.Name);
-						command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+					object? result = await command.ExecuteScalarAsync();
+					return Convert.ToInt32(result);
 
-						var result = await command.ExecuteScalarAsync();
-						return Convert.ToInt32(result);
-					}
-				}
+				}, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
+				Debug.Print($"InsertSqlDBObjectAsync(): {ex.Message}");
 			}
-		}
+			return -1;
+        }
 
 		#endregion
 
@@ -79,68 +70,60 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+				return psqlBase.WithSqlCommand(command =>
 				{
-					connection.Open();
-					string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", id);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Id", id);
-
-						using (var reader = command.ExecuteReader())
-						{
-							if (reader.Read())
-							{
-								return new SqlDBObject
-								{
-									Id = reader.GetInt32(reader.GetOrdinal("Id")),
-									Name = reader.GetString(reader.GetOrdinal("Name")),
-									CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
-								};
-							}
-						}
-					}
-				}
-				return null;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new SqlDBObject
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
+                            };
+                        }
+						return null;
+                    }
+                },query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error retrieving SqlDBObject by ID: {ex.Message}", ex);
+				Debug.Print($"GetById({id}): {ex.Message}");
 			}
+			return null;
 		}
 
 		public List<SqlDBObject> GetAll()
 		{
 			var objects = new List<SqlDBObject>();
-
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
+				psqlBase.WithSqlCommand<object>(command =>
 				{
-					connection.Open();
-					string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
-
-					using (var command = new NpgsqlCommand(query, connection))
-					using (var reader = command.ExecuteReader())
-					{
-						while (reader.Read())
-						{
-							objects.Add(new SqlDBObject
-							{
-								Id = reader.GetInt32(reader.GetOrdinal("Id")),
-								Name = reader.GetString(reader.GetOrdinal("Name")),
-								CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
-							});
-						}
-					}
-				}
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objects.Add(new SqlDBObject
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
+                            });
+                        }
+                    }
+                    return true; // doesn't matter cause objects is populated by reference
+                },query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+				Debug.Print($"GetAll(): Error retrieving all SqlDBObjects: {ex.Message}");
 			}
-
 			return objects;
 		}
 
@@ -150,35 +133,29 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					connection.Open();
-					string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Name\" ILIKE @Name ORDER BY \"CreatedAt\" DESC";
-
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Name", $"%{name}%");
-
-						using (var reader = command.ExecuteReader())
-						{
-							while (reader.Read())
-							{
-								objects.Add(new SqlDBObject
-								{
-									Id = reader.GetInt32(reader.GetOrdinal("Id")),
-									Name = reader.GetString(reader.GetOrdinal("Name")),
-									CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
-								});
-							}
-						}
-					}
-				}
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Name\" ILIKE @Name ORDER BY \"CreatedAt\" DESC";
+                psqlBase.WithSqlCommand<object>(command =>
+                {
+                    command.Parameters.AddWithValue("@Name", $"%{name}%");
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objects.Add(new SqlDBObject
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
+                            });
+                        }
+                    }
+                    return true; // doesn't matter cause objects is populated by reference
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error retrieving SqlDBObjects by name: {ex.Message}", ex);
+				Debug.Print($"GetByName({name}): Error retrieving SqlDBObjects by name: {ex.Message}");
 			}
-
 			return objects;
 		}
 
@@ -188,12 +165,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
+				await psqlBase.WithSqlCommandAsync<object>(async command =>
 				{
-					await connection.OpenAsync();
-					string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
-
-					using (var command = new NpgsqlCommand(query, connection))
 					using (var reader = await command.ExecuteReaderAsync())
 					{
 						while (await reader.ReadAsync())
@@ -206,11 +180,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 							});
 						}
 					}
-				}
+					return true; // doesn't matter cause objects is populated by reference
+				}, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+				Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObjects: {ex.Message}");
 			}
 
 			return objects;
@@ -224,53 +199,45 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+				return psqlBase.WithSqlCommand(command =>
 				{
-					connection.Open();
-					string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", obj.Id);
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Id", obj.Id);
-						command.Parameters.AddWithValue("@Name", obj.Name);
-						command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0;
-					}
-				}
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+				}, query); // just to validate the query
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error updating SqlDBObject: {ex.Message}", ex);
+				Debug.Print($"Error updating SqlDBObject: {ex.Message}", ex);
 			}
-		}
+			return false;
+        }
 
 		public async Task<bool> UpdateSqlDBObjectAsync(SqlDBObject obj)
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+				return await psqlBase.WithSqlCommandAsync(async command =>
 				{
-					await connection.OpenAsync();
-					string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", obj.Id);
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Id", obj.Id);
-						command.Parameters.AddWithValue("@Name", obj.Name);
-						command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-
-						int rowsAffected = await command.ExecuteNonQueryAsync();
-						return rowsAffected > 0;
-					}
-				}
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error updating SqlDBObject: {ex.Message}", ex);
+				Debug.Print($"UpdateSqlDBObjectAsync(): {ex.Message}");
 			}
-		}
+			return false;
+        }
 
 		#endregion
 
@@ -280,73 +247,61 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+				return psqlBase.WithSqlCommand(command =>
 				{
-					connection.Open();
-					string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", id);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Id", id);
-
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0;
-					}
-				}
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error deleting SqlDBObject by ID: {ex.Message}", ex);
+				Debug.Print($"DeleteById({id}): {ex.Message}");
 			}
+			return false;
 		}
 
 		public bool DeleteByName(string name)
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					connection.Open();
-					string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Name\" = @Name";
+                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Name\" = @Name";
+                return psqlBase.WithSqlCommand(command =>
+                {
+                    command.Parameters.AddWithValue("@Name", name);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Name", name);
-
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0;
-					}
-				}
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error deleting SqlDBObject by name: {ex.Message}", ex);
+				Debug.Print($"DeleteByName({name}): {ex.Message}");
 			}
-		}
+			return false;
+        }
 
 		public async Task<bool> DeleteByIdAsync(int id)
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					await connection.OpenAsync();
-					string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                return await psqlBase.WithSqlCommandAsync(async command =>
+                {
+                    command.Parameters.AddWithValue("@Id", id);
 
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						command.Parameters.AddWithValue("@Id", id);
-
-						int rowsAffected = await command.ExecuteNonQueryAsync();
-						return rowsAffected > 0;
-					}
-				}
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }, query);
 			}
 			catch (Exception ex)
-			{
-				throw new Exception($"Error deleting SqlDBObject by ID: {ex.Message}", ex);
+			{ 
+				Debug.Print($"DeleteByIdAsync({id}): {ex.Message}");
 			}
-		}
+			return false;
+        }
 
 		#endregion
 
@@ -356,42 +311,34 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
+                string query = "SELECT COUNT(*) FROM \"SqlDBObjects\"";
+				return psqlBase.WithSqlCommand(command =>
 				{
-					connection.Open();
-					string query = "SELECT COUNT(*) FROM \"SqlDBObjects\"";
-
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						return Convert.ToInt32(command.ExecuteScalar());
-					}
-				}
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error getting record count: {ex.Message}", ex);
+				Debug.Print($"GetRecordCount(): {ex.Message}");
 			}
+			return -1;
 		}
 
 		public bool TableExists()
 		{
 			try
 			{
-				using (var connection = new NpgsqlConnection(connectionStr))
-				{
-					connection.Open();
-					string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'SqlDBObjects'";
-
-					using (var command = new NpgsqlCommand(query, connection))
-					{
-						return Convert.ToInt32(command.ExecuteScalar()) > 0;
-					}
-				}
+                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'SqlDBObjects'";
+                return psqlBase.WithSqlCommand(command =>
+                {
+                    return Convert.ToInt32(command.ExecuteScalar()) > 0;
+                }, query);
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error checking if table exists: {ex.Message}", ex);
-			}
+                Debug.Print($"TableExists(): {ex.Message}");
+            }
+			return false;
 		}
 
 		#endregion

@@ -1,22 +1,19 @@
 ﻿using CSharpAppPlayground.DBClasses.Data;
-using System.Configuration;
 using MySql.Data.MySqlClient;
-using System.Data;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
 {
     public class MysqlBaseExamples
     {
-        private string connectionStr = string.Empty;
-
-        private SqlDBObject? dbObject;
+        // private string connectionStr = string.Empty;
+        // private SqlDBObject? dbObject;
 
         private MysqlBase mysqlBase;
 
         public MysqlBaseExamples()
         {
-            connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            // connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             mysqlBase = new MysqlBase();
         }
 
@@ -408,7 +405,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                Debug.Print($"DeleteByIdAsync({id}): {ex.Message}", ex);
+                Debug.Print($"DeleteByIdAsync({id}): {ex.Message}");
             }
             return false;
         }

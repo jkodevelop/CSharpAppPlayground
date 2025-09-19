@@ -1,12 +1,10 @@
-﻿using CSharpAppPlayground.DBClasses.Data;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System.Configuration;
 
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
 {
     public class MysqlBase
     {
-        // Add these helper methods to your class
         private string connectionStr = string.Empty;
 
         public MysqlBase()
