@@ -1,0 +1,391 @@
+﻿using CSharpAppPlayground.DBClasses.Data;
+using System.Configuration;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Diagnostics;
+
+// source:
+// https://antondevtips.com/blog/best-practices-when-working-with-mongodb-in-dotnet
+
+namespace CSharpAppPlayground.DBClasses.MongoDBExamples
+{
+   
+    public class MongoDBBaseExamples
+    {
+        private string connectionStr = string.Empty;
+        private MongoClient client;
+        private IMongoDatabase database;
+        private IMongoCollection<MongoDBObject> collection;
+
+        public MongoDBBaseExamples()
+        {
+            // Get connection string from App.config
+            connectionStr = ConfigurationManager.ConnectionStrings["MongoDBConnection"].ConnectionString;
+            
+            // Initialize MongoDB client and database
+            client = new MongoClient(connectionStr);
+            database = client.GetDatabase("testdb");
+            collection = database.GetCollection<MongoDBObject>("testcollection");
+        }
+
+        #region Insert Operations
+
+        public async Task<string> InsertSingleAsync(string name)
+        {
+            try
+            {
+                var document = new MongoDBObject(name);
+                await collection.InsertOneAsync(document);
+                Debug.Print($"Inserted document with ID: {document.Id}");
+                return document.Id;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error inserting document: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> InsertMultipleAsync(List<string> names)
+        {
+            try
+            {
+                var documents = names.Select(name => new MongoDBObject(name)).ToList();
+                await collection.InsertManyAsync(documents);
+                Debug.Print($"Inserted {documents.Count} documents");
+                return documents.Count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error inserting multiple documents: {ex.Message}");
+                throw;
+            }
+        }
+
+        public string InsertSingle(string name)
+        {
+            try
+            {
+                var document = new MongoDBObject(name);
+                collection.InsertOne(document);
+                Debug.Print($"Inserted document with ID: {document.Id}");
+                return document.Id;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error inserting document: {ex.Message}");
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Select Operations
+
+        public async Task<MongoDBObject?> FindByIdAsync(string id)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var document = await collection.Find(filter).FirstOrDefaultAsync();
+                Debug.Print(document != null ? $"Found document: {document}" : "Document not found");
+                return document;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error finding document by ID: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<MongoDBObject>> FindByNameAsync(string name)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
+                var documents = await collection.Find(filter).ToListAsync();
+                Debug.Print($"Found {documents.Count} documents with name '{name}'");
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error finding documents by name: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<MongoDBObject>> FindAllAsync()
+        {
+            try
+            {
+                var documents = await collection.Find(_ => true).ToListAsync();
+                Debug.Print($"Found {documents.Count} documents in collection");
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error finding all documents: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<MongoDBObject>> FindWithPaginationAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var skip = (pageNumber - 1) * pageSize;
+                var documents = await collection.Find(_ => true)
+                    .Skip(skip)
+                    .Limit(pageSize)
+                    .ToListAsync();
+                Debug.Print($"Found {documents.Count} documents on page {pageNumber}");
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error finding documents with pagination: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<MongoDBObject>> FindByDateAfterAsync(DateTime date)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Gt(x => x.CreatedAt, date);
+                var documents = await collection.Find(filter).ToListAsync();
+                Debug.Print($"Found {documents.Count} documents created after {date:yyyy-MM-dd HH:mm:ss}");
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error finding documents by date: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> CountDocumentsAsync()
+        {
+            try
+            {
+                var count = await collection.CountDocumentsAsync(_ => true);
+                Debug.Print($"Total documents in collection: {count}");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error counting documents: {ex.Message}");
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Update Operations
+
+        public async Task<bool> UpdateByIdAsync(string id, string newName)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                var result = await collection.UpdateOneAsync(filter, update);
+                
+                bool updated = result.ModifiedCount > 0;
+                Debug.Print(updated ? $"Updated document with ID: {id}" : $"Document with ID {id} not found");
+                return updated;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error updating document: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> UpdateByNameAsync(string oldName, string newName)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, oldName);
+                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                var result = await collection.UpdateManyAsync(filter, update);
+                
+                Debug.Print($"Updated {result.ModifiedCount} documents from '{oldName}' to '{newName}'");
+                return result.ModifiedCount;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error updating documents by name: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ReplaceDocumentAsync(string id, MongoDBObject newDocument)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var result = await collection.ReplaceOneAsync(filter, newDocument);
+                
+                bool replaced = result.ModifiedCount > 0;
+                Debug.Print(replaced ? $"Replaced document with ID: {id}" : $"Document with ID {id} not found");
+                return replaced;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error replacing document: {ex.Message}");
+                throw;
+            }
+        }
+
+        public bool UpdateById(string id, string newName)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                var result = collection.UpdateOne(filter, update);
+                
+                bool updated = result.ModifiedCount > 0;
+                Debug.Print(updated ? $"Updated document with ID: {id}" : $"Document with ID {id} not found");
+                return updated;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error updating document: {ex.Message}");
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Delete Operations
+
+        public async Task<bool> DeleteByIdAsync(string id)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var result = await collection.DeleteOneAsync(filter);
+                
+                bool deleted = result.DeletedCount > 0;
+                Debug.Print(deleted ? $"Deleted document with ID: {id}" : $"Document with ID {id} not found");
+                return deleted;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error deleting document: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> DeleteByNameAsync(string name)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
+                var result = await collection.DeleteManyAsync(filter);
+                
+                Debug.Print($"Deleted {result.DeletedCount} documents with name '{name}'");
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error deleting documents by name: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> DeleteAllAsync()
+        {
+            try
+            {
+                var result = await collection.DeleteManyAsync(_ => true);
+                Debug.Print($"Deleted {result.DeletedCount} documents from collection");
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error deleting all documents: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<long> DeleteByDateBeforeAsync(DateTime date)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Lt(x => x.CreatedAt, date);
+                var result = await collection.DeleteManyAsync(filter);
+                Debug.Print($"Deleted {result.DeletedCount} documents created before {date:yyyy-MM-dd HH:mm:ss}");
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error deleting documents by date: {ex.Message}");
+                throw;
+            }
+        }
+
+        public bool DeleteById(string id)
+        {
+            try
+            {
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                var result = collection.DeleteOne(filter);
+                
+                bool deleted = result.DeletedCount > 0;
+                Debug.Print(deleted ? $"Deleted document with ID: {id}" : $"Document with ID {id} not found");
+                return deleted;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error deleting document: {ex.Message}");
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Utility Methods
+
+        public async Task<bool> TestConnectionAsync()
+        {
+            try
+            {
+                await database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
+                Debug.Print("MongoDB connection test successful");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"MongoDB connection test failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<string> GetCollectionStatsAsync()
+        {
+            try
+            {
+                var count = await collection.CountDocumentsAsync(_ => true);
+                var stats = await database.RunCommandAsync<BsonDocument>("{collStats: 'testcollection'}");
+                
+                string result = $"Collection Statistics:\n" +
+                              $"- Document Count: {count}\n" +
+                              $"- Collection Size: {stats.GetValue("size", 0)} bytes\n" +
+                              $"- Average Document Size: {stats.GetValue("avgObjSize", 0)} bytes";
+                
+                Debug.Print(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error getting collection stats: {ex.Message}");
+                return "Error retrieving collection statistics";
+            }
+        }
+
+        #endregion
+    }
+}

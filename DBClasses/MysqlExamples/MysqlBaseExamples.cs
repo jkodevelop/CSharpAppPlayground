@@ -11,62 +11,95 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
 
         private SqlDBObject? dbObject;
 
+        private MysqlBase mysqlBase;
+
         public MysqlBaseExamples()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            mysqlBase = new MysqlBase();
         }
 
 
         #region INSERT Operations
 
+        //public int InsertSqlDBObject(SqlDBObject obj)
+        //{
+        //    try
+        //    {
+        //        using (MySqlConnection connection = new MySqlConnection(connectionStr))
+        //        {
+        //            connection.Open();
+        //            string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+
+        //            using (MySqlCommand command = new MySqlCommand(query, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@Name", obj.Name);
+        //                command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+
+        //                var result = command.ExecuteScalar();
+        //                return Convert.ToInt32(result);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
+        //    }
+        //}
+
+        //public async Task<int> InsertSqlDBObjectAsync(SqlDBObject obj)
+        //{
+        //    try
+        //    {
+        //        using (var connection = new MySqlConnection(connectionStr))
+        //        {
+        //            await connection.OpenAsync();
+        //            string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+
+        //            using (var command = new MySqlCommand(query, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@Name", obj.Name);
+        //                command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+
+        //                var result = await command.ExecuteScalarAsync();
+        //                return Convert.ToInt32(result);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
+        //    }
+        //}
+
         public int InsertSqlDBObject(SqlDBObject obj)
         {
-            try
+            return mysqlBase.WithConnection(connection =>
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+                using (var command = new MySqlCommand(query, connection))
                 {
-                    connection.Open();
-                    string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Name", obj.Name);
-                        command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-                        
-                        var result = command.ExecuteScalar();
-                        return Convert.ToInt32(result);
-                    }
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+                    var result = command.ExecuteScalar();
+                    return Convert.ToInt32(result);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
-            }
+            });
         }
 
-        public async Task<int> InsertSqlDBObjectAsync(SqlDBObject obj)
+        public Task<int> InsertSqlDBObjectAsync(SqlDBObject obj)
         {
-            try
+            return mysqlBase.WithConnectionAsync(async connection =>
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+                using (var command = new MySqlCommand(query, connection))
                 {
-                    await connection.OpenAsync();
-                    string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
-                    
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Name", obj.Name);
-                        command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-                        
-                        var result = await command.ExecuteScalarAsync();
-                        return Convert.ToInt32(result);
-                    }
+                    command.Parameters.AddWithValue("@Name", obj.Name);
+                    command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+                    var result = await command.ExecuteScalarAsync();
+                    return Convert.ToInt32(result);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error inserting SqlDBObject: {ex.Message}", ex);
-            }
+            });
         }
 
         #endregion
