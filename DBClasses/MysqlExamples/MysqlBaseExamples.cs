@@ -449,5 +449,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         }
 
         #endregion
+
+        public void RunBasicExample()
+        {
+
+        }
     }
 }

@@ -23,5 +23,10 @@ namespace CSharpAppPlayground
             string serverVersion = mysql.getServerVersion();
             Debug.Print($"{serverVersion}");
         }
+
+        private void btnMysqlBasicExample_Click(object sender, EventArgs e)
+        {
+            // running the basic example
+        }
     }
 }

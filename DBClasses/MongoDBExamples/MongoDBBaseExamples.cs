@@ -65,7 +65,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var document = new MongoDBObject(name);
+                MongoDBObject document = new MongoDBObject(name);
                 await collection.InsertOneAsync(document);
                 Debug.Print($"Inserted document with ID: {document.Id}");
                 return document.Id;
@@ -81,7 +81,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var documents = names.Select(name => new MongoDBObject(name)).ToList();
+                List<MongoDBObject> documents = names.Select(name => new MongoDBObject(name)).ToList();
                 await collection.InsertManyAsync(documents);
                 Debug.Print($"Inserted {documents.Count} documents");
                 return documents.Count;
@@ -97,7 +97,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var document = new MongoDBObject(name);
+                MongoDBObject document = new MongoDBObject(name);
                 collection.InsertOne(document);
                 Debug.Print($"Inserted document with ID: {document.Id}");
                 return document.Id;
@@ -117,8 +117,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var document = await collection.Find(filter).FirstOrDefaultAsync();
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                MongoDBObject? document = await collection.Find(filter).FirstOrDefaultAsync();
                 Debug.Print(document != null ? $"Found document: {document}" : "Document not found");
                 return document;
             }
@@ -133,8 +133,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
-                var documents = await collection.Find(filter).ToListAsync();
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
+                List<MongoDBObject> documents = await collection.Find(filter).ToListAsync();
                 Debug.Print($"Found {documents.Count} documents with name '{name}'");
                 return documents;
             }
@@ -149,7 +149,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var documents = await collection.Find(_ => true).ToListAsync();
+                List<MongoDBObject> documents = await collection.Find(_ => true).ToListAsync();
                 Debug.Print($"Found {documents.Count} documents in collection");
                 return documents;
             }
@@ -164,8 +164,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var skip = (pageNumber - 1) * pageSize;
-                var documents = await collection.Find(_ => true)
+                int skip = (pageNumber - 1) * pageSize;
+                List<MongoDBObject> documents = await collection.Find(_ => true)
                     .Skip(skip)
                     .Limit(pageSize)
                     .ToListAsync();
@@ -183,8 +183,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Gt(x => x.CreatedAt, date);
-                var documents = await collection.Find(filter).ToListAsync();
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Gt(x => x.CreatedAt, date);
+                List<MongoDBObject> documents = await collection.Find(filter).ToListAsync();
                 Debug.Print($"Found {documents.Count} documents created after {date:yyyy-MM-dd HH:mm:ss}");
                 return documents;
             }
@@ -199,7 +199,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var count = await collection.CountDocumentsAsync(_ => true);
+                long count = await collection.CountDocumentsAsync(_ => true);
                 Debug.Print($"Total documents in collection: {count}");
                 return count;
             }
@@ -218,9 +218,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
-                var result = await collection.UpdateOneAsync(filter, update);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                UpdateDefinition<MongoDBObject> update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                UpdateResult result = await collection.UpdateOneAsync(filter, update);
                 
                 bool updated = result.ModifiedCount > 0;
                 Debug.Print(updated ? $"Updated document with ID: {id}" : $"Document with ID {id} not found");
@@ -237,11 +237,11 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, oldName);
-                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
-                var result = await collection.UpdateManyAsync(filter, update);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, oldName);
+                UpdateDefinition<MongoDBObject> update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                UpdateResult result = await collection.UpdateManyAsync(filter, update);
                 
-                Debug.Print($"Updated {result.ModifiedCount} documents from '{oldName}' to '{newName}'");
+                Debug.Print($"Update    d {result.ModifiedCount} documents from '{oldName}' to '{newName}'");
                 return result.ModifiedCount;
             }
             catch (Exception ex)
@@ -255,8 +255,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var result = await collection.ReplaceOneAsync(filter, newDocument);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                ReplaceOneResult result = await collection.ReplaceOneAsync(filter, newDocument);
                 
                 bool replaced = result.ModifiedCount > 0;
                 Debug.Print(replaced ? $"Replaced document with ID: {id}" : $"Document with ID {id} not found");
@@ -273,9 +273,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
-                var result = collection.UpdateOne(filter, update);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                UpdateDefinition<MongoDBObject> update = Builders<MongoDBObject>.Update.Set(x => x.Name, newName);
+                UpdateResult result = collection.UpdateOne(filter, update);
                 
                 bool updated = result.ModifiedCount > 0;
                 Debug.Print(updated ? $"Updated document with ID: {id}" : $"Document with ID {id} not found");
@@ -296,8 +296,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var result = await collection.DeleteOneAsync(filter);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                DeleteResult result = await collection.DeleteOneAsync(filter);
                 
                 bool deleted = result.DeletedCount > 0;
                 Debug.Print(deleted ? $"Deleted document with ID: {id}" : $"Document with ID {id} not found");
@@ -314,8 +314,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
-                var result = await collection.DeleteManyAsync(filter);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, name);
+                DeleteResult result = await collection.DeleteManyAsync(filter);
                 
                 Debug.Print($"Deleted {result.DeletedCount} documents with name '{name}'");
                 return result.DeletedCount;
@@ -331,7 +331,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var result = await collection.DeleteManyAsync(_ => true);
+                DeleteResult result = await collection.DeleteManyAsync(_ => true);
                 Debug.Print($"Deleted {result.DeletedCount} documents from collection");
                 return result.DeletedCount;
             }
@@ -346,8 +346,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Lt(x => x.CreatedAt, date);
-                var result = await collection.DeleteManyAsync(filter);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Lt(x => x.CreatedAt, date);
+                DeleteResult result = await collection.DeleteManyAsync(filter);
                 Debug.Print($"Deleted {result.DeletedCount} documents created before {date:yyyy-MM-dd HH:mm:ss}");
                 return result.DeletedCount;
             }
@@ -362,8 +362,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
-                var result = collection.DeleteOne(filter);
+                FilterDefinition<MongoDBObject> filter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, id);
+                DeleteResult result = collection.DeleteOne(filter);
                 
                 bool deleted = result.DeletedCount > 0;
                 Debug.Print(deleted ? $"Deleted document with ID: {id}" : $"Document with ID {id} not found");
