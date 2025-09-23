@@ -1,11 +1,13 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 
 namespace CSharpAppPlayground.DBClasses.Data
 {
     public class MongoDBObject
     {
+        // public ObjectId Id { get; set; } // one option for ID, not the best option
+
+        // better option for ID, string representation of ObjectId, allows for Mongo to auto create the IDs
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = string.Empty;

@@ -4,23 +4,23 @@
 // Switch to the database (create if it doesn't exist)
 use testdb;
 
-var colName = "MongoDBObject";
+var collectionName = "MongoDBObject";
 
 // Drop the collection if it exists (for clean recreation)
 // collection selection options:
 //
 // db.ExampleDBObject
-// db[colName]
-// db.getCollection(colName)
+// db[collectionName]
+// db.getCollection(collectionName)
 
-db[colName].drop();
+db[collectionName].drop();
 
 // Create the ExampleDBObject collection
 // Note: MongoDB creates collections implicitly when first document is inserted
 // But we can create it explicitly and add validation rules
 
 // Create collection with validation schema
-db.createCollection(colName, {
+db.createCollection(collectionName, {
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -46,11 +46,11 @@ db.createCollection(colName, {
 });
 
 // Create indexes for better performance
-db[colName].createIndex({ "Name": 1 });
-db[colName].createIndex({ "CreatedAt": 1 });
+db[collectionName].createIndex({ "Name": 1 });
+db[collectionName].createIndex({ "CreatedAt": 1 });
 
 // Insert sample data
-db[colName].insertMany([
+db[collectionName].insertMany([
     {
         Name: "Sample Object 1",
         CreatedAt: new Date()
@@ -66,14 +66,14 @@ db[colName].insertMany([
 ]);
 
 // Verify collection creation and indexes
-print("Collection created: " + db[colName].getName());
+print("Collection created: " + db[collectionName].getName());
 print("Indexes:");
-db[colName].getIndexes().forEach(printjson);
+db[collectionName].getIndexes().forEach(printjson);
 
 // Show sample data
 print("Sample documents:");
-db[colName].find().forEach(printjson);
+db[collectionName].find().forEach(printjson);
 
 // Show collection statistics
 print("Collection stats:");
-printjson(db[colName].stats());
+printjson(db[collectionName].stats());

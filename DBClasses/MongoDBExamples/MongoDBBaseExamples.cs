@@ -1,7 +1,10 @@
 ﻿using CSharpAppPlayground.DBClasses.Data;
-using System.Configuration;
-using MongoDB.Driver;
+using CSharpAppPlayground.DBClasses.MongoDBExamples.Collections;
+using CSharpAppPlayground.DIExample.median;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
+using MongoDB.Driver;
+using System.Configuration;
 using System.Diagnostics;
 
 // source:
@@ -9,9 +12,11 @@ using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses.MongoDBExamples
 {
-   
     public class MongoDBBaseExamples
     {
+        // SIMPLER VERSION WITHOUT DEPENDENCY INJECTION
+        //
+        /*
         private string connectionStr = string.Empty;
         private MongoClient client;
         private IMongoDatabase database;
@@ -26,6 +31,32 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
             client = new MongoClient(connectionStr);
             database = client.GetDatabase("testdb");
             collection = database.GetCollection<MongoDBObject>("testcollection");
+        }
+        */
+
+        // VERSION WITH DEPENDENCY INJECTION
+        private _connMongoDBStandard _conn = new _connMongoDBStandard();
+        private IMongoDatabase database;
+        private IMongoCollection<MongoDBObject> collection;
+
+        public MongoDBBaseExamples()
+        {
+            ServiceProvider serviceProvider = _conn.GetServiceProvider();
+
+            database = serviceProvider
+                .GetRequiredService<IMongoClient>()
+                .GetDatabase(_connMongoDBStandard.dbName);
+
+            // Option 1. get collection example basic
+            // 
+            //collection = serviceProvider
+            //    .GetRequiredService<IMongoClient>()
+            //    .GetDatabase(_connMongoDBStandard.dbName)
+            //    .GetCollection<MongoDBObject>("MongoDBObject");
+
+            // Option 2. get collection using CollectionsManager
+            //
+            collection = serviceProvider.GetRequiredService<CollectionsManager>().MongoDBObjectCollection; // implicitly requesting the service via interface
         }
 
         #region Insert Operations
@@ -368,13 +399,13 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         {
             try
             {
-                var count = await collection.CountDocumentsAsync(_ => true);
-                var stats = await database.RunCommandAsync<BsonDocument>("{collStats: 'testcollection'}");
+                long count = await collection.CountDocumentsAsync(_ => true);
+                BsonDocument stats = await database.RunCommandAsync<BsonDocument>("{collStats: 'testcollection'}");
                 
-                string result = $"Collection Statistics:\n" +
-                              $"- Document Count: {count}\n" +
-                              $"- Collection Size: {stats.GetValue("size", 0)} bytes\n" +
-                              $"- Average Document Size: {stats.GetValue("avgObjSize", 0)} bytes";
+                string result = @$"Collection Statistics:\n
+                              - Document Count: {count}\n
+                              - Collection Size: {stats.GetValue("size", 0)} bytes\n
+                              - Average Document Size: {stats.GetValue("avgObjSize", 0)} bytes";
                 
                 Debug.Print(result);
                 return result;

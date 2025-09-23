@@ -13,13 +13,16 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
 {
     public class _connMongoDB
     {
-        private MongoClient client;
+        private MongoClient? client;
         private bool connected = false;
-        private string connectionStr = string.Empty;
+        private static string connectionStr = string.Empty;
+
+        public static readonly string dbName = "testdb";
 
         public _connMongoDB()
         {
-           
+            // Connection string to connect to MongoDB
+            connectionStr = ConfigurationManager.ConnectionStrings["MongoDBConnection"].ConnectionString;
         }
 
         public MongoClient getClient()
@@ -29,8 +32,6 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
 
             try
             {
-                // Connection string to connect to MongoDB
-                connectionStr = ConfigurationManager.ConnectionStrings["MongoDBConnection"].ConnectionString;
                 // how many seconds to wait before a timeout occurs, default is 3 seconds in mongo db driver
                 //MongoClientSettings settings = MongoClientSettings.FromConnectionString(connectionStr);
                 //settings.ConnectTimeout = TimeSpan.FromSeconds(2);
