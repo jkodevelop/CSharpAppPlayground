@@ -6,6 +6,9 @@ namespace CSharpAppPlayground
     public partial class FormDBPostgres : Form
     {
         _connPostgres connPostgres;
+
+        PostgresBaseExamples baseExamples = new PostgresBaseExamples();
+
         public FormDBPostgres()
         {
             InitializeComponent();
@@ -21,6 +24,12 @@ namespace CSharpAppPlayground
         {
             string serverVersion = connPostgres.getServerVersion();
             Debug.Print($"{serverVersion}");
+        }
+
+        private void btnPostgresBasicExample_Click(object sender, EventArgs e)
+        {
+            // running basic example: insert, select, update, delete
+            baseExamples.RunBasicExample();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace CSharpAppPlayground
 
         private void btnMysqlBasicExample_Click(object sender, EventArgs e)
         {
-            // running the basic example
+            // running basic example: insert, select, update, delete
             baseExamples.RunBasicExample();
         }
     }

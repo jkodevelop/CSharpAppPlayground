@@ -342,5 +342,51 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		}
 
 		#endregion
-	}
+	
+		public void RunBasicExample()
+		{
+            Debug.Print("Postgre Basic Example Started");
+            try
+			{	
+				// Check if table exists
+				if (!TableExists())
+				{
+					Debug.Print("Table 'SqlDBObject' does not exist. Please create the table before running this example.");
+					return;
+				}
+				// Insert a new record
+				var newObj = new SqlDBObject
+				{
+					Name = "Test Object",
+					CreatedAt = DateTime.Now
+				};
+				int newId = InsertSqlDBObject(newObj);
+				Debug.Print($"Inserted new SqlDBObject with Id: {newId}");
+				// Retrieve the inserted record
+				var retrievedObj = GetById(newId);
+				if (retrievedObj != null)
+				{
+					Debug.Print($"Retrieved SqlDBObject: Id={retrievedObj.Id}, Name={retrievedObj.Name}, CreatedAt={retrievedObj.CreatedAt}");
+				}
+				// Update the record
+				if (retrievedObj != null)
+				{
+					retrievedObj.Name = "Updated Test Object";
+					bool updateResult = UpdateSqlDBObject(retrievedObj);
+					Debug.Print($"Update result: {updateResult}");
+				}
+				// Retrieve all records
+				//var allObjects = GetAll();
+				//Debug.Print($"Total SqlDBObject records: {allObjects.Count}");
+				// Delete the inserted record
+				bool deleteResult = DeleteById(newId);
+				Debug.Print($"Delete result for Id {newId}: {deleteResult}");
+				Debug.Print("PostgreSQL Basic Example Completed");
+			}
+			catch (Exception ex)
+			{
+				Debug.Print($"RunBasicExample(): {ex.Message}");
+			}
+        }
+    }
 }

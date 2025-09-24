@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             btnPostgresStatus = new Button();
+            btnPostgresBasicExample = new Button();
             SuspendLayout();
             // 
             // btnPostgresStatus
@@ -41,11 +42,22 @@
             btnPostgresStatus.UseVisualStyleBackColor = true;
             btnPostgresStatus.Click += btnPostgresStatus_Click;
             // 
+            // btnPostgresBasicExample
+            // 
+            btnPostgresBasicExample.Location = new Point(21, 70);
+            btnPostgresBasicExample.Name = "btnPostgresBasicExample";
+            btnPostgresBasicExample.Size = new Size(132, 32);
+            btnPostgresBasicExample.TabIndex = 2;
+            btnPostgresBasicExample.Text = "Basic examples";
+            btnPostgresBasicExample.UseVisualStyleBackColor = true;
+            btnPostgresBasicExample.Click += btnPostgresBasicExample_Click;
+            // 
             // FormDBPostgres
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnPostgresBasicExample);
             Controls.Add(btnPostgresStatus);
             Name = "FormDBPostgres";
             Text = "FormDBPostgres";
@@ -55,5 +67,6 @@
         #endregion
 
         private Button btnPostgresStatus;
+        private Button btnPostgresBasicExample;
     }
 }

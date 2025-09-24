@@ -453,6 +453,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         public void RunBasicExample()
         {
             // this run a basic example of inserting, retrieving, updating, and deleting a SqlDBObject
+            Debug.Print("Mysql Basic Example Started");
             try
             {
                 // Insert
