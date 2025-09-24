@@ -6,6 +6,8 @@ namespace CSharpAppPlayground
     public partial class FormDBMysql : Form
     {
         _connMysql mysql;
+
+        MysqlBaseExamples baseExamples = new MysqlBaseExamples();
         public FormDBMysql()
         {
             InitializeComponent();
@@ -27,6 +29,7 @@ namespace CSharpAppPlayground
         private void btnMysqlBasicExample_Click(object sender, EventArgs e)
         {
             // running the basic example
+            baseExamples.RunBasicExample();
         }
     }
 }

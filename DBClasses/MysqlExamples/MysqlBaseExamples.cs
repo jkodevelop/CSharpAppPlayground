@@ -27,7 +27,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         //        using (MySqlConnection connection = new MySqlConnection(connectionStr))
         //        {
         //            connection.Open();
-        //            string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+        //            string query = "INSERT INTO SqlDBObject (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
 
         //            using (MySqlCommand command = new MySqlCommand(query, connection))
         //            {
@@ -52,7 +52,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         //        using (var connection = new MySqlConnection(connectionStr))
         //        {
         //            await connection.OpenAsync();
-        //            string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+        //            string query = "INSERT INTO SqlDBObject (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
 
         //            using (var command = new MySqlCommand(query, connection))
         //            {
@@ -74,7 +74,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+                string query = "INSERT INTO SqlDBObject (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
                 return mysqlBase.WithSqlCommand((command =>
                 {
                     command.Parameters.AddWithValue("@Name", obj.Name);
@@ -94,7 +94,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try 
             {
-                string query = "INSERT INTO SqlDBObjects (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
+                string query = "INSERT INTO SqlDBObject (Name, CreatedAt) VALUES (@Name, @CreatedAt); SELECT LAST_INSERT_ID();";
                 return mysqlBase.WithSqlCommandAsync(async command =>
                 {
                     command.Parameters.AddWithValue("@Name", obj.Name);
@@ -119,7 +119,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             SqlDBObject? obj = null;
             try
             {
-                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Id = @Id";
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject WHERE Id = @Id";
                 obj = mysqlBase.WithSqlCommand(command =>
                 {
                     SqlDBObject? res = null;
@@ -150,7 +150,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY Id DESC LIMIT 1";
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject ORDER BY Id DESC LIMIT 1";
                 return mysqlBase.WithSqlCommand(command =>
                 {
                     SqlDBObject? res = null;
@@ -185,7 +185,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         //        using (var connection = new MySqlConnection(connectionStr))
         //        {
         //            connection.Open();
-        //            string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+        //            string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject ORDER BY CreatedAt DESC";
 
         //            using (var command = new MySqlCommand(query, connection))
         //            using (var reader = command.ExecuteReader())
@@ -204,7 +204,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         //    }
         //    catch (Exception ex)
         //    {
-        //        throw new Exception($"Error retrieving all SqlDBObjects: {ex.Message}", ex);
+        //        throw new Exception($"Error retrieving all SqlDBObject: {ex.Message}", ex);
         //    }
 
         //    return objects;
@@ -215,7 +215,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             List<SqlDBObject> objects = new List<SqlDBObject>();
             try
             {
-                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject ORDER BY CreatedAt DESC";
                 mysqlBase.WithSqlCommand<object>(command =>
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -235,7 +235,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                Debug.Print($"GetAll(): Error retrieving all SqlDBObjects: {ex.Message}");
+                Debug.Print($"GetAll(): Error retrieving all SqlDBObject: {ex.Message}");
             }
             return objects;
         }
@@ -245,7 +245,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             var objects = new List<SqlDBObject>();
             try
             {
-                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects WHERE Name LIKE @Name ORDER BY CreatedAt DESC";
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject WHERE Name LIKE @Name ORDER BY CreatedAt DESC";
                 mysqlBase.WithSqlCommand<object>(command =>
                 {
                     command.Parameters.AddWithValue("@Name", $"%{name}%");
@@ -266,7 +266,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                Debug.Print($"GetByName({name}): Error retrieving SqlDBObjects by name: {ex.Message}");
+                Debug.Print($"GetByName({name}): Error retrieving SqlDBObject by name: {ex.Message}");
             }
             return objects;
         }
@@ -276,7 +276,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             List<SqlDBObject> objects = new List<SqlDBObject>();
             try
             {
-                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObjects ORDER BY CreatedAt DESC";
+                string query = "SELECT Id, Name, CreatedAt FROM SqlDBObject ORDER BY CreatedAt DESC";
                 await mysqlBase.WithSqlCommandAsync<object>(async command =>
                 {
                     using (MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync())
@@ -296,7 +296,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
             }
             catch (Exception ex)
             {
-                Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObjects: {ex.Message}");
+                Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObject: {ex.Message}");
             }
             return objects;
         }
@@ -309,7 +309,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
+                string query = "UPDATE SqlDBObject SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
                 return mysqlBase.WithSqlCommand(command =>
                 {
                     command.Parameters.AddWithValue("@Id", obj.Id);
@@ -331,7 +331,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "UPDATE SqlDBObjects SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
+                string query = "UPDATE SqlDBObject SET Name = @Name, CreatedAt = @CreatedAt WHERE Id = @Id";
                 return await mysqlBase.WithSqlCommandAsync(async command =>
                 {
                     command.Parameters.AddWithValue("@Id", obj.Id);
@@ -357,8 +357,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
-                mysqlBase.WithSqlCommand(command =>
+                string query = "DELETE FROM SqlDBObject WHERE Id = @Id";
+                return mysqlBase.WithSqlCommand(command =>
                 {
                     command.Parameters.AddWithValue("@Id", id);
                     int rowsAffected = command.ExecuteNonQuery();
@@ -376,8 +376,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "DELETE FROM SqlDBObjects WHERE Name = @Name";
-                mysqlBase.WithSqlCommand(command =>
+                string query = "DELETE FROM SqlDBObject WHERE Name = @Name";
+                return mysqlBase.WithSqlCommand(command =>
                 {
                     command.Parameters.AddWithValue("@Name", name);
                     int rowsAffected = command.ExecuteNonQuery();
@@ -395,7 +395,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "DELETE FROM SqlDBObjects WHERE Id = @Id";
+                string query = "DELETE FROM SqlDBObject WHERE Id = @Id";
                 return await mysqlBase.WithSqlCommandAsync(async command =>
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -418,7 +418,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "SELECT COUNT(*) FROM SqlDBObjects";
+                string query = "SELECT COUNT(*) FROM SqlDBObject";
                 return mysqlBase.WithSqlCommand(command =>
                 {
                     return Convert.ToInt32(command.ExecuteScalar());
@@ -435,7 +435,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         {
             try
             {
-                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'SqlDBObjects'";
+                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'SqlDBObject'";
                 return mysqlBase.WithSqlCommand(command =>
                 {
                     return Convert.ToInt32(command.ExecuteScalar()) > 0;
@@ -452,7 +452,34 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
 
         public void RunBasicExample()
         {
-
+            // this run a basic example of inserting, retrieving, updating, and deleting a SqlDBObject
+            try
+            {
+                // Insert
+                var newObj = new SqlDBObject { Name = "Test Object", CreatedAt = DateTime.Now };
+                int newId = InsertSqlDBObject(newObj);
+                Debug.Print($"Inserted new SqlDBObject with Id: {newId}");
+                // Retrieve
+                var retrievedObj = GetById(newId);
+                if (retrievedObj != null)
+                {
+                    Debug.Print($"Retrieved SqlDBObject: {retrievedObj.ToString()}");
+                }
+                // Update
+                if (retrievedObj != null)
+                {
+                    retrievedObj.Name = "Updated Test Object";
+                    bool updateSuccess = UpdateSqlDBObject(retrievedObj);
+                    Debug.Print($"Update success: {updateSuccess}");
+                }
+                // Delete
+                bool deleteSuccess = DeleteById(newId);
+                Debug.Print($"Delete success byId({newId}): {deleteSuccess}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"RunBasicExample(): {ex.Message}");
+            }
         }
     }
 }

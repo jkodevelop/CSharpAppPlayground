@@ -23,7 +23,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+                string query = "INSERT INTO \"SqlDBObject\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
 				return psqlBase.WithSqlCommand(command => {
 
                     command.Parameters.AddWithValue("@Name", obj.Name);
@@ -45,7 +45,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "INSERT INTO \"SqlDBObjects\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
+                string query = "INSERT INTO \"SqlDBObject\" (\"Name\", \"CreatedAt\") VALUES (@Name, @CreatedAt) RETURNING \"Id\";";
 				return await psqlBase.WithSqlCommandAsync(async command => {
 					command.Parameters.AddWithValue("@Name", obj.Name);
 					command.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
@@ -70,7 +70,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObject\" WHERE \"Id\" = @Id";
 				return psqlBase.WithSqlCommand(command =>
 				{
                     command.Parameters.AddWithValue("@Id", id);
@@ -102,7 +102,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 			var objects = new List<SqlDBObject>();
 			try
 			{
-                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObject\" ORDER BY \"CreatedAt\" DESC";
 				psqlBase.WithSqlCommand<object>(command =>
 				{
                     using (var reader = command.ExecuteReader())
@@ -122,7 +122,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 			}
 			catch (Exception ex)
 			{
-				Debug.Print($"GetAll(): Error retrieving all SqlDBObjects: {ex.Message}");
+				Debug.Print($"GetAll(): Error retrieving all SqlDBObject: {ex.Message}");
 			}
 			return objects;
 		}
@@ -133,7 +133,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
 			try
 			{
-                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" WHERE \"Name\" ILIKE @Name ORDER BY \"CreatedAt\" DESC";
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObject\" WHERE \"Name\" ILIKE @Name ORDER BY \"CreatedAt\" DESC";
                 psqlBase.WithSqlCommand<object>(command =>
                 {
                     command.Parameters.AddWithValue("@Name", $"%{name}%");
@@ -154,7 +154,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 			}
 			catch (Exception ex)
 			{
-				Debug.Print($"GetByName({name}): Error retrieving SqlDBObjects by name: {ex.Message}");
+				Debug.Print($"GetByName({name}): Error retrieving SqlDBObject by name: {ex.Message}");
 			}
 			return objects;
 		}
@@ -165,7 +165,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
 			try
 			{
-                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObjects\" ORDER BY \"CreatedAt\" DESC";
+                string query = "SELECT \"Id\", \"Name\", \"CreatedAt\" FROM \"SqlDBObject\" ORDER BY \"CreatedAt\" DESC";
 				await psqlBase.WithSqlCommandAsync<object>(async command =>
 				{
 					using (var reader = await command.ExecuteReaderAsync())
@@ -185,7 +185,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 			}
 			catch (Exception ex)
 			{
-				Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObjects: {ex.Message}");
+				Debug.Print($"GetAllAsync(): Error retrieving all SqlDBObject: {ex.Message}");
 			}
 
 			return objects;
@@ -199,7 +199,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+                string query = "UPDATE \"SqlDBObject\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
 				return psqlBase.WithSqlCommand(command =>
 				{
                     command.Parameters.AddWithValue("@Id", obj.Id);
@@ -221,7 +221,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "UPDATE \"SqlDBObjects\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
+                string query = "UPDATE \"SqlDBObject\" SET \"Name\" = @Name, \"CreatedAt\" = @CreatedAt WHERE \"Id\" = @Id";
 				return await psqlBase.WithSqlCommandAsync(async command =>
 				{
                     command.Parameters.AddWithValue("@Id", obj.Id);
@@ -247,7 +247,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                string query = "DELETE FROM \"SqlDBObject\" WHERE \"Id\" = @Id";
 				return psqlBase.WithSqlCommand(command =>
 				{
                     command.Parameters.AddWithValue("@Id", id);
@@ -267,7 +267,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Name\" = @Name";
+                string query = "DELETE FROM \"SqlDBObject\" WHERE \"Name\" = @Name";
                 return psqlBase.WithSqlCommand(command =>
                 {
                     command.Parameters.AddWithValue("@Name", name);
@@ -287,7 +287,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "DELETE FROM \"SqlDBObjects\" WHERE \"Id\" = @Id";
+                string query = "DELETE FROM \"SqlDBObject\" WHERE \"Id\" = @Id";
                 return await psqlBase.WithSqlCommandAsync(async command =>
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -311,7 +311,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "SELECT COUNT(*) FROM \"SqlDBObjects\"";
+                string query = "SELECT COUNT(*) FROM \"SqlDBObject\"";
 				return psqlBase.WithSqlCommand(command =>
 				{
                     return Convert.ToInt32(command.ExecuteScalar());
@@ -328,7 +328,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 		{
 			try
 			{
-                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'SqlDBObjects'";
+                string query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'SqlDBObject'";
                 return psqlBase.WithSqlCommand(command =>
                 {
                     return Convert.ToInt32(command.ExecuteScalar()) > 0;
