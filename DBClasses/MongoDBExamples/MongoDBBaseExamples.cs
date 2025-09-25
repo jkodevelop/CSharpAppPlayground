@@ -54,7 +54,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
             //    .GetDatabase(_connMongoDBStandard.dbName)
             //    .GetCollection<MongoDBObject>("MongoDBObject");
 
-            // Option 2. get collection using CollectionsManager
+            // Option 2. get collection using CollectionsManagerm - DI example
             //
             collection = serviceProvider.GetRequiredService<CollectionsManager>().MongoDBObjectCollection; // implicitly requesting the service via interface
         }
@@ -418,5 +418,55 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
         }
 
         #endregion
+
+        public void RunBasicExample()
+        {
+            Debug.Print("Running MongoDB Basic Example...");
+            try
+            {
+                // 1. INSERT: Create a new MongoDBObject and insert it into the collection
+                var newObj = new MongoDBObject { Name = "Inserted Object", CreatedAt = DateTime.UtcNow };
+                collection.InsertOne(newObj);
+                Debug.Print($"Inserted document with Id: {newObj.Id}");
+
+                // 2. SELECT: Find the inserted object by name
+                var filter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, "Inserted Object");
+                var foundObj = collection.Find(filter).FirstOrDefault();
+                if (foundObj != null)
+                {
+                    // Debug.Print($"Found document: Id={foundObj.Id}, Name={foundObj.Name}, CreatedAt={foundObj.CreatedAt}");
+                    Debug.Print($"Found document: {foundObj.ToString()}");
+                }
+
+                // 3. UPDATE: Update the Name of the inserted object
+                var update = Builders<MongoDBObject>.Update.Set(x => x.Name, "Updated Object");
+                var updateResult = collection.UpdateOne(filter, update);
+                Debug.Print($"Matched {updateResult.MatchedCount} document(s), Modified {updateResult.ModifiedCount} document(s)");
+
+                // 4. SELECT: Verify the update
+                var updatedFilter = Builders<MongoDBObject>.Filter.Eq(x => x.Name, "Updated Object");
+                var updatedObj = collection.Find(updatedFilter).FirstOrDefault();
+                if (updatedObj != null)
+                {
+                    Debug.Print($"Updated document: {updatedObj.ToString()}");
+                }
+
+                // 5. DELETE: Delete the updated object
+                var deleteFilter = Builders<MongoDBObject>.Filter.Eq(x => x.Id, updatedObj.Id);
+                var deleteResult = collection.DeleteOne(deleteFilter);
+                Debug.Print($"Deleted {deleteResult.DeletedCount} document(s)");
+
+                // 6. SELECT: Verify deletion
+                var deletedObj = collection.Find(deleteFilter).FirstOrDefault();
+                if (deletedObj == null)
+                    Debug.Print("Document successfully deleted.");
+                else
+                    Debug.Print("Document still exists after delete.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in MongoDB Basic Example: {ex.Message}");
+            }
+        }
     }
 }

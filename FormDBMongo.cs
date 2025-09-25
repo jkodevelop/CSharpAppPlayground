@@ -6,6 +6,8 @@ namespace CSharpAppPlayground
     public partial class FormDBMongo : Form
     {
         public _connMongoDB mongo;
+
+        protected MongoDBBaseExamples basicExamples = new MongoDBBaseExamples();
         public FormDBMongo()
         {
             InitializeComponent();
@@ -21,6 +23,11 @@ namespace CSharpAppPlayground
         {
             string serverVersion = mongo.getServerVersion();
             Debug.Print($"{serverVersion}");
+        }
+
+        private void btnMongoBasicExample_Click(object sender, EventArgs e)
+        {
+            basicExamples.RunBasicExample();
         }
     }
 }

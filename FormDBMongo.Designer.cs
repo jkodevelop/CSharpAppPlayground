@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             btnMongoStatus = new Button();
+            btnMongoBasicExample = new Button();
             SuspendLayout();
             // 
             // btnMongoStatus
@@ -41,11 +42,22 @@
             btnMongoStatus.UseVisualStyleBackColor = true;
             btnMongoStatus.Click += btnMongoStatus_Click;
             // 
+            // btnMongoBasicExample
+            // 
+            btnMongoBasicExample.Location = new Point(21, 69);
+            btnMongoBasicExample.Name = "btnMongoBasicExample";
+            btnMongoBasicExample.Size = new Size(132, 33);
+            btnMongoBasicExample.TabIndex = 2;
+            btnMongoBasicExample.Text = "Basic examples";
+            btnMongoBasicExample.UseVisualStyleBackColor = true;
+            btnMongoBasicExample.Click += btnMongoBasicExample_Click;
+            // 
             // FormDBMongo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnMongoBasicExample);
             Controls.Add(btnMongoStatus);
             Name = "FormDBMongo";
             Text = "FormDBMongo";
@@ -55,5 +67,6 @@
         #endregion
 
         private Button btnMongoStatus;
+        private Button btnMongoBasicExample;
     }
 }

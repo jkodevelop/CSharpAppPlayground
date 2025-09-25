@@ -46,7 +46,7 @@
             // 
             btnMysqlBasicExample.Location = new Point(21, 70);
             btnMysqlBasicExample.Name = "btnMysqlBasicExample";
-            btnMysqlBasicExample.Size = new Size(132, 29);
+            btnMysqlBasicExample.Size = new Size(132, 31);
             btnMysqlBasicExample.TabIndex = 1;
             btnMysqlBasicExample.Text = "Basic examples";
             btnMysqlBasicExample.UseVisualStyleBackColor = true;
