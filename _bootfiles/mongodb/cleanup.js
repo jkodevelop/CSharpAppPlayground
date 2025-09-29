@@ -8,3 +8,10 @@
 use testdb
 db.dropUser('testuser')
 db.dropDatabase()
+
+// for replica sets and sharded clusters, ensure the dropUser command is acknowledged by a majority of nodes
+//
+//db.runCommand({
+//    dropUser: "username",
+//    writeConcern: { w: "majority", wtimeout: 5000 }
+//})
