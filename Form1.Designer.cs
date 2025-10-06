@@ -37,6 +37,7 @@
             btnConcurThread = new Button();
             btnConcurParallel = new Button();
             btnDBs = new Button();
+            btnLogging = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -121,7 +122,7 @@
             // 
             // btnDBs
             // 
-            btnDBs.Location = new Point(12, 295);
+            btnDBs.Location = new Point(12, 323);
             btnDBs.Name = "btnDBs";
             btnDBs.Size = new Size(183, 44);
             btnDBs.TabIndex = 21;
@@ -129,11 +130,22 @@
             btnDBs.UseVisualStyleBackColor = true;
             btnDBs.Click += btnDBs_Click;
             // 
+            // btnLogging
+            // 
+            btnLogging.Location = new Point(12, 275);
+            btnLogging.Name = "btnLogging";
+            btnLogging.Size = new Size(183, 23);
+            btnLogging.TabIndex = 22;
+            btnLogging.Text = "Logging";
+            btnLogging.UseVisualStyleBackColor = true;
+            btnLogging.Click += btnLogging_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 426);
+            Controls.Add(btnLogging);
             Controls.Add(btnDBs);
             Controls.Add(btnConcurParallel);
             Controls.Add(btnConcurThread);
@@ -159,5 +171,6 @@
         private Button btnConcurThread;
         private Button btnConcurParallel;
         private Button btnDBs;
+        private Button btnLogging;
     }
 }

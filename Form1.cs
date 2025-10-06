@@ -105,5 +105,13 @@ namespace CSharpAppPlayground
         {
             _formDBs.Open();
         }
+
+        TraceLogger tLogger = new TraceLogger();
+        private void btnLogging_Click(object sender, EventArgs e)
+        {
+            // show examples from TraceLogger, GlobalLogger(ILogger) from .Loggers Namespace
+            GlobalLogger.Instance.LogInformation("Hi From GlobalLogger<ILogger>");
+            tLogger.Info("Hi From TraceLogger", "Form1.btnLogging_Click");
+        }
     }
 }
