@@ -45,9 +45,4 @@
     
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DBClasses\MongoDBBenchmark\" />
-    <Folder Include="DBClasses\PostgresBenchmark\" />
-  </ItemGroup>
-
 </Project>
