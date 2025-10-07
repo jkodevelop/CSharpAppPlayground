@@ -34,6 +34,7 @@
             btnMySQLStatus = new Button();
             btnPostgresStatus = new Button();
             btnMongoDBStatus = new Button();
+            btnDBBenchmark = new Button();
             SuspendLayout();
             // 
             // btnMySQL
@@ -96,11 +97,22 @@
             btnMongoDBStatus.UseVisualStyleBackColor = true;
             btnMongoDBStatus.Click += btnMongoDBStatus_Click;
             // 
+            // btnDBBenchmark
+            // 
+            btnDBBenchmark.Location = new Point(22, 201);
+            btnDBBenchmark.Name = "btnDBBenchmark";
+            btnDBBenchmark.Size = new Size(170, 35);
+            btnDBBenchmark.TabIndex = 6;
+            btnDBBenchmark.Text = "Benchmark";
+            btnDBBenchmark.UseVisualStyleBackColor = true;
+            btnDBBenchmark.Click += btnDBBenchmark_Click;
+            // 
             // FormDBsMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnDBBenchmark);
             Controls.Add(btnMongoDBStatus);
             Controls.Add(btnPostgresStatus);
             Controls.Add(btnMySQLStatus);
@@ -120,5 +132,6 @@
         private Button btnMySQLStatus;
         private Button btnPostgresStatus;
         private Button btnMongoDBStatus;
+        private Button btnDBBenchmark;
     }
 }

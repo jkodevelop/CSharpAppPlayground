@@ -1,7 +1,5 @@
 using CSharpAppPlayground.Concurrency.TasksExample;
 using CSharpAppPlayground.UIClasses;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CSharpAppPlayground
 {

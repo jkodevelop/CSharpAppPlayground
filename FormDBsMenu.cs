@@ -18,7 +18,7 @@ namespace CSharpAppPlayground
             InitializeComponent();
 
             mysql = new _connMysql();
-            postgres = new _connPostgres(); 
+            postgres = new _connPostgres();
             mongo = new _connMongoDB();
         }
 
@@ -54,6 +54,12 @@ namespace CSharpAppPlayground
         {
             string serverVersion = mongo.getServerVersion();
             Debug.Print($"{serverVersion}");
+        }
+
+        protected FormFactory _formDBBenchmark = new FormFactory("CSharpAppPlayground.DBClasses.FormDBBenchmark, CSharpAppPlayground");
+        private void btnDBBenchmark_Click(object sender, EventArgs e)
+        {
+            _formDBBenchmark.Open();
         }
     }
 }
