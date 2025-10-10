@@ -1,4 +1,5 @@
 using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DIExample.advance;
 using CSharpAppPlayground.DIExample.median;
 using CSharpAppPlayground.DIExample.medianB;
@@ -112,6 +113,22 @@ namespace CSharpAppPlayground
             // show examples from TraceLogger, GlobalLogger(ILogger) from .Loggers Namespace
             GlobalLogger.Instance.LogInformation("Hi From GlobalLogger<ILogger>");
             tLogger.Info("Hi From TraceLogger", "Form1.btnLogging_Click");
+        }
+
+        /// <summary>
+        /// 
+        /// This button is good for quick testing of data generation performance
+        /// For any new data generation class, add a TestPerformance() method
+        /// Then hook up here for quick test. 
+        /// Change to new object when needed.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDataGenQuickTest_Click(object sender, EventArgs e)
+        {
+            GenerateVidsSQL gen = new GenerateVidsSQL();
+            gen.TestPerformance();
         }
     }
 }

@@ -38,6 +38,7 @@
             btnConcurParallel = new Button();
             btnDBs = new Button();
             btnLogging = new Button();
+            btnDataGenQuickTest = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -122,7 +123,7 @@
             // 
             // btnDBs
             // 
-            btnDBs.Location = new Point(12, 323);
+            btnDBs.Location = new Point(12, 370);
             btnDBs.Name = "btnDBs";
             btnDBs.Size = new Size(183, 44);
             btnDBs.TabIndex = 21;
@@ -140,11 +141,22 @@
             btnLogging.UseVisualStyleBackColor = true;
             btnLogging.Click += btnLogging_Click;
             // 
+            // btnDataGenQuickTest
+            // 
+            btnDataGenQuickTest.Location = new Point(12, 306);
+            btnDataGenQuickTest.Name = "btnDataGenQuickTest";
+            btnDataGenQuickTest.Size = new Size(183, 23);
+            btnDataGenQuickTest.TabIndex = 23;
+            btnDataGenQuickTest.Text = "Data Generation QuickTest";
+            btnDataGenQuickTest.UseVisualStyleBackColor = true;
+            btnDataGenQuickTest.Click += btnDataGenQuickTest_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 426);
+            Controls.Add(btnDataGenQuickTest);
             Controls.Add(btnLogging);
             Controls.Add(btnDBs);
             Controls.Add(btnConcurParallel);
@@ -172,5 +184,6 @@
         private Button btnConcurParallel;
         private Button btnDBs;
         private Button btnLogging;
+        private Button btnDataGenQuickTest;
     }
 }
