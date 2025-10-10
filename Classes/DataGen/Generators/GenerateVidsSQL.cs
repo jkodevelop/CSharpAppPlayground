@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
+using Google.Protobuf.WellKnownTypes;
 using MethodTimer;
 using System.Collections.Concurrent;
 
@@ -48,30 +49,37 @@ namespace CSharpAppPlayground.Classes.DataGen.Generators
         [Time("GenerateVidsSQL.ParallelThread({count})")]
         protected List<VidsSQL> ParallelThread(int count)
         {
-            RandomDataGenerator randomGen = new RandomDataGenerator();
-            ConcurrentBag<VidsSQL> dataBag = new ConcurrentBag<VidsSQL>();
-
-            Parallel.For(0, count, i =>
+            var partitionSize = 10000; // Adjust based on your needs
+            var partitions = (count / partitionSize) + (count % partitionSize > 0 ? 1 : 0);
+            
+            var results = new ConcurrentBag<List<VidsSQL>>();
+            
+            Parallel.For(0, partitions, i =>
             {
-                // Each thread gets its own Random instance to avoid thread safety issues
-                Random rand = new Random(Guid.NewGuid().GetHashCode());
+                var localRandomGen = new RandomDataGenerator();
+                var localRand = new Random(Guid.NewGuid().GetHashCode());
+                var localList = new List<VidsSQL>();
                 
-                VidsSQL vid = new VidsSQL
+                var start = i * partitionSize;
+                var end = Math.Min(start + partitionSize, count);
+                
+                for (int j = start; j < end; j++)
                 {
-                    filename = randomGen.RandomString(rand.Next(10, 45)) + ".mp4",
-                    filesizebyte = randomGen.RandomFileSize(new System.Numerics.BigInteger(1_000_000), new System.Numerics.BigInteger(10_000_000_000)), // Between ~1MB and ~10GB
-                    duration = randomGen.RandomInt(30, 7200), // Between 30 seconds and 2 hours
-                    metadatetime = randomGen.RandomDate(new DateTime(2000, 1, 1), DateTime.Now),
-                    height = randomGen.RandomElement<int>(randHeights),
-                    width = randomGen.RandomElement<int>(randWidths)
-                };
-
-                // Thread-safe addition using ConcurrentBag
-                dataBag.Add(vid);
+                    var vid = new VidsSQL
+                    {
+                        filename = localRandomGen.RandomString(localRand.Next(10, 45)) + ".mp4",
+                        filesizebyte = localRandomGen.RandomFileSize(new System.Numerics.BigInteger(1_000_000), new System.Numerics.BigInteger(10_000_000_000)),
+                        duration = localRandomGen.RandomInt(30, 7200),
+                        metadatetime = localRandomGen.RandomDate(new DateTime(2000, 1, 1), DateTime.Now),
+                        height = localRandomGen.RandomElement<int>(randHeights),
+                        width = localRandomGen.RandomElement<int>(randWidths)
+                    };
+                    localList.Add(vid);
+                }
+                results.Add(localList);
             });
 
-            // Convert ConcurrentBag to List for return
-            return dataBag.ToList();
+            return results.SelectMany(x => x).ToList();
         }
 
 
@@ -88,8 +96,17 @@ namespace CSharpAppPlayground.Classes.DataGen.Generators
     }
 }
 
-// summary
+//
+// SUMMARY
+//
 // Method 'ParallelThread' executed in 00:00:01.5520845 ms, GenerateVidsSQL.ParallelThread(1000000)
 // Method 'SingleThread' executed in 00:00:01.4247937 ms, GenerateVidsSQL.SingleThread(1000000)
 // Method 'SingleThread' executed in 00:00:15.1837723 ms, GenerateVidsSQL.SingleThread(10000000)
 // Method 'ParallelThread' executed in 00:00:17.5056310 ms, GenerateVidsSQL.ParallelThread(10000000)
+// After localized and partitioned Parallel
+// Parition: 1000
+// Method 'ParallelThread' executed in 00:00:06.7192088 ms, GenerateVidsSQL.ParallelThread(10000000)
+// Parition: 500
+// Method 'ParallelThread' executed in 00:00:06.7269346 ms, GenerateVidsSQL.ParallelThread(10000000)
+// Parition: 10000
+// Method 'ParallelThread' executed in 00:00:06.8805132 ms, GenerateVidsSQL.ParallelThread(10000000)
