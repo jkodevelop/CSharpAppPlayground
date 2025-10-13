@@ -57,12 +57,12 @@ namespace CSharpAppPlayground.FilesFolders
 
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
-            Debug.Print($"out:: {output}");
+            // Debug.Print($"out:: {output}");
             process.WaitForExit();
 
             Match match = Regex.Match(output, @"Total Files Listed:\s+\d+\s+File\(s\)\s+([\d,]+)");
             bytes = match.Success ? long.Parse(match.Groups[1].Value) : 0;
-            Debug.Print($"What is total size? {bytes} bytes, {match}");
+            // Debug.Print($"What is total size? {bytes} bytes, {Environment.NewLine}{match}");
             return bytes;
         }
 
@@ -94,19 +94,18 @@ namespace CSharpAppPlayground.FilesFolders
 
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
-            Debug.Print($"out:: {output}");
+            // Debug.Print($"out:: {output}");
             process.WaitForExit();
 
             Match match = Regex.Match(output, @"Bytes :\s+(\d+)\s+");
             bytes = match.Success ? long.Parse(match.Groups[1].Value) : 0;
-            Debug.Print($"What is total size? {bytes} bytes, {match}");
+            // Debug.Print($"What is total size? {bytes} bytes, {match}");
             return bytes;
         }
 
         public long CountMethodD(string folderPath)
         {
             long bytes = Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-            Debug.Print($"{bytes} bytes");
             return bytes;
         }
 
@@ -115,19 +114,44 @@ namespace CSharpAppPlayground.FilesFolders
             string[] allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
             // int fileCount = allFiles.Length;
             long bytes = allFiles.Sum(file => new FileInfo(file).Length);
-            Debug.Print($"{bytes} bytes");
             return bytes;
         }
 
         [Time("CountMethodB: {folderPath}")]
         public void Test_CountMethodB(string folderPath)
         {
-            CountMethodB(folderPath);
+            long bytes = CountMethodB(folderPath);
+            Debug.Print($"CountMethodB: {bytes} bytes");
         }
+
+        [Time("CountMethodC: {folderPath}")]
+        public void Test_CountMethodC(string folderPath)
+        {
+            long bytes = CountMethodC(folderPath);
+            Debug.Print($"CountMethodC: {bytes} bytes");
+        }
+
+        [Time("CountMethodD: {folderPath}")]
+        public void Test_CountMethodD(string folderPath)
+        {
+            long bytes = CountMethodD(folderPath);
+            Debug.Print($"CountMethodD: {bytes} bytes");
+        }
+
+        [Time("CountMethodE: {folderPath}")]
+        public void Test_CountMethodE(string folderPath)
+        {
+            long bytes = CountMethodE(folderPath);
+            Debug.Print($"CountMethodE: {bytes} bytes");
+        }
+
 
         public void TestPerformance(string folderPath)
         {
             Test_CountMethodB(folderPath);
+            Test_CountMethodC(folderPath);
+            Test_CountMethodD(folderPath);
+            Test_CountMethodE(folderPath);
         }
     }
 }

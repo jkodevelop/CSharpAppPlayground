@@ -14,6 +14,7 @@ namespace CSharpAppPlayground.FilesFolders
         {
             btnFileCount.Enabled = true;
             btnStorage.Enabled = true;
+            btnCountAndStorage.Enabled = true;
         }
 
         private void btnFolderBrowse_Click(object sender, EventArgs e)
