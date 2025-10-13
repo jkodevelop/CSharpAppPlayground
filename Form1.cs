@@ -130,5 +130,11 @@ namespace CSharpAppPlayground
             GenerateVidsSQL gen = new GenerateVidsSQL();
             gen.TestPerformance();
         }
+
+        protected FormFactory _formFilesFolders = new FormFactory("CSharpAppPlayground.FilesFolders.FormFilesFolders, CSharpAppPlayground");
+        private void btnFileIO_Click(object sender, EventArgs e)
+        {
+            _formFilesFolders.Open();
+        }
     }
 }

@@ -39,6 +39,7 @@
             btnDBs = new Button();
             btnLogging = new Button();
             btnDataGenQuickTest = new Button();
+            btnFileIO = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -151,11 +152,22 @@
             btnDataGenQuickTest.UseVisualStyleBackColor = true;
             btnDataGenQuickTest.Click += btnDataGenQuickTest_Click;
             // 
+            // btnFileIO
+            // 
+            btnFileIO.Location = new Point(212, 370);
+            btnFileIO.Name = "btnFileIO";
+            btnFileIO.Size = new Size(183, 44);
+            btnFileIO.TabIndex = 24;
+            btnFileIO.Text = "File and Folders";
+            btnFileIO.UseVisualStyleBackColor = true;
+            btnFileIO.Click += btnFileIO_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 426);
+            Controls.Add(btnFileIO);
             Controls.Add(btnDataGenQuickTest);
             Controls.Add(btnLogging);
             Controls.Add(btnDBs);
@@ -185,5 +197,6 @@
         private Button btnDBs;
         private Button btnLogging;
         private Button btnDataGenQuickTest;
+        private Button btnFileIO;
     }
 }
