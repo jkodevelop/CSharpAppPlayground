@@ -13,6 +13,7 @@ namespace CSharpAppPlayground.FilesFolders
         public void EnableButtons()
         {
             btnFileCount.Enabled = true;
+            btnStorage.Enabled = true;
         }
 
         private void btnFolderBrowse_Click(object sender, EventArgs e)
@@ -35,6 +36,17 @@ namespace CSharpAppPlayground.FilesFolders
 
             Debug.Print(txtFolderPath.Text);
             Debug.Print($"Files: {fileCount}, Folders: {folderCount}");
+        }
+
+        private CountStorage countStorage = new CountStorage();
+        private void btnStorage_Click(object sender, EventArgs e)
+        {
+            countStorage.TestPerformance(txtFolderPath.Text);
+        }
+
+        private void btnCountAndStorage_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

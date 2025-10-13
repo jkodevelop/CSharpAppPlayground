@@ -32,6 +32,8 @@
             folderBrowserDialog1 = new FolderBrowserDialog();
             btnFolderBrowse = new Button();
             txtFolderPath = new TextBox();
+            btnStorage = new Button();
+            btnCountAndStorage = new Button();
             SuspendLayout();
             // 
             // btnFileCount
@@ -64,11 +66,35 @@
             txtFolderPath.Size = new Size(396, 23);
             txtFolderPath.TabIndex = 4;
             // 
+            // btnStorage
+            // 
+            btnStorage.Enabled = false;
+            btnStorage.Location = new Point(135, 62);
+            btnStorage.Name = "btnStorage";
+            btnStorage.Size = new Size(117, 30);
+            btnStorage.TabIndex = 5;
+            btnStorage.Text = "Storage";
+            btnStorage.UseVisualStyleBackColor = true;
+            btnStorage.Click += btnStorage_Click;
+            // 
+            // btnCountAndStorage
+            // 
+            btnCountAndStorage.Enabled = false;
+            btnCountAndStorage.Location = new Point(12, 108);
+            btnCountAndStorage.Name = "btnCountAndStorage";
+            btnCountAndStorage.Size = new Size(240, 30);
+            btnCountAndStorage.TabIndex = 6;
+            btnCountAndStorage.Text = "File Count + Storage";
+            btnCountAndStorage.UseVisualStyleBackColor = true;
+            btnCountAndStorage.Click += btnCountAndStorage_Click;
+            // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCountAndStorage);
+            Controls.Add(btnStorage);
             Controls.Add(txtFolderPath);
             Controls.Add(btnFolderBrowse);
             Controls.Add(btnFileCount);
@@ -77,6 +103,8 @@
             Controls.SetChildIndex(btnFileCount, 0);
             Controls.SetChildIndex(btnFolderBrowse, 0);
             Controls.SetChildIndex(txtFolderPath, 0);
+            Controls.SetChildIndex(btnStorage, 0);
+            Controls.SetChildIndex(btnCountAndStorage, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -87,5 +115,7 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Button btnFolderBrowse;
         private TextBox txtFolderPath;
+        private Button btnStorage;
+        private Button btnCountAndStorage;
     }
 }

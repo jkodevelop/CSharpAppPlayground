@@ -19,7 +19,7 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print("Error: Folder path is null, empty, or whitespace.");
                 return;
             }
-            if(!Directory.Exists(folderPath))
+            else if(!Directory.Exists(folderPath))
             {
                 Debug.Print($"Error: Folder path does not exist: {folderPath}");
                 return;
@@ -210,19 +210,6 @@ namespace CSharpAppPlayground.FilesFolders
             Debug.Print($"{bytes} bytes");
         }
 
-        public void TestPerformance(string folderPath)
-        {
-            int fileCount = 0;  
-            int folderCount = 0;
-
-            //Test_CountMethodA(folderPath, out fileCount, out folderCount);
-            //Debug.Print($"TOTAL => CountMethodA({folderPath}): file={fileCount}, folder={folderCount}");
-
-            // Test_CountMethodB(folderPath, out fileCount, out folderCount);
-
-            Test_CountMethodC(folderPath, out fileCount, out folderCount);
-        }
-
         [Time("CountMethodA: {folderPath}")]
         protected void Test_CountMethodA(string folderPath, out int fileCount, out int folderCount)
         {
@@ -239,6 +226,19 @@ namespace CSharpAppPlayground.FilesFolders
         protected void Test_CountMethodC(string folderPath, out int fileCount, out int folderCount)
         {
             CountMethodC(folderPath, out fileCount, out folderCount);
+        }
+
+        public void TestPerformance(string folderPath)
+        {
+            int fileCount = 0;
+            int folderCount = 0;
+
+            //Test_CountMethodA(folderPath, out fileCount, out folderCount);
+            //Debug.Print($"TOTAL => CountMethodA({folderPath}): file={fileCount}, folder={folderCount}");
+
+            // Test_CountMethodB(folderPath, out fileCount, out folderCount);
+
+            Test_CountMethodC(folderPath, out fileCount, out folderCount);
         }
     }
 }
