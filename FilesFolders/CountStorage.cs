@@ -1,5 +1,7 @@
 ﻿using MethodTimer;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Enumeration;
 using System.Text.RegularExpressions;
 
 namespace CSharpAppPlayground.FilesFolders
@@ -27,6 +29,37 @@ namespace CSharpAppPlayground.FilesFolders
             // Task.Run + CancelletionToken
         }
 
+        protected long CountMethodA(string folderPath)
+        {
+            long bytes = 0;
+            try
+            {
+                string[] allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
+                // int fileCount = allFiles.Length;
+                bytes = allFiles.Sum(file => new FileInfo(file).Length);
+
+                // Alt: Sum the sizes of all files (about the same performance)
+                //foreach (string file in allFiles)
+                //{
+                //    FileInfo fileInfo = new FileInfo(file);
+                //    bytes += fileInfo.Length;
+                //}
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Debug.Print($"Error: Unauthorized access - {ex.Message}");
+            }
+            catch (PathTooLongException ex)
+            {
+                Debug.Print($"Error: Path too long - {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error: An unexpected error occurred - {ex.Message}");
+            }
+            return bytes;
+        }
+
         // A: using System.IO + loop + recursion
         //
         // <TODO>
@@ -48,7 +81,7 @@ namespace CSharpAppPlayground.FilesFolders
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c dir /s /-c \"{folderPath}\"",
+					Arguments = $"/c dir /a /s /-c \"{folderPath}\"",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -109,12 +142,38 @@ namespace CSharpAppPlayground.FilesFolders
             return bytes;
         }
 
+        //public long CoundMethodD_Parallel(string folderPath)
+        //{
+        //    long bytes = Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories)
+        //                           .AsParallel()
+        //                           .Sum(file => new FileInfo(file).Length);
+        //    return bytes;
+        //}
+
         public long CountMethodE(string folderPath)
         {
-            string[] allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
-            // int fileCount = allFiles.Length;
-            long bytes = allFiles.Sum(file => new FileInfo(file).Length);
+            long bytes = 0;
             return bytes;
+        }
+
+        public long CountMethodF(string folderPath)
+        {
+			var options = new EnumerationOptions
+			{
+				RecurseSubdirectories = true,
+				AttributesToSkip = 0, // include hidden and system
+				ReturnSpecialDirectories = false,
+				IgnoreInaccessible = true
+			};
+			long bytes = new FileSystemEnumerable<long>(folderPath, (ref FileSystemEntry entry) => entry.Length, options).Sum();
+			return bytes;
+        }
+
+        [Time("CountMethodA: {folderPath}")]
+        public void Test_CountMethodA(string folderPath)
+        {
+            long bytes = CountMethodA(folderPath);
+            Debug.Print($"CountMethodA: {bytes} bytes");
         }
 
         [Time("CountMethodB: {folderPath}")]
@@ -145,13 +204,21 @@ namespace CSharpAppPlayground.FilesFolders
             Debug.Print($"CountMethodE: {bytes} bytes");
         }
 
+        [Time("CountMethodF: {folderPath}")]
+        public void Test_CountMethodF(string folderPath)
+        {
+            long bytes = CountMethodF(folderPath);
+            Debug.Print($"CountMethodF: {bytes} bytes");
+        }
 
         public void TestPerformance(string folderPath)
         {
+            Test_CountMethodA(folderPath);
             Test_CountMethodB(folderPath);
             Test_CountMethodC(folderPath);
             Test_CountMethodD(folderPath);
             Test_CountMethodE(folderPath);
+            Test_CountMethodF(folderPath);
         }
     }
 }
