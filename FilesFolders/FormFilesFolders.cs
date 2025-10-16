@@ -5,9 +5,14 @@ namespace CSharpAppPlayground.FilesFolders
 {
     public partial class FormFilesFolders : FormWithRichText
     {
+        private CancellationTokenSource cts;
+        private bool cancelTokenIsDisposed = true;
+
+        private bool somethingRunning = false;
         public FormFilesFolders()
         {
             InitializeComponent();
+            this.FormClosing += FormFilesFolders_FormClosing;
         }
 
         public void EnableButtons()
@@ -15,6 +20,30 @@ namespace CSharpAppPlayground.FilesFolders
             btnFileCount.Enabled = true;
             btnStorage.Enabled = true;
             btnCountAndStorage.Enabled = true;
+        }
+
+        private CancellationToken GenCancelToken()
+        {
+            cts = new CancellationTokenSource();
+            cancelTokenIsDisposed = false;
+            return cts.Token;
+        }
+
+        private void CancelAndDisposeToken()
+        {
+            if (cts != null && !cancelTokenIsDisposed)
+            {
+                //Debug.Print("CancelAndDisposeToken: Cancelling token.");
+                cts.Cancel();
+                cts.Dispose();
+                cancelTokenIsDisposed = true;
+                Debug.Print("CancelAndDisposeToken: Token disposed.\n");
+            }
+        }
+
+        private void FormFilesFolders_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CancelAndDisposeToken();
         }
 
         private void btnFolderBrowse_Click(object sender, EventArgs e)
@@ -27,22 +56,37 @@ namespace CSharpAppPlayground.FilesFolders
         }
 
         private CountFilesFolders countFilesFolders = new CountFilesFolders();
-        private void btnFileCount_Click(object sender, EventArgs e)
+        private async void btnFileCount_Click(object sender, EventArgs e)
         {
-            int fileCount = 0;
-            int folderCount = 0;
-            // countFilesFolders.CountFilesAndFolders(txtFolderPath.Text, out fileCount, out folderCount);
+            if (somethingRunning)
+            {
+                Debug.Print("btnFileCount_Click: Something is already running.");
+                return;
+            }
+            somethingRunning = true;
+            CancellationToken cancelToken = GenCancelToken();
 
-            countFilesFolders.TestPerformance(txtFolderPath.Text);
+            await countFilesFolders.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
 
-            Debug.Print(txtFolderPath.Text);
-            Debug.Print($"Files: {fileCount}, Folders: {folderCount}");
+            CancelAndDisposeToken();
+            somethingRunning = false;
         }
 
         private CountStorage countStorage = new CountStorage();
-        private void btnStorage_Click(object sender, EventArgs e)
+        private async void btnStorage_Click(object sender, EventArgs e)
         {
-            countStorage.TestPerformance(txtFolderPath.Text);
+            if(somethingRunning)
+            {
+                Debug.Print("btnStorage_Click: Something is already running.");
+                return;
+            }
+            somethingRunning = true;
+            CancellationToken cancelToken = GenCancelToken();
+
+            await countStorage.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
+
+            CancelAndDisposeToken();
+            somethingRunning = false;
         }
 
         private void btnCountAndStorage_Click(object sender, EventArgs e)

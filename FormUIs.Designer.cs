@@ -33,6 +33,9 @@
             panel1 = new Panel();
             btnHidePanel01 = new Button();
             lblPanel1 = new Label();
+            progressBar = new ProgressBar();
+            btnProgress0 = new Button();
+            btnProgress100 = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,11 +79,41 @@
             lblPanel1.TabIndex = 0;
             lblPanel1.Text = resources.GetString("lblPanel1.Text");
             // 
+            // progressBar
+            // 
+            progressBar.Location = new Point(113, 154);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(226, 31);
+            progressBar.TabIndex = 2;
+            // 
+            // btnProgress0
+            // 
+            btnProgress0.Location = new Point(12, 154);
+            btnProgress0.Name = "btnProgress0";
+            btnProgress0.Size = new Size(95, 31);
+            btnProgress0.TabIndex = 3;
+            btnProgress0.Text = "0 Progress";
+            btnProgress0.UseVisualStyleBackColor = true;
+            btnProgress0.Click += btnProgress0_Click;
+            // 
+            // btnProgress100
+            // 
+            btnProgress100.Location = new Point(345, 154);
+            btnProgress100.Name = "btnProgress100";
+            btnProgress100.Size = new Size(95, 31);
+            btnProgress100.TabIndex = 4;
+            btnProgress100.Text = "100 Progress";
+            btnProgress100.UseVisualStyleBackColor = true;
+            btnProgress100.Click += btnProgress100_Click;
+            // 
             // FormUIs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnProgress100);
+            Controls.Add(btnProgress0);
+            Controls.Add(progressBar);
             Controls.Add(btnShowPanel01);
             Controls.Add(panel1);
             Name = "FormUIs";
@@ -96,5 +129,8 @@
         private Panel panel1;
         private Label lblPanel1;
         private Button btnHidePanel01;
+        private ProgressBar progressBar;
+        private Button btnProgress0;
+        private Button btnProgress100;
     }
 }

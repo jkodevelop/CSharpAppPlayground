@@ -17,5 +17,15 @@
             panel1.Visible = true;
             panel1.BringToFront();
         }
+
+        private void btnProgress0_Click(object sender, EventArgs e)
+        {
+            progressBar.Value = 0;
+        }
+
+        private void btnProgress100_Click(object sender, EventArgs e)
+        {
+            progressBar.Value = 100;
+        }
     }
 }

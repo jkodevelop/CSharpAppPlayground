@@ -1,7 +1,9 @@
 ﻿using MethodTimer;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Enumeration;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -29,7 +31,7 @@ namespace CSharpAppPlayground.FilesFolders
         }
 
         // A: using System.IO + loop + recursion
-        protected void R_CountMethodA(string folderPath, out int fileCount, out int folderCount)
+        protected void CountMethodA_Recur(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
@@ -54,7 +56,7 @@ namespace CSharpAppPlayground.FilesFolders
                     {
                         if (!string.IsNullOrWhiteSpace(dir))
                         {
-                            R_CountMethodA(dir, out int subFileCount, out int subFolderCount);
+                            CountMethodA_Recur(dir, out int subFileCount, out int subFolderCount);
                             fileCount += subFileCount;
                             folderCount += subFolderCount;
                         }
@@ -75,6 +77,16 @@ namespace CSharpAppPlayground.FilesFolders
             //}
         }
 
+        public void CountMethodB(string folderPath, out int fileCount, out int folderCount)
+        {
+            fileCount = 0;
+            folderCount = 0;
+            var allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
+            fileCount = allFiles.Length;
+            var allDirs = Directory.GetDirectories(folderPath, "*", SearchOption.AllDirectories);
+            folderCount = allDirs.Length;
+        }
+
         // B: using cmd.exe + dir /s
         // dir /s "E:\Downloads" | find "File(s)"
         // dir /s /-c "E:\Downloads"
@@ -83,7 +95,7 @@ namespace CSharpAppPlayground.FilesFolders
             /-c disables the thousands separator, so 1,024 becomes 1024.
             /s displays files in specified directory and all subdirectories.
         */
-        protected void CountMethodB(string folderPath, out int fileCount, out int folderCount)
+        protected void CountMethodC(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
@@ -101,12 +113,23 @@ namespace CSharpAppPlayground.FilesFolders
 
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
-            Debug.Print($"out:: {output}");
+            // Debug.Print($"out:: {output}");
             process.WaitForExit();
 
-            Match match = Regex.Match(output, @"Total Files Listed:\s+\d+\s+File\(s\)\s+([\d,]+)");
-            long totalSize = match.Success ? long.Parse(match.Groups[1].Value) : 0;
-            Debug.Print($"What is total size? {totalSize} bytes, {match}");
+			// Extract totals from the end summary. With /-c there are no commas, but handle both.
+			// Take the last occurrence to ensure we capture the grand totals, not per-directory lines.
+			var fileMatches = Regex.Matches(output, @"^\s*(\d+)\s+File\(s\)", RegexOptions.Multiline);
+			if (fileMatches.Count > 0)
+				fileCount = int.Parse(fileMatches[fileMatches.Count - 1].Groups[1].Value);
+
+			var dirMatches = Regex.Matches(output, @"^\s*(\d+)\s+Dir\(s\)", RegexOptions.Multiline);
+			if (dirMatches.Count > 0)
+				folderCount = int.Parse(dirMatches[dirMatches.Count - 1].Groups[1].Value);
+            
+            // Match sizeMatch = Regex.Match(output, @"Total Files Listed:\s+\d+\s+File\(s\)\s+([\d,]+)");
+			// long totalSize = sizeMatch.Success ? long.Parse(sizeMatch.Groups[1].Value.Replace(",", string.Empty)) : 0;
+			
+            // Debug.Print($"Totals => files={fileCount}, dirs={folderCount}, bytes={totalSize}");
         }
 
         // C: using Robocopy (Windows only)
@@ -120,7 +143,16 @@ namespace CSharpAppPlayground.FilesFolders
             /TS – Includes the source file’s timestamp in the output log.
             /FP – Includes the full path of each file in the log output.
         */
-        protected void CountMethodC(string folderPath, out int fileCount, out int folderCount)
+        /* Example output, end summary part
+         * 
+                           Total    Copied       Skipped  Mismatch    FAILED    Extras
+            Dirs :         33454         0         33454         0         0         0
+           Files :         92482         0         92482         0         0         0
+           Bytes : 2741560126524         0 2741560126524         0         0         0
+           Times :       0:00:42   0:00:00                           0:00:00   0:00:42
+           Ended : October 16, 2025 2:11:27 PM   
+        */
+        protected void CountMethodD(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
@@ -138,107 +170,277 @@ namespace CSharpAppPlayground.FilesFolders
 
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
-            Debug.Print($"out:: {output}");
+            // Debug.Print($"out:: {output}");
             process.WaitForExit();
 
-            Match match = Regex.Match(output, @"Bytes :\s+(\d+)\s+");
-            long totalSize = match.Success ? long.Parse(match.Groups[1].Value) : 0;
-            Debug.Print($"What is total size? {totalSize} bytes, {match}");
-        }
+            // -- getting bytes
+            //Match bytesMatch = Regex.Match(output, @"Bytes :\s+(\d+)\s+");
+            //long totalSize = bytesMatch.Success ? long.Parse(bytesMatch.Groups[1].Value) : 0;
+            //Debug.Print($"What is total size? {totalSize} bytes, {bytesMatch}");
 
-        public void CountMethodD(string folderPath, out int fileCount, out int folderCount)
-        {
-            fileCount = 0;
-            folderCount = 0;
-            long bytes = Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-            Debug.Print($"{bytes} bytes");
+            // -- getting total files
+            Match filesMatch = Regex.Match(output, @"Files :\s+(\d+)\s+");
+            fileCount = filesMatch.Success ? int.Parse(filesMatch.Groups[1].Value) : 0;
+            Debug.Print($"What is total fileCount? {fileCount}, {filesMatch}");
+
+            // -- getting total dirs
+            Match dirsMatch = Regex.Match(output, @"Dirs :\s+(\d+)\s+");
+            folderCount = dirsMatch.Success ? int.Parse(dirsMatch.Groups[1].Value) : 0;
+            Debug.Print($"What is total dirCount? {folderCount}, {dirsMatch}");
         }
 
         public void CountMethodE(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
-            var allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
-            fileCount = allFiles.Length;
-            long bytes = allFiles.Sum(file => new FileInfo(file).Length);
-            Debug.Print($"{bytes} bytes");
+
+            fileCount = Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories).Count();
+            folderCount = Directory.EnumerateDirectories(folderPath, "*", SearchOption.AllDirectories).Count();
         }
 
+        // EnumerateFileSystemInfos
         public void CountMethodF(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
-            var allDirs = Directory.GetDirectories(folderPath, "*", SearchOption.AllDirectories);
-            folderCount = allDirs.Length;
-            Debug.Print($"Total directories: {folderCount}");
+            var allEntries = new DirectoryInfo(folderPath).EnumerateFileSystemInfos("*", SearchOption.AllDirectories);
+            foreach (var entry in allEntries)
+            {
+                if (entry is DirectoryInfo)
+                    folderCount++;
+                else if (entry is FileInfo)
+                    fileCount++;
+            }
+            // Debug.Print($"Total directories: {folderCount}, Total files: {fileCount}");
         }
 
         public void CountMethodG(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
-            var allDirs = Directory.EnumerateDirectories(folderPath, "*", SearchOption.AllDirectories);
-            folderCount = allDirs.Count();
-            Debug.Print($"Total directories: {folderCount}");
+            var allEntries = new DirectoryInfo(folderPath).GetFileSystemInfos("*", SearchOption.AllDirectories);
+            foreach (var entry in allEntries)
+            {
+                if (entry is DirectoryInfo)
+                    folderCount++;
+                else if (entry is FileInfo)
+                    fileCount++;
+            }
+            // Debug.Print($"Total directories: {folderCount}, Total files: {fileCount}");
         }
 
         public void CountMethodH(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
-            var allDirs = Directory.EnumerateFileSystemEntries(folderPath, "*", SearchOption.AllDirectories);
-            // var allEntries = Directory.GetFileSystemEntries(folderPath, "*", SearchOption.AllDirectories);
-            foreach (var entry in allDirs)
+            var allEntries = Directory.EnumerateFileSystemEntries(folderPath, "*", SearchOption.AllDirectories);
+            foreach (var entry in allEntries)
             {
                 if (Directory.Exists(entry))
-                {
                     folderCount++;
-                }
                 else if (File.Exists(entry))
-                {
                     fileCount++;
-                }
             }
-            Debug.Print($"Total directories: {folderCount}, Total files: {fileCount}");
+            // Debug.Print($"Total directories: {folderCount}, Total files: {fileCount}");
         }
 
         public void CountMethodI(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
             folderCount = 0;
-            long bytes = new FileSystemEnumerable<long>(folderPath, (ref FileSystemEntry entry) => entry.Length, new EnumerationOptions { RecurseSubdirectories = true }).Sum();
-            Debug.Print($"{bytes} bytes");
+            var allEntries = Directory.GetFileSystemEntries(folderPath, "*", SearchOption.AllDirectories);
+            foreach (var entry in allEntries)
+            {
+                if (Directory.Exists(entry))
+                    folderCount++;
+                else if (File.Exists(entry))
+                    fileCount++;
+            }
+            // Debug.Print($"Total directories: {folderCount}, Total files: {fileCount}");
+        }
+
+        public void CountMethodJ(string folderPath, out int fileCount, out int folderCount)
+        {
+            fileCount = 0;
+            folderCount = 0;
+            var options = new EnumerationOptions
+            {
+				RecurseSubdirectories = true,
+				AttributesToSkip = 0, // include hidden and system
+				ReturnSpecialDirectories = false,
+				IgnoreInaccessible = true
+			};
+
+            var enumerable = new FileSystemEnumerable<byte>(
+                folderPath,
+                (ref FileSystemEntry entry) =>
+                {
+                    if (entry.IsDirectory)
+                        return (byte)1; // folder
+                    else
+                        return (byte)2; // file
+                },
+                options);
+
+            foreach (var type in enumerable)
+            {
+                if (type == 1)
+                    folderCount++;
+                else if (type == 2)
+                    fileCount++;
+            }
+        }
+
+        public void CountMethodK(string folderPath, out int fileCount, out int folderCount)
+        {
+            int _fileCount = 0;
+            int _folderCount = 0;
+            var directoriesToProcess = new ConcurrentQueue<string>();
+            directoriesToProcess.Enqueue(folderPath);
+
+            while (directoriesToProcess.TryDequeue(out var currentDir))
+            {
+                // Process files in parallel for the current directory
+                var files = Directory.EnumerateFiles(currentDir, "*");
+                Parallel.ForEach(files, file => Interlocked.Increment(ref _fileCount));
+
+                // Enqueue subdirectories for later processing
+                var subDirs = Directory.EnumerateDirectories(currentDir, "*");
+                foreach (var subDir in subDirs)
+                {
+                    Interlocked.Increment(ref _folderCount);
+                    directoriesToProcess.Enqueue(subDir);
+                }   
+            }
+            fileCount = _fileCount;
+            folderCount = _folderCount;
         }
 
         [Time("CountMethodA: {folderPath}")]
-        protected void Test_CountMethodA(string folderPath, out int fileCount, out int folderCount)
+        protected void Test_CountMethodA(string folderPath)
         {
-            R_CountMethodA(folderPath, out fileCount, out folderCount);
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodA_Recur on folder: {folderPath}");
+            CountMethodA_Recur(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodA_Recur({folderPath}): file={fileCount}, folder={folderCount}");
         }
 
         [Time("CountMethodB: {folderPath}")]
-        protected void Test_CountMethodB(string folderPath, out int fileCount, out int folderCount)
+        protected void Test_CountMethodB(string folderPath)
         {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
             CountMethodB(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodB({folderPath}): file={fileCount}, folder={folderCount}");
         }
 
         [Time("CountMethodC: {folderPath}")]
-        protected void Test_CountMethodC(string folderPath, out int fileCount, out int folderCount)
+        protected void Test_CountMethodC(string folderPath)
         {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodC on folder: {folderPath}");
             CountMethodC(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodC({folderPath}): file={fileCount}, folder={folderCount}");
         }
 
-        public void TestPerformance(string folderPath)
+        [Time("CountMethodD: {folderPath}")]
+        protected void Test_CountMethodD(string folderPath)
         {
-            int fileCount = 0;
-            int folderCount = 0;
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodD on folder: {folderPath}");
+            CountMethodD(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodD({folderPath}): file={fileCount}, folder={folderCount}");
+        }
 
-            //Test_CountMethodA(folderPath, out fileCount, out folderCount);
-            //Debug.Print($"TOTAL => CountMethodA({folderPath}): file={fileCount}, folder={folderCount}");
+        [Time("CountMethodE: {folderPath}")]
+        protected void Test_CountMethodE(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodE on folder: {folderPath}");
+            CountMethodE(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodE({folderPath}): file={fileCount}, folder={folderCount}");
+        }
 
-            // Test_CountMethodB(folderPath, out fileCount, out folderCount);
+        [Time("CountMethodF: {folderPath}")]
+        protected void Test_CountMethodF(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodF on folder: {folderPath}");
+            CountMethodF(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodF({folderPath}): file={fileCount}, folder={folderCount}");
+        }
 
-            Test_CountMethodC(folderPath, out fileCount, out folderCount);
+        [Time("CountMethodG: {folderPath}")]
+        protected void Test_CountMethodG(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodG on folder: {folderPath}");
+            CountMethodG(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodG({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
+        [Time("CountMethodH: {folderPath}")]
+        protected void Test_CountMethodH(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodH on folder: {folderPath}");
+            CountMethodH(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodH({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
+        [Time("CountMethodI: {folderPath}")]
+        protected void Test_CountMethodI(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodI on folder: {folderPath}");
+            CountMethodI(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodI({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
+        [Time("CountMethodJ: {folderPath}")]
+        protected void Test_CountMethodJ(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodJ on folder: {folderPath}");
+            CountMethodJ(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodJ({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
+        [Time("CountMethodK: {folderPath}")]
+        protected void Test_CountMethodK(string folderPath)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting CountMethodK on folder: {folderPath}");
+            CountMethodK(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => CountMethodK({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
+        public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // one only
+                // await Task.Run(() => Test_CountMethodC(folderPath), cancellationToken);
+
+                // one after another
+                await Task.Run(() => Test_CountMethodA(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodC(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodD(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodF(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodG(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodH(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodI(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodJ(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodK(folderPath), cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Print("Cancellation requested: The operation was cancelled by the user.");
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace CSharpAppPlayground.FilesFolders
             }
 
             // TODO: let's see which is faster, MethodA or MethodB
-            // Task.Run + CancelletionToken
+            // Task.Run + CancelletionToken, once the best one is tested
         }
 
         protected long CountMethodA(string folderPath)
@@ -142,6 +142,15 @@ namespace CSharpAppPlayground.FilesFolders
             return bytes;
         }
 
+        /// <summary>
+        /// 
+        /// This function is not going to be helpful, because IO operations are mostly waiting (not CPU-bound),
+        /// Reading HDD the bottleneck is the drive speed and hardware component
+        /// Reading SSD/NVMe may improve performance
+        /// 
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
         //public long CoundMethodD_Parallel(string folderPath)
         //{
         //    long bytes = Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories)
@@ -172,6 +181,7 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodA: {folderPath}")]
         public void Test_CountMethodA(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
             long bytes = CountMethodA(folderPath);
             Debug.Print($"CountMethodA: {bytes} bytes");
         }
@@ -179,6 +189,7 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodB: {folderPath}")]
         public void Test_CountMethodB(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
             long bytes = CountMethodB(folderPath);
             Debug.Print($"CountMethodB: {bytes} bytes");
         }
@@ -186,6 +197,7 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodC: {folderPath}")]
         public void Test_CountMethodC(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodC on folder: {folderPath}");
             long bytes = CountMethodC(folderPath);
             Debug.Print($"CountMethodC: {bytes} bytes");
         }
@@ -193,6 +205,7 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodD: {folderPath}")]
         public void Test_CountMethodD(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodD on folder: {folderPath}");
             long bytes = CountMethodD(folderPath);
             Debug.Print($"CountMethodD: {bytes} bytes");
         }
@@ -200,6 +213,7 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodE: {folderPath}")]
         public void Test_CountMethodE(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodE on folder: {folderPath}");
             long bytes = CountMethodE(folderPath);
             Debug.Print($"CountMethodE: {bytes} bytes");
         }
@@ -207,18 +221,32 @@ namespace CSharpAppPlayground.FilesFolders
         [Time("CountMethodF: {folderPath}")]
         public void Test_CountMethodF(string folderPath)
         {
+            Debug.Print($"\nTesting CountMethodF on folder: {folderPath}");
             long bytes = CountMethodF(folderPath);
             Debug.Print($"CountMethodF: {bytes} bytes");
         }
 
-        public void TestPerformance(string folderPath)
+        public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)
         {
-            Test_CountMethodA(folderPath);
-            Test_CountMethodB(folderPath);
-            Test_CountMethodC(folderPath);
-            Test_CountMethodD(folderPath);
-            Test_CountMethodE(folderPath);
-            Test_CountMethodF(folderPath);
+            try
+            {
+                // one only
+                // await Task.Run(() => Test_CountMethodF(folderPath), cancellationToken);
+
+                // one after another
+                await Task.Run(() => Test_CountMethodF(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodC(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodD(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodA(folderPath), cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Print("Cancellation requested: The operation was cancelled by the user.");
+            }
         }
     }
 }
