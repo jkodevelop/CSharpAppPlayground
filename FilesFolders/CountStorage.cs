@@ -60,12 +60,47 @@ namespace CSharpAppPlayground.FilesFolders
             return bytes;
         }
 
-        // A: using System.IO + loop + recursion
-        //
-        // <TODO>
-        //
+        // using System.IO + loop + recursion
+        protected long CountMethodA_Recur(string folderPath)
+        {
+            long bytes = 0;
+            try
+            {
+                // Use System.IO to get files and directories
+                // Count files in current directory
+                var files = Directory.GetFiles(folderPath);
+                if (files != null)
+                {
+                    foreach (var file in files)
+                        bytes += new FileInfo(file).Length;
+                }
 
-        // B: using cmd.exe + dir /s
+                // Count directories in current directory
+                var subDirs = Directory.GetDirectories(folderPath);
+                if (subDirs != null)
+                {
+                    // Recursively count files and folders in subdirectories
+                    foreach (var dir in subDirs)
+                    {
+                        if (!string.IsNullOrWhiteSpace(dir))
+                        {
+                            bytes += CountMethodA_Recur(dir);
+                        }
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Debug.Print($"Access denied to folder: {folderPath}. Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"An error occurred while accessing folder: {folderPath}. Exception: {ex.Message}");
+            }
+            return bytes;
+        }
+
+        // B: using cmd.exe + dir /s (Windows only)
         // dir /s "E:\Downloads" | find "File(s)"
         // dir /s /-c "E:\Downloads"
         /*
@@ -99,7 +134,7 @@ namespace CSharpAppPlayground.FilesFolders
             return bytes;
         }
 
-        // C: using Robocopy (Windows only)
+        // using Robocopy (Windows only)
         // robocopy "C:\Folder" "C:\Folder" /L /S /BYTES
         // robocopy "C:\Folder" "C:\Folder" /E /V /TS /FP /BYTES /LOG:detailed.log
         /*
@@ -162,6 +197,32 @@ namespace CSharpAppPlayground.FilesFolders
         public long CountMethodE(string folderPath)
         {
             long bytes = 0;
+            try
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
+                
+                // Get all files in the directory and subdirectories
+                FileInfo[] files = directoryInfo.GetFiles("*", SearchOption.AllDirectories);
+                
+                // Sum up the file sizes
+                bytes = files.Sum(file => file.Length);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Debug.Print($"Error: Unauthorized access - {ex.Message}");
+            }
+            catch (PathTooLongException ex)
+            {
+                Debug.Print($"Error: Path too long - {ex.Message}");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Debug.Print($"Error: Directory not found - {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error: An unexpected error occurred - {ex.Message}");
+            }
             return bytes;
         }
 
@@ -183,6 +244,14 @@ namespace CSharpAppPlayground.FilesFolders
         {
             Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
             long bytes = CountMethodA(folderPath);
+            Debug.Print($"CountMethodA: {bytes} bytes");
+        }
+
+        [Time("CountMethodA_Recur: {folderPath}")]
+        public void Test_CountMethodA_Recur(string folderPath)
+        {
+            Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
+            long bytes = CountMethodA_Recur(folderPath);
             Debug.Print($"CountMethodA: {bytes} bytes");
         }
 
@@ -238,8 +307,9 @@ namespace CSharpAppPlayground.FilesFolders
                     .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodC(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodD(folderPath), cancellationToken)
-                    .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
-                    .ContinueWith(t => Test_CountMethodA(folderPath), cancellationToken);
+                    // .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodA(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodA_Recur(folderPath), cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
             }

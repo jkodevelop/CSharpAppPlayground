@@ -30,7 +30,7 @@ namespace CSharpAppPlayground.FilesFolders
             // TODO: let's see which is faster, MethodA or MethodB
         }
 
-        // A: using System.IO + loop + recursion
+        // using System.IO + loop + recursion
         protected void CountMethodA_Recur(string folderPath, out int fileCount, out int folderCount)
         {
             fileCount = 0;
@@ -87,7 +87,7 @@ namespace CSharpAppPlayground.FilesFolders
             folderCount = allDirs.Length;
         }
 
-        // B: using cmd.exe + dir /s
+        // using cmd.exe + dir /s (Windows only)
         // dir /s "E:\Downloads" | find "File(s)"
         // dir /s /-c "E:\Downloads"
         /*
@@ -97,6 +97,7 @@ namespace CSharpAppPlayground.FilesFolders
         */
         protected void CountMethodC(string folderPath, out int fileCount, out int folderCount)
         {
+            Debug.Print($"\n!! using cmd.exe to cound file and folders, the folders count will not be corrected because of the way dir counts !!\n");
             fileCount = 0;
             folderCount = 0;
             Process process = new Process
@@ -104,7 +105,8 @@ namespace CSharpAppPlayground.FilesFolders
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c dir /s /-c \"{folderPath}\"",
+                    Arguments = $"/c dir /a /s /-c \"{folderPath}\"",
+                    // Arguments = $"/c dir /s /-c \"{folderPath}\"",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -132,7 +134,7 @@ namespace CSharpAppPlayground.FilesFolders
             // Debug.Print($"Totals => files={fileCount}, dirs={folderCount}, bytes={totalSize}");
         }
 
-        // C: using Robocopy (Windows only)
+        // using Robocopy (Windows only)
         // robocopy "C:\Folder" "C:\Folder" /L /S /BYTES
         // robocopy "C:\Folder" "C:\Folder" /E /V /TS /FP /BYTES /LOG:detailed.log
         /*
@@ -186,6 +188,7 @@ namespace CSharpAppPlayground.FilesFolders
             // -- getting total dirs
             Match dirsMatch = Regex.Match(output, @"Dirs :\s+(\d+)\s+");
             folderCount = dirsMatch.Success ? int.Parse(dirsMatch.Groups[1].Value) : 0;
+            folderCount -= 1; // subtract 1 to exclude the root folder itself
             Debug.Print($"What is total dirCount? {folderCount}, {dirsMatch}");
         }
 
