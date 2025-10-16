@@ -39,15 +39,19 @@ namespace CSharpAppPlayground.FilesFolders
             }
         }
 
+        // Usage: pass driveName = "C:" or "D:" etc. mind the colon
         public static bool isHDD(string driveName)
         {
             try
             {
-                // Extract the drive letter (e.g., "C:")
-                // string driveLetter = Path.GetPathRoot(path)?.TrimEnd('\\');
-
                 if (string.IsNullOrEmpty(driveName))
                     return false;
+
+                // Ensure drive name has proper format (e.g., "C:")
+                if (!driveName.EndsWith(":"))
+                    driveName += ":";
+
+                Debug.Print($"Checking drive: {driveName}");
 
                 // Find the physical disk corresponding to that logical drive
                 string query = "ASSOCIATORS OF {Win32_LogicalDisk.DeviceID='" + driveName +
@@ -63,14 +67,38 @@ namespace CSharpAppPlayground.FilesFolders
                     using var driveSearcher = new ManagementObjectSearcher(diskQuery);
                     foreach (ManagementObject drive in driveSearcher.Get())
                     {
-                        // Primary properties
+                        // Get all relevant properties for debugging
                         var rotationRate = drive["RotationRate"];
                         var iface = drive["InterfaceType"]?.ToString()?.ToUpperInvariant();
+                        var model = drive["Model"]?.ToString();
+                        var mediaType = drive["MediaType"]?.ToString();
 
+                        Debug.Print($"Drive Model: {model}");
+                        Debug.Print($"Interface Type: {iface}");
+                        Debug.Print($"Media Type: {mediaType}");
+                        Debug.Print($"Rotation Rate: {rotationRate}");
+
+                        // Check rotation rate (HDDs have > 0, SSDs typically have 0 or null)
                         if (rotationRate is uint rate && rate > 0)
+                        {
+                            Debug.Print($"HDD detected - Rotation Rate: {rate} RPM");
                             return true; // HDD
+                        }
+
+                        // Check interface type for external drives
                         if (iface == "USB")
+                        {
+                            Debug.Print("External USB drive detected - assuming HDD");
                             return true; // Assume external USB = HDD
+                        }
+
+                        // Check media type as additional indicator
+                        if (!string.IsNullOrEmpty(mediaType) && 
+                            (mediaType.Contains("Fixed") || mediaType.Contains("Rotational")))
+                        {
+                            Debug.Print($"HDD detected by Media Type: {mediaType}");
+                            return true;
+                        }
                     }
                 }
             }
@@ -79,26 +107,90 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print($"isHDD Exception: {ex.Message}");
             }
             return false; // Default to SSD if unknown
+        }
 
-            //try
-            //{
-            //    var driveLetter = Path.GetPathRoot(path)?.TrimEnd('\\');
-            //    using var searcher = new System.Management.ManagementObjectSearcher(
-            //        "SELECT RotationRate, InterfaceType FROM Win32_DiskDrive");
+        /// <summary>
+        /// Gets detailed information about all physical drives in the system
+        /// Useful for debugging and understanding drive properties
+        /// </summary>
+        public static void PrintAllDriveDetails()
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+                
+                Debug.Print("=== All Physical Drives ===");
+                foreach (ManagementObject drive in searcher.Get())
+                {
+                    Debug.Print($"Model: {drive["Model"]}");
+                    Debug.Print($"  DeviceID: {drive["DeviceID"]}");
+                    Debug.Print($"  InterfaceType: {drive["InterfaceType"]}");
+                    Debug.Print($"  MediaType: {drive["MediaType"]}");
+                    Debug.Print($"  RotationRate: {drive["RotationRate"]} RPM");
+                    Debug.Print($"  Size: {drive["Size"]} bytes");
+                    Debug.Print($"  Status: {drive["Status"]}");
+                    Debug.Print("---");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"PrintAllDriveDetails Exception: {ex.Message}");
+            }
+        }
 
-            //    foreach (ManagementObject drive in searcher.Get())
-            //    {
-            //        var rotation = drive["RotationRate"];
-            //        var iface = drive["InterfaceType"]?.ToString()?.ToUpperInvariant();
+        /// <summary>
+        /// Alternative method to check if a drive is HDD using direct WMI query
+        /// This is simpler but less precise for specific logical drives
+        /// 
+        /// Usage: pass driveName = "C:" or "D:" etc. mind the colon
+        /// </summary>
+        public static bool isHDD_Alternative(string driveName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(driveName))
+                    return false;
 
-            //        if (rotation is uint rate && rate > 0)
-            //            return true; // HDD
-            //        if (iface == "USB")
-            //            return true; // External USB HDD assumed
-            //    }
-            //}
-            //catch { }
-            //return false; // default to SSD
+                // Ensure drive name has proper format
+                if (!driveName.EndsWith(":"))
+                    driveName += ":";
+
+                // Get the drive letter without colon for WMI query
+                string driveLetter = driveName.TrimEnd(':');
+
+                // Direct query to get drive information
+                string query = $"SELECT * FROM Win32_LogicalDisk WHERE DeviceID = '{driveName}'";
+                using var searcher = new ManagementObjectSearcher(query);
+
+                foreach (ManagementObject logicalDisk in searcher.Get())
+                {
+                    // Get associated physical drive
+                    string assocQuery = $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID='{driveName}'}} WHERE AssocClass=Win32_LogicalDiskToPartition";
+                    using var assocSearcher = new ManagementObjectSearcher(assocQuery);
+                    
+                    foreach (ManagementObject partition in assocSearcher.Get())
+                    {
+                        string diskQuery = $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass=Win32_DiskDriveToDiskPartition";
+                        using var diskSearcher = new ManagementObjectSearcher(diskQuery);
+                        
+                        foreach (ManagementObject disk in diskSearcher.Get())
+                        {
+                            var rotationRate = disk["RotationRate"];
+                            var iface = disk["InterfaceType"]?.ToString()?.ToUpperInvariant();
+                            
+                            if (rotationRate is uint rate && rate > 0)
+                                return true;
+                            if (iface == "USB")
+                                return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"isHDD_Alternative Exception: {ex.Message}");
+            }
+            return false;
         }
     }
 }

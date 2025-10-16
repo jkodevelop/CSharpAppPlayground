@@ -96,7 +96,9 @@ namespace CSharpAppPlayground.FilesFolders
 
         private void btnDriveInfo_Click(object sender, EventArgs e)
         {
-            DriveCheck.isHDD("C");
+            // DriveCheck.isHDD("F:");
+            // DriveCheck.CheckAllDriveInfo(); 
+            DriveCheck.PrintAllDriveDetails();
         }
     }
 }
