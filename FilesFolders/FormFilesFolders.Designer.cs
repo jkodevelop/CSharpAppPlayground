@@ -34,6 +34,7 @@
             txtFolderPath = new TextBox();
             btnStorage = new Button();
             btnCountAndStorage = new Button();
+            btnDriveInfo = new Button();
             SuspendLayout();
             // 
             // btnFileCount
@@ -88,11 +89,22 @@
             btnCountAndStorage.UseVisualStyleBackColor = true;
             btnCountAndStorage.Click += btnCountAndStorage_Click;
             // 
+            // btnDriveInfo
+            // 
+            btnDriveInfo.Location = new Point(12, 403);
+            btnDriveInfo.Name = "btnDriveInfo";
+            btnDriveInfo.Size = new Size(128, 35);
+            btnDriveInfo.TabIndex = 7;
+            btnDriveInfo.Text = "Drive Info";
+            btnDriveInfo.UseVisualStyleBackColor = true;
+            btnDriveInfo.Click += btnDriveInfo_Click;
+            // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnDriveInfo);
             Controls.Add(btnCountAndStorage);
             Controls.Add(btnStorage);
             Controls.Add(txtFolderPath);
@@ -105,6 +117,7 @@
             Controls.SetChildIndex(txtFolderPath, 0);
             Controls.SetChildIndex(btnStorage, 0);
             Controls.SetChildIndex(btnCountAndStorage, 0);
+            Controls.SetChildIndex(btnDriveInfo, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -117,5 +130,6 @@
         private TextBox txtFolderPath;
         private Button btnStorage;
         private Button btnCountAndStorage;
+        private Button btnDriveInfo;
     }
 }

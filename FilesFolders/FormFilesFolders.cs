@@ -75,7 +75,7 @@ namespace CSharpAppPlayground.FilesFolders
         private CountStorage countStorage = new CountStorage();
         private async void btnStorage_Click(object sender, EventArgs e)
         {
-            if(somethingRunning)
+            if (somethingRunning)
             {
                 Debug.Print("btnStorage_Click: Something is already running.");
                 return;
@@ -92,6 +92,11 @@ namespace CSharpAppPlayground.FilesFolders
         private void btnCountAndStorage_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnDriveInfo_Click(object sender, EventArgs e)
+        {
+            DriveCheck.isHDD("C");
         }
     }
 }
