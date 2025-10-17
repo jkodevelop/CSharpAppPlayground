@@ -118,20 +118,24 @@ namespace CSharpAppPlayground.FilesFolders
             };
         }
 
+        // Generic tester to avoid duplicated Test_Count logic.
+        private void Test_Count(string folderPath, string methodName, Func<string, FileFolderStorageCount> countMethod)
+        {
+            Debug.Print($"\nTesting {methodName} on folder: {folderPath}");
+            FileFolderStorageCount o = countMethod(folderPath);
+            Debug.Print($"TOTAL => {methodName}({folderPath}): file={o.FileCount}, folder={o.FolderCount}, bytes={o.TotalBytes}");
+        }
+
         [Time("CountMethodA: {folderPath}")]
         protected void Test_CountMethodA(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
-            FileFolderStorageCount o = CountMethodA(folderPath);
-            Debug.Print($"TOTAL => CountMethodA({folderPath}): file={o.FileCount}, folder={o.FolderCount}, bytes={o.TotalBytes}");
+            Test_Count(folderPath, nameof(CountMethodA), CountMethodA);
         }
 
         [Time("CountMethodA: {folderPath}")]
         protected void Test_CountMethodB(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
-            FileFolderStorageCount o = CountMethodB(folderPath);
-            Debug.Print($"TOTAL => CountMethodB({folderPath}): file={o.FileCount}, folder={o.FolderCount}, bytes={o.TotalBytes}");
+            Test_Count(folderPath, "CountMethodB", CountMethodB);
         }
 
         public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)

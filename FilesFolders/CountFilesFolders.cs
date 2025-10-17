@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Enumeration;
 using System.Text.RegularExpressions;
+using static CSharpAppPlayground.FilesFolders.CountFilesFoldersStorage;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -318,103 +319,83 @@ namespace CSharpAppPlayground.FilesFolders
             folderCount = _folderCount;
         }
 
+        // Delegate matching the out-parameter counting methods
+        private delegate void CountOutMethod(string folderPath, out int fileCount, out int folderCount);
+
+        // Generic tester to avoid duplicated Test_Count logic.
+        private void Test_Count(string folderPath, string methodName, CountOutMethod countMethod)
+        {
+            int fileCount = 0, folderCount = 0;
+            Debug.Print($"\nTesting {methodName} on folder: {folderPath}");
+            countMethod(folderPath, out fileCount, out folderCount);
+            Debug.Print($"TOTAL => {methodName}({folderPath}): file={fileCount}, folder={folderCount}");
+        }
+
         [Time("CountMethodA: {folderPath}")]
         protected void Test_CountMethodA(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodA_Recur on folder: {folderPath}");
-            CountMethodA_Recur(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodA_Recur({folderPath}): file={fileCount}, folder={folderCount}");
+            // attribute kept for MethodTimer; delegate body to generic tester
+            Test_Count(folderPath, nameof(CountMethodA_Recur), CountMethodA_Recur);
         }
 
         [Time("CountMethodB: {folderPath}")]
         protected void Test_CountMethodB(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
-            CountMethodB(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodB({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodB), CountMethodB);
         }
 
         [Time("CountMethodC: {folderPath}")]
         protected void Test_CountMethodC(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodC on folder: {folderPath}");
-            CountMethodC(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodC({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodC), CountMethodC);
         }
 
         [Time("CountMethodD: {folderPath}")]
         protected void Test_CountMethodD(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodD on folder: {folderPath}");
-            CountMethodD(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodD({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodD), CountMethodD);
         }
 
         [Time("CountMethodE: {folderPath}")]
         protected void Test_CountMethodE(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodE on folder: {folderPath}");
-            CountMethodE(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodE({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodE), CountMethodE);
         }
 
         [Time("CountMethodF: {folderPath}")]
         protected void Test_CountMethodF(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodF on folder: {folderPath}");
-            CountMethodF(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodF({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodF), CountMethodF);
         }
 
         [Time("CountMethodG: {folderPath}")]
         protected void Test_CountMethodG(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodG on folder: {folderPath}");
-            CountMethodG(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodG({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodG), CountMethodG);
         }
 
         [Time("CountMethodH: {folderPath}")]
         protected void Test_CountMethodH(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodH on folder: {folderPath}");
-            CountMethodH(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodH({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodH), CountMethodH);
         }
 
         [Time("CountMethodI: {folderPath}")]
         protected void Test_CountMethodI(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodI on folder: {folderPath}");
-            CountMethodI(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodI({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodI), CountMethodI);
         }
 
         [Time("CountMethodJ: {folderPath}")]
         protected void Test_CountMethodJ(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodJ on folder: {folderPath}");
-            CountMethodJ(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodJ({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodJ), CountMethodJ);
         }
 
         [Time("CountMethodK: {folderPath}")]
         protected void Test_CountMethodK(string folderPath)
         {
-            int fileCount = 0, folderCount = 0;
-            Debug.Print($"\nTesting CountMethodK on folder: {folderPath}");
-            CountMethodK(folderPath, out fileCount, out folderCount);
-            Debug.Print($"TOTAL => CountMethodK({folderPath}): file={fileCount}, folder={folderCount}");
+            Test_Count(folderPath, nameof(CountMethodK), CountMethodK);
         }
 
         public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)

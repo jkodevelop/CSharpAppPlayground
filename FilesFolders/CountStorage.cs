@@ -238,60 +238,55 @@ namespace CSharpAppPlayground.FilesFolders
 			return bytes;
         }
 
+        private delegate long CountMethod(string folderPath);
+
+        private void Test_Count(string folderPath, string methodName, CountMethod countMethod)
+        {
+            Debug.Print($"\nTesting {methodName} on folder: {folderPath}");
+            long bytes = countMethod(folderPath);
+            Debug.Print($"{methodName}: {bytes} bytes");
+        }
+
         [Time("CountMethodA: {folderPath}")]
         public void Test_CountMethodA(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
-            long bytes = CountMethodA(folderPath);
-            Debug.Print($"CountMethodA: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodA", CountMethodA);
         }
 
         [Time("CountMethodA_Recur: {folderPath}")]
         public void Test_CountMethodA_Recur(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodA on folder: {folderPath}");
-            long bytes = CountMethodA_Recur(folderPath);
-            Debug.Print($"CountMethodA: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodA_Recur", CountMethodA_Recur);
         }
 
         [Time("CountMethodB: {folderPath}")]
         public void Test_CountMethodB(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
-            long bytes = CountMethodB(folderPath);
-            Debug.Print($"CountMethodB: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodB", CountMethodB);
         }
 
         [Time("CountMethodC: {folderPath}")]
         public void Test_CountMethodC(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodC on folder: {folderPath}");
-            long bytes = CountMethodC(folderPath);
-            Debug.Print($"CountMethodC: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodC", CountMethodC);
         }
 
         [Time("CountMethodD: {folderPath}")]
         public void Test_CountMethodD(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodD on folder: {folderPath}");
-            long bytes = CountMethodD(folderPath);
-            Debug.Print($"CountMethodD: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodD", CountMethodD);
         }
 
         [Time("CountMethodE: {folderPath}")]
         public void Test_CountMethodE(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodE on folder: {folderPath}");
-            long bytes = CountMethodE(folderPath);
-            Debug.Print($"CountMethodE: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodE", CountMethodE);
         }
 
         [Time("CountMethodF: {folderPath}")]
         public void Test_CountMethodF(string folderPath)
         {
-            Debug.Print($"\nTesting CountMethodF on folder: {folderPath}");
-            long bytes = CountMethodF(folderPath);
-            Debug.Print($"CountMethodF: {bytes} bytes");
+            Test_Count(folderPath, "CountMethodF", CountMethodF);
         }
 
         public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)
