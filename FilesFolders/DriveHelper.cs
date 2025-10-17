@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -103,7 +104,10 @@ namespace CSharpAppPlayground.FilesFolders
             {
                 isSSD = IsDriveSSD(drive);
             }
-            catch { /* fallback */ }
+            catch (Exception ex)
+            {
+                Debug.Print($"GetParallelOptions Exception: {ex.Message}");
+            }
 
             return new ParallelOptions
             {
