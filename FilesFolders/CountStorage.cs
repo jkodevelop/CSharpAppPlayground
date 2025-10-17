@@ -1,6 +1,5 @@
 ﻿using MethodTimer;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Enumeration;
 using System.Text.RegularExpressions;
 

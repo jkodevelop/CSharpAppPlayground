@@ -90,9 +90,21 @@ namespace CSharpAppPlayground.FilesFolders
             somethingRunning = false;
         }
 
-        private void btnCountAndStorage_Click(object sender, EventArgs e)
+        private CountFilesFoldersStorage countAll = new CountFilesFoldersStorage();
+        private async void btnCountAndStorage_Click(object sender, EventArgs e)
         {
+            if (somethingRunning)
+            {
+                Debug.Print("btnStorage_Click: Something is already running.");
+                return;
+            }
+            somethingRunning = true;
+            CancellationToken cancelToken = GenCancelToken();
 
+            await countAll.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
+
+            CancelAndDisposeToken();
+            somethingRunning = false;
         }
 
         private void btnDriveInfo_Click(object sender, EventArgs e)
