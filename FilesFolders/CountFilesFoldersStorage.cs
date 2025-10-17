@@ -1,5 +1,6 @@
 ﻿using MethodTimer;
 using System.Diagnostics;
+using System.IO.Enumeration;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -50,6 +51,7 @@ namespace CSharpAppPlayground.FilesFolders
             try
             {
                 string[] allDirs = Directory.GetDirectories(folderPath, "*", SearchOption.AllDirectories);
+                folderCount = allDirs.Length;
                 string[] allFiles = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
                 fileCount = allFiles.Length;
                 bytes = allFiles.Sum(file => new FileInfo(file).Length);
@@ -75,6 +77,47 @@ namespace CSharpAppPlayground.FilesFolders
             };
         }
 
+        public FileFolderStorageCount CountMethodB(string folderPath)
+        {
+            int fileCount = 0;
+            int folderCount = 0;
+            long bytes = 0;
+
+            var options = new EnumerationOptions
+            {
+                RecurseSubdirectories = true,
+                AttributesToSkip = 0, // include hidden and system
+                ReturnSpecialDirectories = false,
+                IgnoreInaccessible = true
+            };
+
+            // Count files and folders using FileSystemEnumerable
+            foreach (var entry in new FileSystemEnumerable<bool>(folderPath, (ref FileSystemEntry entry) => 
+            {
+                if (entry.IsDirectory)
+                {
+                    folderCount++;
+                }
+                else
+                {
+                    fileCount++;
+                    bytes += entry.Length;
+                }
+                return true;
+            }, options))
+            {
+                // Processing done in the selector
+                // Debug.Print("DONE: Processing done in the selector");
+            }
+            
+            return new FileFolderStorageCount
+            {
+                FileCount = fileCount,
+                FolderCount = folderCount,
+                TotalBytes = bytes
+            };
+        }
+
         [Time("CountMethodA: {folderPath}")]
         protected void Test_CountMethodA(string folderPath)
         {
@@ -83,14 +126,25 @@ namespace CSharpAppPlayground.FilesFolders
             Debug.Print($"TOTAL => CountMethodA({folderPath}): file={o.FileCount}, folder={o.FolderCount}, bytes={o.TotalBytes}");
         }
 
+        [Time("CountMethodA: {folderPath}")]
+        protected void Test_CountMethodB(string folderPath)
+        {
+            Debug.Print($"\nTesting CountMethodB on folder: {folderPath}");
+            FileFolderStorageCount o = CountMethodB(folderPath);
+            Debug.Print($"TOTAL => CountMethodB({folderPath}): file={o.FileCount}, folder={o.FolderCount}, bytes={o.TotalBytes}");
+        }
+
         public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)
         {
             try
             {
                 // one only
-                await Task.Run(() => Test_CountMethodA(folderPath), cancellationToken);
+                // await Task.Run(() => Test_CountMethodA(folderPath), cancellationToken);
 
                 // one after another
+                await Task.Run(() => Test_CountMethodA(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken);
+
                 //await Task.Run(() => Test_CountMethodF(folderPath), cancellationToken)
                 //    .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken)
                 //    .ContinueWith(t => Test_CountMethodC(folderPath), cancellationToken)

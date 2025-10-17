@@ -21,6 +21,7 @@ namespace CSharpAppPlayground.FilesFolders
             btnFileCount.Enabled = true;
             btnStorage.Enabled = true;
             btnCountAndStorage.Enabled = true;
+            btnMediaInfo.Enabled = true;
         }
 
         private CancellationToken GenCancelToken()
@@ -107,21 +108,38 @@ namespace CSharpAppPlayground.FilesFolders
             somethingRunning = false;
         }
 
+        private MediaInfoCheck mCheck = new MediaInfoCheck();
+        private void btnMediaInfo_Click(object sender, EventArgs e)
+        {
+            if (somethingRunning)
+            {
+                Debug.Print("btnStorage_Click: Something is already running.");
+                return;
+            }
+            somethingRunning = true;
+            CancellationToken cancelToken = GenCancelToken();
+
+            // TODO: implement media info functionality
+
+            CancelAndDisposeToken();
+            somethingRunning = false;
+        }
+
         private void btnDriveInfo_Click(object sender, EventArgs e)
         {
-            if(txtFolderPath.Text == string.Empty || txtFolderPath.Text.Length < 2 || txtFolderPath.Text[1] != ':')
+            if (txtFolderPath.Text == string.Empty || txtFolderPath.Text.Length < 2 || txtFolderPath.Text[1] != ':')
             {
                 Debug.Print("Please select a proper folder path first.");
                 DriveCheck.CheckAllDriveInfo();
                 return;
-            } 
+            }
 
             string driveName = txtFolderPath.Text.Substring(0, 2); // Extract drive letter, e.g., "C:"
-           
+
             //DriveCheck.isHDD(driveName);
             //DriveCheck.PrintAllDriveDetails();
 
-            if (DriveHelper.IsDriveSSD(driveName))                 
+            if (DriveHelper.IsDriveSSD(driveName))
                 Debug.Print($"Drive {driveName} is SSD");
             else
                 Debug.Print($"Drive {driveName} is HDD");
