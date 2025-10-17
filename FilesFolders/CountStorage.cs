@@ -301,7 +301,7 @@ namespace CSharpAppPlayground.FilesFolders
                     .ContinueWith(t => Test_CountMethodB(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodC(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodD(folderPath), cancellationToken)
-                    // .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodE(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodA(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodA_Recur(folderPath), cancellationToken);
 

@@ -294,6 +294,45 @@ namespace CSharpAppPlayground.FilesFolders
             }
         }
 
+        public void CountMethodJ_Alt(string folderPath, out int fileCount, out int folderCount)
+        {
+            fileCount = 0;
+            folderCount = 0;
+            var options = new EnumerationOptions
+            {
+                RecurseSubdirectories = true,
+                AttributesToSkip = 0, // include hidden and system
+                ReturnSpecialDirectories = false,
+                IgnoreInaccessible = true
+            };
+
+            int localFileCount = 0;
+            int localFolderCount = 0;
+            var enumerable = new FileSystemEnumerable<byte>(
+                folderPath,
+                (ref FileSystemEntry entry) =>
+                {
+                    if (entry.IsDirectory)
+                        localFolderCount++;
+                    else
+                        localFileCount++;
+
+                    // Debug.Print($"What is local Count? {localFileCount}, {localFolderCount}");
+                    return 0;
+                },
+                options);
+
+            // Actually enumerate the items to trigger the delegate
+            foreach (var item in enumerable)
+            {
+                // no logic needed here, just triggering the enumeration
+            }
+
+            Debug.Print($"What is total Count? {localFileCount}, {localFolderCount}");
+            fileCount = localFileCount;
+            folderCount = localFolderCount;
+        }
+
         public void CountMethodK_Parallel(string folderPath, out int fileCount, out int folderCount)
         {
             int _fileCount = 0;
@@ -392,6 +431,12 @@ namespace CSharpAppPlayground.FilesFolders
             Test_Count(folderPath, nameof(CountMethodJ), CountMethodJ);
         }
 
+        [Time("CountMethodJ_Alt: {folderPath}")]
+        protected void Test_CountMethodJAlt(string folderPath)
+        {
+            Test_Count(folderPath, nameof(CountMethodJ_Alt), CountMethodJ_Alt);
+        }
+
         [Time("CountMethodK_Parallel: {folderPath}")]
         protected void Test_CountMethodK(string folderPath)
         {
@@ -402,8 +447,9 @@ namespace CSharpAppPlayground.FilesFolders
         {
             try
             {
-                // one only
-                // await Task.Run(() => Test_CountMethodC(folderPath), cancellationToken);
+                FileCacheManager.FlushFileCache();
+
+                //await Task.Run(() => Test_CountMethodJ(folderPath), cancellationToken);
 
                 // one after another
                 await Task.Run(() => Test_CountMethodA(folderPath), cancellationToken)
@@ -416,6 +462,7 @@ namespace CSharpAppPlayground.FilesFolders
                     .ContinueWith(t => Test_CountMethodH(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodI(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodJ(folderPath), cancellationToken)
+                    .ContinueWith(t => Test_CountMethodJAlt(folderPath), cancellationToken)
                     .ContinueWith(t => Test_CountMethodK(folderPath), cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
