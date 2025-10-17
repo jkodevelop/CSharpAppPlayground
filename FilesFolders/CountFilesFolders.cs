@@ -294,7 +294,7 @@ namespace CSharpAppPlayground.FilesFolders
             }
         }
 
-        public void CountMethodK(string folderPath, out int fileCount, out int folderCount)
+        public void CountMethodK_Parallel(string folderPath, out int fileCount, out int folderCount)
         {
             int _fileCount = 0;
             int _folderCount = 0;
@@ -392,10 +392,10 @@ namespace CSharpAppPlayground.FilesFolders
             Test_Count(folderPath, nameof(CountMethodJ), CountMethodJ);
         }
 
-        [Time("CountMethodK: {folderPath}")]
+        [Time("CountMethodK_Parallel: {folderPath}")]
         protected void Test_CountMethodK(string folderPath)
         {
-            Test_Count(folderPath, nameof(CountMethodK), CountMethodK);
+            Test_Count(folderPath, nameof(CountMethodK_Parallel), CountMethodK_Parallel);
         }
 
         public async Task TestPerformanceAsync(string folderPath, CancellationToken cancellationToken)
