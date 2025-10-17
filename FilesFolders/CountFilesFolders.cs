@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Enumeration;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.FilesFolders
 {

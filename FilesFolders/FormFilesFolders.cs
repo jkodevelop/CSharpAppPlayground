@@ -1,5 +1,6 @@
 ﻿using CSharpAppPlayground.UIClasses;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -96,9 +97,22 @@ namespace CSharpAppPlayground.FilesFolders
 
         private void btnDriveInfo_Click(object sender, EventArgs e)
         {
-            // DriveCheck.isHDD("F:");
-            // DriveCheck.CheckAllDriveInfo(); 
-            DriveCheck.PrintAllDriveDetails();
+            if(txtFolderPath.Text == string.Empty || txtFolderPath.Text.Length < 2 || txtFolderPath.Text[1] != ':')
+            {
+                Debug.Print("Please select a proper folder path first.");
+                DriveCheck.CheckAllDriveInfo();
+                return;
+            } 
+
+            string driveName = txtFolderPath.Text.Substring(0, 2); // Extract drive letter, e.g., "C:"
+           
+            //DriveCheck.isHDD(driveName);
+            //DriveCheck.PrintAllDriveDetails();
+
+            if (DriveHelper.IsDriveSSD(driveName))                 
+                Debug.Print($"Drive {driveName} is SSD");
+            else
+                Debug.Print($"Drive {driveName} is HDD");
         }
     }
 }

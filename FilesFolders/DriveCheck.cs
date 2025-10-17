@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Management;
 
 namespace CSharpAppPlayground.FilesFolders
@@ -8,7 +7,7 @@ namespace CSharpAppPlayground.FilesFolders
     {
         public static void CheckAllDriveInfo()
         {   
-            var drives = System.IO.DriveInfo.GetDrives();
+            var drives = DriveInfo.GetDrives();
             foreach (var drive in drives)
             {
                 PrintDriveInfo(drive);
