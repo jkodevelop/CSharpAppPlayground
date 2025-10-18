@@ -28,7 +28,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print($"TagLibService.getDurationOfMedia() ex: {ex.Message}");
+                Debug.Print($"TagLibService.GetDuration() ex: {ex.Message}");
             }
             return -1;
         }
@@ -53,7 +53,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print($"GetMediaDimensions() ex: {ex.Message}");
+                Debug.Print($"TagLibService.GetMediaDimensions() ex: {ex.Message}");
             }
             return (-1, -1); // Return invalid dimensions if unsuccessful
         }
