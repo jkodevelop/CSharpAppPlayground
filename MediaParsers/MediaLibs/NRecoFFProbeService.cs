@@ -8,10 +8,11 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         protected FFProbe ffProbe;
         protected NReco.VideoInfo.MediaInfo videoInfo;
 
-        public NRecoFFProbeService(string filePath)
+        public NRecoFFProbeService(string? filePath)
         {
             ffProbe = new FFProbe();
-            GetFile(filePath);
+            if(filePath != null)
+                GetFile(filePath);
         }
 
         public void GetFile(string filePath)
