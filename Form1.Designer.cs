@@ -40,6 +40,7 @@
             btnLogging = new Button();
             btnDataGenQuickTest = new Button();
             btnFileIO = new Button();
+            btnMediaParser = new Button();
             SuspendLayout();
             // 
             // btnRun
@@ -154,19 +155,30 @@
             // 
             // btnFileIO
             // 
-            btnFileIO.Location = new Point(212, 370);
+            btnFileIO.Location = new Point(411, 12);
             btnFileIO.Name = "btnFileIO";
-            btnFileIO.Size = new Size(183, 44);
+            btnFileIO.Size = new Size(181, 44);
             btnFileIO.TabIndex = 24;
             btnFileIO.Text = "File and Folders";
             btnFileIO.UseVisualStyleBackColor = true;
             btnFileIO.Click += btnFileIO_Click;
+            // 
+            // btnMediaParser
+            // 
+            btnMediaParser.Location = new Point(411, 68);
+            btnMediaParser.Name = "btnMediaParser";
+            btnMediaParser.Size = new Size(181, 44);
+            btnMediaParser.TabIndex = 25;
+            btnMediaParser.Text = "Media Parser";
+            btnMediaParser.UseVisualStyleBackColor = true;
+            btnMediaParser.Click += btnMediaParser_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 426);
+            Controls.Add(btnMediaParser);
             Controls.Add(btnFileIO);
             Controls.Add(btnDataGenQuickTest);
             Controls.Add(btnLogging);
@@ -198,5 +210,6 @@
         private Button btnLogging;
         private Button btnDataGenQuickTest;
         private Button btnFileIO;
+        private Button btnMediaParser;
     }
 }

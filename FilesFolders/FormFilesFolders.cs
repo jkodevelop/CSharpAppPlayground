@@ -1,4 +1,5 @@
-﻿using CSharpAppPlayground.UIClasses;
+﻿using CSharpAppPlayground.MediaParsers;
+using CSharpAppPlayground.UIClasses;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -21,7 +22,7 @@ namespace CSharpAppPlayground.FilesFolders
             btnFileCount.Enabled = true;
             btnStorage.Enabled = true;
             btnCountAndStorage.Enabled = true;
-            btnMediaInfo.Enabled = true;
+            btnReadFile.Enabled = true;
         }
 
         private CancellationToken GenCancelToken()
@@ -108,23 +109,6 @@ namespace CSharpAppPlayground.FilesFolders
             somethingRunning = false;
         }
 
-        private MediaInfoCheck mCheck = new MediaInfoCheck();
-        private void btnMediaInfo_Click(object sender, EventArgs e)
-        {
-            if (somethingRunning)
-            {
-                Debug.Print("btnStorage_Click: Something is already running.");
-                return;
-            }
-            somethingRunning = true;
-            CancellationToken cancelToken = GenCancelToken();
-
-            // TODO: implement media info functionality
-
-            CancelAndDisposeToken();
-            somethingRunning = false;
-        }
-
         private void btnDriveInfo_Click(object sender, EventArgs e)
         {
             if (txtFolderPath.Text == string.Empty || txtFolderPath.Text.Length < 2 || txtFolderPath.Text[1] != ':')
@@ -143,6 +127,11 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print($"Drive {driveName} is SSD");
             else
                 Debug.Print($"Drive {driveName} is HDD");
+        }
+
+        private void btnReadFile_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -136,5 +136,11 @@ namespace CSharpAppPlayground
         {
             _formFilesFolders.Open();
         }
+
+        protected FormFactory _formMediaParser = new FormFactory("CSharpAppPlayground.MediaParsers.FormMediaParser, CSharpAppPlayground");
+        private void btnMediaParser_Click(object sender, EventArgs e)
+        {
+            _formMediaParser.Open();
+        }
     }
 }

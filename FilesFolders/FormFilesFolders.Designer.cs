@@ -35,7 +35,7 @@
             btnStorage = new Button();
             btnCountAndStorage = new Button();
             btnDriveInfo = new Button();
-            btnMediaInfo = new Button();
+            btnReadFile = new Button();
             SuspendLayout();
             // 
             // btnFileCount
@@ -100,23 +100,23 @@
             btnDriveInfo.UseVisualStyleBackColor = true;
             btnDriveInfo.Click += btnDriveInfo_Click;
             // 
-            // btnMediaInfo
+            // btnReadFile
             // 
-            btnMediaInfo.Enabled = false;
-            btnMediaInfo.Location = new Point(12, 162);
-            btnMediaInfo.Name = "btnMediaInfo";
-            btnMediaInfo.Size = new Size(240, 36);
-            btnMediaInfo.TabIndex = 8;
-            btnMediaInfo.Text = "Media Info";
-            btnMediaInfo.UseVisualStyleBackColor = true;
-            btnMediaInfo.Click += btnMediaInfo_Click;
+            btnReadFile.Enabled = false;
+            btnReadFile.Location = new Point(284, 62);
+            btnReadFile.Name = "btnReadFile";
+            btnReadFile.Size = new Size(205, 30);
+            btnReadFile.TabIndex = 8;
+            btnReadFile.Text = "Read File";
+            btnReadFile.UseVisualStyleBackColor = true;
+            btnReadFile.Click += btnReadFile_Click;
             // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnMediaInfo);
+            Controls.Add(btnReadFile);
             Controls.Add(btnDriveInfo);
             Controls.Add(btnCountAndStorage);
             Controls.Add(btnStorage);
@@ -131,7 +131,7 @@
             Controls.SetChildIndex(btnStorage, 0);
             Controls.SetChildIndex(btnCountAndStorage, 0);
             Controls.SetChildIndex(btnDriveInfo, 0);
-            Controls.SetChildIndex(btnMediaInfo, 0);
+            Controls.SetChildIndex(btnReadFile, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -145,6 +145,6 @@
         private Button btnStorage;
         private Button btnCountAndStorage;
         private Button btnDriveInfo;
-        private Button btnMediaInfo;
+        private Button btnReadFile;
     }
 }
