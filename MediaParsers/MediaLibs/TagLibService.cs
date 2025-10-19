@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using TagLib;
+using System.Diagnostics;
+
+// NuGet Package: TagLibSharp
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {

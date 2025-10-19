@@ -1,5 +1,7 @@
 ﻿using MediaInfo;
 
+// NuGet Package: MediaInfo.Core.Native + MediaInfo.Wrapper.Core
+
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class MediaInfoService

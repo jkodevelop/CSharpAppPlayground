@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Windows.Storage;
+using System.Diagnostics;
 
 // Required: [TO DOCUMENT]
 // 1. Install the NuGet package "Microsoft.WindowsAppSDK" version 1.4.6 or later

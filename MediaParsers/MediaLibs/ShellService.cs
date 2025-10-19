@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell;
-using TagLib.Asf;
+
+// NuGet Package: Microsoft-WindowsAPICodePack-Shell
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {

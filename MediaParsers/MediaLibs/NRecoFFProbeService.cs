@@ -1,6 +1,8 @@
 ﻿using NReco.VideoInfo;
 using System.Diagnostics;
 
+// NuGet Package: NReco.VideoInfo
+
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class NRecoFFProbeService
@@ -11,7 +13,8 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         public NRecoFFProbeService(string? filePath)
         {
             ffProbe = new FFProbe();
-            if(filePath != null)
+            // ffProbe = new FFProbe { ToolPath = @"C:\ffmpeg\bin" };
+            if (filePath != null)
                 GetFile(filePath);
         }
 

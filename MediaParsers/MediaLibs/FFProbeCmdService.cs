@@ -1,6 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Shell;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
