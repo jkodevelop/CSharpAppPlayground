@@ -58,5 +58,10 @@ namespace CSharpAppPlayground.MediaParsers
         {
 
         }
+
+        private void btnLibCheck_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

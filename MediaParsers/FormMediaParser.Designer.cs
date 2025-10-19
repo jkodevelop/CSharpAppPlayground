@@ -35,6 +35,7 @@
             openFileDialog1 = new OpenFileDialog();
             btnFileBrowse = new Button();
             btnParseMediaFolder = new Button();
+            btnLibCheck = new Button();
             SuspendLayout();
             // 
             // txtFolderPath
@@ -92,11 +93,22 @@
             btnParseMediaFolder.UseVisualStyleBackColor = true;
             btnParseMediaFolder.Click += btnParseMediaFolder_Click;
             // 
+            // btnLibCheck
+            // 
+            btnLibCheck.Location = new Point(12, 403);
+            btnLibCheck.Name = "btnLibCheck";
+            btnLibCheck.Size = new Size(141, 35);
+            btnLibCheck.TabIndex = 10;
+            btnLibCheck.Text = "Lib Check";
+            btnLibCheck.UseVisualStyleBackColor = true;
+            btnLibCheck.Click += btnLibCheck_Click;
+            // 
             // FormMediaParser
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnLibCheck);
             Controls.Add(btnParseMediaFolder);
             Controls.Add(btnFileBrowse);
             Controls.Add(btnParseMediaFile);
@@ -109,6 +121,7 @@
             Controls.SetChildIndex(btnParseMediaFile, 0);
             Controls.SetChildIndex(btnFileBrowse, 0);
             Controls.SetChildIndex(btnParseMediaFolder, 0);
+            Controls.SetChildIndex(btnLibCheck, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -122,5 +135,6 @@
         private OpenFileDialog openFileDialog1;
         private Button btnFileBrowse;
         private Button btnParseMediaFolder;
+        private Button btnLibCheck;
     }
 }
