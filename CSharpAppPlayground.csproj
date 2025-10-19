@@ -44,6 +44,10 @@
     <PackageReference Include="NReco.VideoInfo" Version="1.2.1" />
     <PackageReference Include="System.Management" Version="9.0.10" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    <PackageReference Include="WMPLib" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
