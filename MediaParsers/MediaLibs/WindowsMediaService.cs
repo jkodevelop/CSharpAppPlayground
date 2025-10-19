@@ -1,8 +1,17 @@
 ﻿using System.Diagnostics;
-//using Windows.Storage;
 
-// NuGet: Microsoft.Windows.SDK.Contracts => Windows.Media + Windows.Storage
-// newer: Microsoft.WindowsAppSDK
+// Required: [TO DOCUMENT]
+// 1. Install the NuGet package "Microsoft.WindowsAppSDK" version 1.4.6 or later
+// Microsoft.WindowsAppSDK => Windows.Media + Windows.Storage
+//
+// 2. update your project file (.csproj) to include the following property group:
+// <PropertyGroup>
+//   ...
+//   <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+// </PropertyGroup>
+//
+// older package
+// NuGet: Microsoft.Windows.SDK.Contracts => Windows.Media + Windows.Storage (obsolete)
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
@@ -16,16 +25,16 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
             try
             {
-                //var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(filePath);
-                //var props = await file.Properties.GetVideoPropertiesAsync();
+                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(filePath);
+                var props = await file.Properties.GetVideoPropertiesAsync();
 
-                //w = (int)props.Width;
-                //h = (int)props.Height;
-                //duration = (int)props.Duration.TotalSeconds;
+                w = (int)props.Width;
+                h = (int)props.Height;
+                duration = (int)props.Duration.TotalSeconds;
 
-                //Debug.Print($"Duration: {props.Duration.TotalSeconds:F2} seconds");
-                //Debug.Print($"Width: {props.Width}");
-                //Debug.Print($"Height: {props.Height}");
+                Debug.Print($"Duration: {props.Duration.TotalSeconds:F2} seconds");
+                Debug.Print($"Width: {props.Width}");
+                Debug.Print($"Height: {props.Height}");
             }
             catch(Exception ex)
             {
