@@ -88,7 +88,7 @@ namespace CSharpAppPlayground.MediaParsers
             return tagLibService.GetDuration(filePath);
         }
 
-        protected VLCLibService vlcLibService = new VLCLibService();
+        protected VLCLibServiceAlt vlcLibService = new VLCLibServiceAlt();
         public async Task<int> UseVLCLibService(string filePath)
         {
             return await vlcLibService.GetDuration(filePath);
@@ -108,6 +108,7 @@ namespace CSharpAppPlayground.MediaParsers
 
         protected void TestDuration(string filePath, string nameOfMethod, Func<string, int> f)
         {
+            Debug.Print($"\nStarting {nameOfMethod}...");
             int seconds = f(filePath);
             Debug.Print($"{nameOfMethod}: {seconds} seconds");
         }
@@ -191,20 +192,20 @@ namespace CSharpAppPlayground.MediaParsers
             {
                 FileCacheManager.FlushFileCache();
 
-                //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseVLCLibService(filePath), cancellationToken);
 
                 // one after another
-                await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseFFProbeCmd(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseMediaInfo(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseMediaToolkit(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseMp4Parser(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseVLCLibService(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
-                    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseFFProbeCmd(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseMediaInfo(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseMediaToolkit(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseMp4Parser(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseVLCLibService(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
             }

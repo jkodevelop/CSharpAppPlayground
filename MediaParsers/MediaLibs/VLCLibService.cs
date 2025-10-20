@@ -1,8 +1,6 @@
 ﻿using LibVLCSharp.Shared;
 using System.Diagnostics;
 
-// NuGet Packages required: LibVLCSharp + VideoLAN.LibVLC.Windows
-
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class VLCLibService : IDisposable
@@ -12,46 +10,32 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
         public VLCLibService()
         {
-            // 1. Initialize LibVLCSharp core.
-            // This only needs to be called once in your application's lifetime.
-            Core.Initialize();
-            
-            // Create a single LibVLC instance to be reused
-            _libVLC = new LibVLC();
+            // Initialize with common VLC options for media parsing
+            _libVLC = new LibVLC("--quiet", "--no-video", "--no-audio");
         }
 
         public async Task<int> GetDuration(string filePath)
         {
-            // Create a Media object for the video file using the shared LibVLC instance
-            using var media = new Media(_libVLC, filePath, FromType.FromPath);
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(VLCLibService));
 
-            // Parse the media asynchronously to get metadata
-            var parseResult = await media.Parse(MediaParseOptions.ParseNetwork);
-            Debug.Print($"Parse result: {parseResult}");
-
-            if (parseResult != MediaParsedStatus.Done)
+            try
             {
-                Console.WriteLine($"Failed to parse media. Status: {parseResult}");
+                using (var media = new Media(_libVLC, new Uri(filePath)))
+                {
+                    // Parse the media synchronously first
+                    await media.Parse(MediaParseOptions.ParseNetwork);
+
+                    // Get duration in milliseconds and convert to seconds
+                    long durationMs = media.Duration;
+                    return (int)(durationMs / 1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"VLC error parsing {filePath}: {ex.Message}");
                 return -1;
             }
-
-            // Access the video's properties
-            var duration = media.Duration;
-            var videoTrack = media.Tracks.FirstOrDefault(t => t.TrackType == TrackType.Video);
-
-            if (!videoTrack.Equals(default(MediaTrack)))
-            {
-                var width = videoTrack.Data.Video.Width;
-                var height = videoTrack.Data.Video.Height;
-
-                Console.WriteLine($"Video Duration: {TimeSpan.FromMilliseconds(duration)}");
-                Console.WriteLine($"Frame Size: {width}x{height}");
-            }
-            else
-            {
-                Console.WriteLine("No video track found.");
-            }
-            return -1;
         }
 
         public void Dispose()
@@ -73,13 +57,3 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         }
     }
 }
-
-/* Example usage:
-using (var vlcService = new VLCLibService())
-{
-    // Parse multiple videos using the same service instance
-    await vlcService.GetDuration("video1.mp4");
-    await vlcService.GetDuration("video2.mp4");
-    await vlcService.GetDuration("video3.mp4");
-}
-*/
