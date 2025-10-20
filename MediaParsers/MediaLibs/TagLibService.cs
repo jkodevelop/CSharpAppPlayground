@@ -1,5 +1,6 @@
 ﻿using TagLib;
 using System.Diagnostics;
+using Microsoft.UI.Xaml.Input;
 
 // NuGet Package: TagLibSharp
 
@@ -23,6 +24,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
         public int GetDuration(string filePath)
         {
+            GetFile(filePath);
             try
             {
                 //Debug.Print($"Taglib object:{filePath} -> {tFile.Name}");

@@ -10,12 +10,10 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         protected FFProbe ffProbe;
         protected NReco.VideoInfo.MediaInfo videoInfo;
 
-        public NRecoFFProbeService(string? filePath)
+        public NRecoFFProbeService()
         {
             ffProbe = new FFProbe();
             // ffProbe = new FFProbe { ToolPath = @"C:\ffmpeg\bin" };
-            if (filePath != null)
-                GetFile(filePath);
         }
 
         public void GetFile(string filePath)
@@ -27,21 +25,14 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print("NRecoFFProbeService.GetMediaInfo() ex: " + ex.Message);
+                Debug.Print($"NRecoFFProbeService.GetMediaInfo() ex: {ex.Message}");
+                throw new Exception($"NRecoFFProbeService.GetFile() failed to get media info for {filePath}");
             }
         }
 
-        public void CheckFileIsSet()
+        public void ParseWithFFProbe(string filePath)
         {
-            if (videoInfo == null)
-            {
-                throw new Exception("videoInfo is null, use GetFile() to set the file");
-            }
-        }
-
-        public void ParseWithFFProbe()
-        {
-            CheckFileIsSet();
+            GetFile(filePath);
             try
             {
                 // Debug.Print($"VideoInfo: {videoInfo}");
@@ -60,9 +51,9 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
         }
 
-        public int GetDuration()
+        public int GetDuration(string filePath)
         {
-            CheckFileIsSet();
+            GetFile(filePath);
             try
             {               
                 return (int)videoInfo.Duration.TotalSeconds;
@@ -76,7 +67,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
         public (int width, int height) GetMediaDimensions(string filePath)
         {
-            CheckFileIsSet();
+            GetFile(filePath);
             int w = -1;
             int h = -1;
             try

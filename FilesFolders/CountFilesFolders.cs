@@ -1,9 +1,9 @@
 ﻿using MethodTimer;
+using Microsoft.Extensions.FileProviders.Physical;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Enumeration;
 using System.Text.RegularExpressions;
-using static CSharpAppPlayground.FilesFolders.CountFilesFoldersStorage;
 
 namespace CSharpAppPlayground.FilesFolders
 {
@@ -28,6 +28,7 @@ namespace CSharpAppPlayground.FilesFolders
             }
 
             // TODO: let's see which is faster, MethodA or MethodB
+            // J is the fastest so far
         }
 
         // using System.IO + loop + recursion
@@ -470,6 +471,10 @@ namespace CSharpAppPlayground.FilesFolders
             catch (OperationCanceledException)
             {
                 Debug.Print("Cancellation requested: The operation was cancelled by the user.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"An error occurred during performance testing: {ex.Message}");
             }
         }
     }

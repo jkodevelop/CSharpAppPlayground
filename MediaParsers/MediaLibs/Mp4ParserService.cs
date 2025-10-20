@@ -14,12 +14,27 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             public int DurationSeconds;
         }
 
+        public int GetDuration(string filePath)
+        {
+            var info = ParseMp4Header(filePath);
+            return info.DurationSeconds;
+        }
+
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        // This section parses the MP4 file structure to extract width, height, and duration
+        //////////////////////////////////////////////////////////////////////////////////////
         public Mp4Info ParseMp4Header(string filePath)
         {
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(fs);
 
-            Mp4Info info = new Mp4Info();
+            Mp4Info info = new Mp4Info() 
+            { 
+                Width = -1, 
+                Height = -1, 
+                DurationSeconds = -1 
+            };
 
             while (fs.Position < fs.Length)
             {

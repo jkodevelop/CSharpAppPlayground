@@ -18,6 +18,25 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class WindowsMediaService
     {
+        public async Task<int> GetDuration(string filePath)
+        {
+            int duration = -1;
+
+            try
+            {
+                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(filePath);
+                var props = await file.Properties.GetVideoPropertiesAsync();
+                duration = (int)props.Duration.TotalSeconds;
+                Debug.Print($"Duration: {props.Duration.TotalSeconds:F2} seconds");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"WindowsMediaService.GetVideoProperties() failed {ex.Message}");
+            }
+
+            return duration;
+        }
+
         public async Task<(int width, int height, int duration)> GetVideoProperties(string filePath)
         {
             int w = -1;

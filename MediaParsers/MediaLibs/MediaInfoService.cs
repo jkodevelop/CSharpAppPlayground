@@ -1,4 +1,5 @@
-﻿using MediaInfo;
+﻿using CSharpAppPlayground.Loggers;
+using MediaInfo;
 
 // NuGet Package: MediaInfo.Core.Native + MediaInfo.Wrapper.Core
 
@@ -7,26 +8,26 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
     public class MediaInfoService
     {
         protected MediaInfo.MediaInfoWrapper mediaInf;
+        protected DebugLogger logger = new DebugLogger("MediaInfoService");
 
-        public MediaInfoService(string filePath)
+        public void GetFile(string filePath)
         {
-            // supports ILogger
-            // example: mediaInf = new MediaInfo.MediaInfoWrapper(filePath, logger);
-            
-            mediaInf = new MediaInfo.MediaInfoWrapper(filePath);
+            mediaInf = new MediaInfo.MediaInfoWrapper(filePath, logger);
             if (!mediaInf.Success)
             {
                 throw new Exception($"Failed to get MediaInfo {filePath}");
             }
         }
 
-        public int GetDuration()
+        public int GetDuration(string filePath)
         {
+            GetFile(filePath);
             return mediaInf.Duration;
         }
 
-        public (int width, int height) GetMediaDimensions()
+        public (int width, int height) GetMediaDimensions(string filePath)
         {
+            GetFile(filePath);
             int w = mediaInf.Width;
             int h = mediaInf.Height;
             return (w, h);
