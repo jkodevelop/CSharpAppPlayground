@@ -23,10 +23,11 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             {
                 using (var media = new Media(_libVLC, new Uri(filePath)))
                 {
+                    Debug.Print($"Parsing media file: {filePath}, {media.ToString()}");
                     // Parse the media synchronously first
                     await media.Parse(MediaParseOptions.ParseNetwork);
 
-                    // Get duration in milliseconds and convert to seconds
+                    //// Get duration in milliseconds and convert to seconds
                     long durationMs = media.Duration;
                     return (int)(durationMs / 1000);
                 }

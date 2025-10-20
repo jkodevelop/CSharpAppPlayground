@@ -88,10 +88,16 @@ namespace CSharpAppPlayground.MediaParsers
             return tagLibService.GetDuration(filePath);
         }
 
-        protected VLCLibServiceAlt vlcLibService = new VLCLibServiceAlt();
+        protected VLCLibService vlcLibService = new VLCLibService();
         public async Task<int> UseVLCLibService(string filePath)
         {
             return await vlcLibService.GetDuration(filePath);
+        }
+
+        protected VLCLibSimpleService vLCLibSimpleService = new VLCLibSimpleService();
+        public int UseVLCLibSimpleService(string filePath)
+        {
+            return vLCLibSimpleService.GetDuration(filePath);
         }
 
         protected WindowsMediaPlayerService wmpService = new WindowsMediaPlayerService();
@@ -174,6 +180,12 @@ namespace CSharpAppPlayground.MediaParsers
             await TestDurationAsync(filePath, "UseVLCLibService", UseVLCLibService);
         }
 
+        [Time("UseVLCLibSimpleService: {filePath}")]
+        protected void Test_UseVLCLibSimpleService(string filePath)
+        {
+            TestDuration(filePath, "UseVLCLibSimpleService", UseVLCLibSimpleService);
+        }
+
         [Time("UseWMPService: {filePath}")]
         protected void Test_UseWMPService(string filePath)
         {
@@ -192,7 +204,7 @@ namespace CSharpAppPlayground.MediaParsers
             {
                 FileCacheManager.FlushFileCache();
 
-                //await Task.Run(() => Test_UseVLCLibService(filePath), cancellationToken);
+                await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
 
                 // one after another
                 //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)

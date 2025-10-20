@@ -36,6 +36,8 @@
             btnFileBrowse = new Button();
             btnParseMediaFolder = new Button();
             btnLibCheck = new Button();
+            videoView1 = new LibVLCSharp.WinForms.VideoView();
+            ((System.ComponentModel.ISupportInitialize)videoView1).BeginInit();
             SuspendLayout();
             // 
             // txtFolderPath
@@ -103,11 +105,22 @@
             btnLibCheck.UseVisualStyleBackColor = true;
             btnLibCheck.Click += btnLibCheck_Click;
             // 
+            // videoView1
+            // 
+            videoView1.BackColor = Color.Black;
+            videoView1.Location = new Point(168, 403);
+            videoView1.MediaPlayer = null;
+            videoView1.Name = "videoView1";
+            videoView1.Size = new Size(75, 23);
+            videoView1.TabIndex = 11;
+            videoView1.Text = "videoView1";
+            // 
             // FormMediaParser
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(videoView1);
             Controls.Add(btnLibCheck);
             Controls.Add(btnParseMediaFolder);
             Controls.Add(btnFileBrowse);
@@ -122,6 +135,8 @@
             Controls.SetChildIndex(btnFileBrowse, 0);
             Controls.SetChildIndex(btnParseMediaFolder, 0);
             Controls.SetChildIndex(btnLibCheck, 0);
+            Controls.SetChildIndex(videoView1, 0);
+            ((System.ComponentModel.ISupportInitialize)videoView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -136,5 +151,6 @@
         private Button btnFileBrowse;
         private Button btnParseMediaFolder;
         private Button btnLibCheck;
+        private LibVLCSharp.WinForms.VideoView videoView1;
     }
 }

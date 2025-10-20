@@ -22,7 +22,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         public int GetDuration(string filePath)
         {
             GetFile(filePath);
-            return mediaInf.Duration;
+            return (int)(mediaInf.Duration/1000);
         }
 
         public (int width, int height) GetMediaDimensions(string filePath)
