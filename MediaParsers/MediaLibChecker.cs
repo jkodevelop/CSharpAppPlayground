@@ -94,6 +94,14 @@ namespace CSharpAppPlayground.MediaParsers
             return vLCLibSimpleService.GetDuration(filePath);
         }
 
+        public int UseVLCLibSimpleService_IDispose(string filePath)
+        {
+            using (var vlcService = new VLCLibSimpleService())
+            {
+                return vlcService.GetDuration(filePath);
+            }
+        }
+
         protected WindowsMediaPlayerService wmpService = new WindowsMediaPlayerService();
         public int UseWMPService(string filePath)
         {
@@ -174,6 +182,12 @@ namespace CSharpAppPlayground.MediaParsers
             TestDuration(filePath, "UseVLCLibSimpleService", UseVLCLibSimpleService);
         }
 
+        [Time("UseVLCLibSimpleService_IDispose: {filePath}")]
+        protected void Test_UseVLCLibSimpleService_IDispose(string filePath)
+        {
+            TestDuration(filePath, "UseVLCLibSimpleService_IDispose", UseVLCLibSimpleService_IDispose);
+        }
+
         [Time("UseWMPService: {filePath}")]
         protected void Test_UseWMPService(string filePath)
         {
@@ -194,6 +208,7 @@ namespace CSharpAppPlayground.MediaParsers
 
                 await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
                 //await Task.Run(() => Test_UseMp4Parser(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseVLCLibSimpleService_IDispose(filePath), cancellationToken);
 
                 // one after another
                 //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)

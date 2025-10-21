@@ -5,15 +5,22 @@ using System.Diagnostics;
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
-    public class VLCLibSimpleService
+    public class VLCLibSimpleService : IDisposable
     {
+        private readonly LibVLC _libVLC;
+        private bool _disposed;
+
+        public VLCLibSimpleService()
+        {
+            _libVLC = new LibVLC();
+        }
+
         public int GetDuration(string filePath)
         {
             int seconds = -1;
             try
             {
-                var libVLC = new LibVLC();
-                var media = new Media(libVLC, filePath);
+                var media = new Media(_libVLC, filePath);
                 media.Parse(MediaParseOptions.ParseLocal | MediaParseOptions.ParseNetwork);
 
                 // Wait for parsing to complete
@@ -39,8 +46,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             int h = -1;
             try
             {
-                var libVLC = new LibVLC();
-                var media = new Media(libVLC, filePath);
+                var media = new Media(_libVLC, filePath);
                 media.Parse(MediaParseOptions.ParseLocal | MediaParseOptions.ParseNetwork);
 
                 // Wait for parsing to complete
@@ -63,7 +69,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print($"VLCLibSimpleService.GetDuration() ex: {ex.Message}");
+                Debug.Print($"VLCLibSimpleService.GetMediaDimensions() ex: {ex.Message}");
             }
             return (w, h);
         }
@@ -75,8 +81,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             int h = -1;
             try
             {
-                var libVLC = new LibVLC();
-                var media = new Media(libVLC, filePath);
+                var media = new Media(_libVLC, filePath);
                 media.Parse(MediaParseOptions.ParseLocal | MediaParseOptions.ParseNetwork);
 
                 // Wait for parsing to complete
@@ -104,10 +109,37 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print($"VLCLibSimpleService.GetDuration() ex: {ex.Message}");
+                Debug.Print($"VLCLibSimpleService.GetVideoProperties() ex: {ex.Message}");
             }
             return (w, h, seconds);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _libVLC?.Dispose();
+                }
+                _disposed = true;
+            }
         }
     }
 }
 
+/* Example usage:
+using (var vlcService = new VLCLibSimpleService())
+{
+    // Parse multiple videos using the same service instance
+    vlcService.GetDuration("video1.mp4");
+    vlcService.GetDuration("video2.mp4");
+    vlcService.GetDuration("video3.mp4");
+}
+*/
