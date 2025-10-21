@@ -206,22 +206,22 @@ namespace CSharpAppPlayground.MediaParsers
             {
                 FileCacheManager.FlushFileCache();
 
-                await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
                 //await Task.Run(() => Test_UseMp4Parser(filePath), cancellationToken);
                 //await Task.Run(() => Test_UseVLCLibSimpleService_IDispose(filePath), cancellationToken);
 
                 // one after another
-                //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseFFProbeCmd(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseMediaInfo(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseMediaToolkit(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseMp4Parser(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseVLCLibSimpleService(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
+                await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseFFProbeCmd(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseMediaInfo(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseMediaToolkit(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseMp4Parser(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseVLCLibSimpleService(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
+                    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
