@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 // EXPERIMENTAL: A simple MP4 parser to extract width, height, and duration without external libraries
 // SUPPORTS: mp4/mov/m4v
@@ -7,6 +8,8 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class Mp4ParserService
     {
+        protected Mp4Info info;
+
         public struct Mp4Info
         {
             public int Width;
@@ -14,12 +17,22 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             public int DurationSeconds;
         }
 
-        public int GetDuration(string filePath)
+        public Mp4ParserService()
         {
-            var info = ParseMp4Header(filePath);
-            return info.DurationSeconds;
+            info = new Mp4Info()
+            {
+                Width = -1,
+                Height = -1,
+                DurationSeconds = -1
+            };
         }
 
+        public int GetDuration(string filePath)
+        {
+            ParseMp4Header(filePath);
+            Debug.Print($"what? {info.DurationSeconds}");
+            return info.DurationSeconds;
+        }
 
         //////////////////////////////////////////////////////////////////////////////////////
         // This section parses the MP4 file structure to extract width, height, and duration
@@ -28,13 +41,6 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
         {
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(fs);
-
-            Mp4Info info = new Mp4Info() 
-            { 
-                Width = -1, 
-                Height = -1, 
-                DurationSeconds = -1 
-            };
 
             while (fs.Position < fs.Length)
             {
@@ -47,7 +53,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
                 if (boxType == "moov")
                 {
-                    ParseMoovBox(br, boxStart, boxSize, info);
+                    ParseMoovBox(br, boxStart, boxSize);
                     break;
                 }
                 else
@@ -59,7 +65,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             return info;
         }
 
-        private void ParseMoovBox(BinaryReader br, long moovStart, uint moovSize, Mp4Info info)
+        private void ParseMoovBox(BinaryReader br, long moovStart, uint moovSize)
         {
             long moovEnd = moovStart + moovSize;
 
@@ -70,15 +76,15 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
 
                 if (boxType == "mvhd")
-                    ParseMvhd(br, info);
+                    ParseMvhd(br);
                 else if (boxType == "trak")
-                    ParseTrak(br, boxStart, boxSize, info);
+                    ParseTrak(br, boxStart, boxSize);
                 else
                     br.BaseStream.Position = boxStart + boxSize;
             }
         }
 
-        private void ParseMvhd(BinaryReader br, Mp4Info info)
+        private void ParseMvhd(BinaryReader br)
         {
             long start = br.BaseStream.Position;
             byte version = br.ReadByte();
@@ -96,13 +102,15 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 br.BaseStream.Position += 8; // creation/modification time
                 uint timescale = ReadUInt32(br);
                 uint duration = ReadUInt32(br);
+                Debug.Print($"duration: {duration}");
                 info.DurationSeconds = (int)(duration / (double)timescale);
+                Debug.Print($"info.duration: {info.DurationSeconds}");
             }
 
             br.BaseStream.Position = start + 100; // skip rest of mvhd
         }
 
-        private void ParseTrak(BinaryReader br, long trakStart, uint trakSize, Mp4Info info)
+        private void ParseTrak(BinaryReader br, long trakStart, uint trakSize)
         {
             long trakEnd = trakStart + trakSize;
 
@@ -114,7 +122,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
                 if (boxType == "tkhd")
                 {
-                    ParseTkhd(br, info);
+                    ParseTkhd(br);
                     break;
                 }
                 else
@@ -124,7 +132,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
         }
 
-        private void ParseTkhd(BinaryReader br, Mp4Info info)
+        private void ParseTkhd(BinaryReader br)
         {
             long start = br.BaseStream.Position;
             byte version = br.ReadByte();

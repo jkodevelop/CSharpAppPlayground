@@ -27,7 +27,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(filePath);
                 var props = await file.Properties.GetVideoPropertiesAsync();
                 duration = (int)props.Duration.TotalSeconds;
-                Debug.Print($"Duration: {props.Duration.TotalSeconds:F2} seconds");
+                //Debug.Print($"Duration: {props.Duration.TotalSeconds:F2} seconds");
             }
             catch (Exception ex)
             {
