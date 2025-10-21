@@ -88,12 +88,6 @@ namespace CSharpAppPlayground.MediaParsers
             return tagLibService.GetDuration(filePath);
         }
 
-        protected VLCLibService vlcLibService = new VLCLibService();
-        public async Task<int> UseVLCLibService(string filePath)
-        {
-            return await vlcLibService.GetDuration(filePath);
-        }
-
         protected VLCLibSimpleService vLCLibSimpleService = new VLCLibSimpleService();
         public int UseVLCLibSimpleService(string filePath)
         {
@@ -174,12 +168,6 @@ namespace CSharpAppPlayground.MediaParsers
             TestDuration(filePath, "UseTagLibService", UseTagLibService);
         }
 
-        [Time("UseVLCLibService: {filePath}")]
-        protected async void Test_UseVLCLibService(string filePath)
-        {
-            await TestDurationAsync(filePath, "UseVLCLibService", UseVLCLibService);
-        }
-
         [Time("UseVLCLibSimpleService: {filePath}")]
         protected void Test_UseVLCLibSimpleService(string filePath)
         {
@@ -204,8 +192,8 @@ namespace CSharpAppPlayground.MediaParsers
             {
                 FileCacheManager.FlushFileCache();
 
-                //await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
-                await Task.Run(() => Test_UseMp4Parser(filePath), cancellationToken);
+                await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseMp4Parser(filePath), cancellationToken);
 
                 // one after another
                 //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
@@ -216,7 +204,6 @@ namespace CSharpAppPlayground.MediaParsers
                 //    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
-                //    //.ContinueWith(t => Test_UseVLCLibService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseVLCLibSimpleService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
