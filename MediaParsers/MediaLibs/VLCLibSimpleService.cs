@@ -1,6 +1,8 @@
 ﻿using LibVLCSharp.Shared;
 using System.Diagnostics;
 
+// // NuGet Packages required: LibVLCSharp + VideoLAN.LibVLC.Windows
+
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     public class VLCLibSimpleService
@@ -24,7 +26,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 long duration = media.Duration;
                 return (int)(duration / 1000);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.Print($"VLCLibSimpleService.GetDuration() ex: {ex.Message}");
             }
@@ -63,8 +65,48 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             {
                 Debug.Print($"VLCLibSimpleService.GetDuration() ex: {ex.Message}");
             }
-
             return (w, h);
+        }
+
+        public (int width, int height, int duration) GetVideoProperties(string filePath)
+        {
+            int seconds = -1;
+            int w = -1;
+            int h = -1;
+            try
+            {
+                var libVLC = new LibVLC();
+                var media = new Media(libVLC, filePath);
+                media.Parse(MediaParseOptions.ParseLocal | MediaParseOptions.ParseNetwork);
+
+                // Wait for parsing to complete
+                while (media.ParsedStatus != MediaParsedStatus.Done)
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+
+                // Duration is now available in milliseconds
+                long duration = media.Duration;
+                seconds = (int)(duration / 1000);
+
+                // Framesize
+                var videoTrack = media.Tracks.FirstOrDefault(t => t.TrackType == TrackType.Video);
+                if (!videoTrack.Equals(default(MediaTrack)))
+                {
+                    w = (int)videoTrack.Data.Video.Width;
+                    h = (int)videoTrack.Data.Video.Height;
+                    //Debug.Print($"Frame Size: {w}x{h}");
+                }
+                else
+                {
+                    Debug.Print("No video track found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"VLCLibSimpleService.GetDuration() ex: {ex.Message}");
+            }
+            return (w, h, seconds);
         }
     }
 }
