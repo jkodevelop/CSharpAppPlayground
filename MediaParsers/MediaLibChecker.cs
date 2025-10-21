@@ -204,7 +204,8 @@ namespace CSharpAppPlayground.MediaParsers
             {
                 FileCacheManager.FlushFileCache();
 
-                await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
+                //await Task.Run(() => Test_UseVLCLibSimpleService(filePath), cancellationToken);
+                await Task.Run(() => Test_UseMp4Parser(filePath), cancellationToken);
 
                 // one after another
                 //await Task.Run(() => Test_UseFFMpegCore(filePath), cancellationToken)
@@ -215,7 +216,8 @@ namespace CSharpAppPlayground.MediaParsers
                 //    .ContinueWith(t => Test_UseNRecoFFProbe(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseShellService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseTagLibService(filePath), cancellationToken)
-                //    .ContinueWith(t => Test_UseVLCLibService(filePath), cancellationToken)
+                //    //.ContinueWith(t => Test_UseVLCLibService(filePath), cancellationToken)
+                //    .ContinueWith(t => Test_UseVLCLibSimpleService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseWMPService(filePath), cancellationToken)
                 //    .ContinueWith(t => Test_UseWMService(filePath), cancellationToken);
 
