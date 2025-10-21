@@ -6,16 +6,23 @@ using System.Text;
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
+    public struct Mp4Info
+    {
+        public int Width;
+        public int Height;
+        public int DurationSeconds;
+    }
+
+    public enum Mp4ParseMode
+    {
+        DurationOnly,
+        FrameSizeOnly,
+        FullProperties
+    }
+
     public class Mp4ParserService
     {
         protected Mp4Info info;
-
-        public struct Mp4Info
-        {
-            public int Width;
-            public int Height;
-            public int DurationSeconds;
-        }
 
         public Mp4ParserService()
         {
@@ -29,14 +36,78 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
 
         public int GetDuration(string filePath)
         {
-            ParseMp4Header(filePath);
+            ParseMp4HeaderX(filePath, Mp4ParseMode.DurationOnly);
             return info.DurationSeconds;
+        }
+
+        public (int width, int height) GetMediaDimensions(string filePath)
+        {
+            ParseMp4HeaderX(filePath, Mp4ParseMode.FrameSizeOnly);
+            return (info.Width, info.Height);
         }
 
         public (int width, int height, int duration) GetVideoProperties(string filePath)
         {
-            ParseMp4Header(filePath);
+            ParseMp4HeaderX(filePath, Mp4ParseMode.FullProperties);
             return (info.Width, info.Height, info.DurationSeconds);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        // This section parses the MP4 file structure to extract duration only
+        //////////////////////////////////////////////////////////////////////////////////////
+        public Mp4Info ParseMp4HeaderX(string filePath, Mp4ParseMode mode)
+        {
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            using var br = new BinaryReader(fs);
+            while (fs.Position < fs.Length)
+            {
+                long boxStart = fs.Position;
+                uint boxSize = ReadUInt32(br);
+                string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
+
+                if (boxSize == 1)
+                    boxSize = (uint)(br.ReadUInt64() - 16); // large size (rare)
+
+                if (boxType == "moov")
+                {
+                    ParseMoovBoxX(br, boxStart, boxSize, mode);
+                    break;
+                }
+                else
+                {
+                    fs.Position = boxStart + boxSize;
+                }
+            }
+            return info;
+        }
+
+        private void ParseMoovBoxX(BinaryReader br, long moovStart, uint moovSize, Mp4ParseMode mode)
+        {
+            long moovEnd = moovStart + moovSize;
+
+            while (br.BaseStream.Position < moovEnd)
+            {
+                long boxStart = br.BaseStream.Position;
+                uint boxSize = ReadUInt32(br);
+                string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
+
+                if (boxType == "mvhd")
+                {
+                    if (mode != Mp4ParseMode.FrameSizeOnly)
+                    {
+                        ParseMvhd(br);
+                    }
+                }
+                else if (boxType == "trak")
+                {
+                    if (mode != Mp4ParseMode.DurationOnly)
+                    {
+                        ParseTrak(br, boxStart, boxSize);
+                    }
+                }
+                else
+                    br.BaseStream.Position = boxStart + boxSize;
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
