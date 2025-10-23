@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 
+// REQUIRED: ffmpeg and ffprobe must be installed and accessible in the system PATH for this code to work.
+
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
 {
     // command example to get video duration, width, and height:
