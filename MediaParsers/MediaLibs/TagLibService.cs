@@ -63,6 +63,31 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             return (-1, -1); // Return invalid dimensions if unsuccessful
         }
 
+        public (int width, int height, int duration) GetVideoProperties(string filePath)
+        {
+            try
+            {
+                if (tFile.Properties != null)
+                {
+                    // For video files
+                    if (tFile.Properties.VideoWidth > 0 && tFile.Properties.VideoHeight > 0)
+                    {
+                        return (tFile.Properties.VideoWidth, tFile.Properties.VideoHeight, (int)tFile.Properties.Duration.TotalSeconds);
+                    }
+                    // For image files
+                    if (tFile.Properties.PhotoWidth > 0 && tFile.Properties.PhotoHeight > 0)
+                    {
+                        return (tFile.Properties.PhotoWidth, tFile.Properties.PhotoHeight, (int)tFile.Properties.Duration.TotalSeconds);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"TagLibService.GetMediaDimensions() ex: {ex.Message}");
+            }
+            return (-1, -1, -1); // Return invalid dimensions if unsuccessful
+        }
+
         public void Dispose()
         {
             tFile?.Dispose();

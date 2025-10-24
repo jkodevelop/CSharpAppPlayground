@@ -3,7 +3,7 @@
 
 ### MediaLibChecker.cs
 
-#### CPU: 
+#### CPU: i7-12700KF, 3610 Mhz, 12 Cores + 20 Logical Processors, RAM: 16 GB RAM
 
 Starting UseMp4Parser...
 UseMp4Parser: 8505 seconds

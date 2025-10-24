@@ -1,6 +1,6 @@
 ﻿namespace CSharpAppPlayground
 {
-    partial class FormDBsMenu
+    partial class FormDBsMenu : Form
     {
         /// <summary>
         /// Required designer variable.

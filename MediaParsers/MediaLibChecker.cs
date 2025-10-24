@@ -7,20 +7,10 @@ namespace CSharpAppPlayground.MediaParsers
 {
     public class MediaLibChecker
     {
-        static string[] audioExtensions = { ".mp3", ".wav", ".aac", ".flac", ".ogg", ".opus" };
-        static string[] videoExtensions = { ".mp4", ".avi", ".mov", ".mkv", ".wmv", ".rmvb", ".mpg", ".flv" };
-
-        public static bool IsMediaFile(string filePath)
+        // [TODO]
+        public void CheckLibsUsingFile(string filePath)
         {
-            string fileExtension = Path.GetExtension(filePath).ToLower();
-
-            return Array.Exists(audioExtensions, ext => ext == fileExtension) ||
-                    Array.Exists(videoExtensions, ext => ext == fileExtension);
-        }
-
-        public void CheckFile(string filePath)
-        {
-            if (IsMediaFile(filePath))
+            if (MediaChecker.IsMediaFile(filePath))
             {
                 // Perform media file checks, [TODO: pick a good option]
             }
@@ -29,13 +19,13 @@ namespace CSharpAppPlayground.MediaParsers
         }
 
         // [TODO]
-        public void CheckFolder(string folderPath)
+        public void CheckLibsUsingFolder(string folderPath)
         {
             var mediaFiles = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
-                                      .Where(file => IsMediaFile(file));
+                                      .Where(file => MediaChecker.IsMediaFile(file));
             foreach (var file in mediaFiles)
             {
-                CheckFile(file);
+                CheckLibsUsingFile(file);
             }
         }
 

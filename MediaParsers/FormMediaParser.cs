@@ -90,9 +90,11 @@ namespace CSharpAppPlayground.MediaParsers
 
         }
 
+        MediaFileParser fileParser = new MediaFileParser();
         private void btnParseMediaFile_Click(object sender, EventArgs e)
         {
-
+            MediaMeta metaData = fileParser.GetFileMetaData(txtFolderPath.Text);
+            Debug.Print($"{metaData.ToString()}");
         }
 
         private async void btnLibCheck_Click(object sender, EventArgs e)
