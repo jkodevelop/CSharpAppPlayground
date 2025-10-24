@@ -1,6 +1,7 @@
 ﻿using TagLib;
 using System.Diagnostics;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.Extensions.Logging;
 
 // NuGet Package: TagLibSharp
 
@@ -75,9 +76,13 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                         return (tFile.Properties.VideoWidth, tFile.Properties.VideoHeight, (int)tFile.Properties.Duration.TotalSeconds);
                     }
                     // For image files
-                    if (tFile.Properties.PhotoWidth > 0 && tFile.Properties.PhotoHeight > 0)
+                    else if (tFile.Properties.PhotoWidth > 0 && tFile.Properties.PhotoHeight > 0)
                     {
                         return (tFile.Properties.PhotoWidth, tFile.Properties.PhotoHeight, (int)tFile.Properties.Duration.TotalSeconds);
+                    }
+                    else
+                    {
+                        return (-1, -1, (int)tFile.Properties.Duration.TotalSeconds);
                     }
                 }
             }

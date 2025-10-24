@@ -3,29 +3,6 @@ using System.Diagnostics;
 
 namespace CSharpAppPlayground.MediaParsers
 {
-    public struct MediaMeta
-    {
-        public int Width;
-        public int Height;
-        public int DurationSeconds;
-        public parseResults Result;
-        public string filePath;
-        public string notes;
-
-        public override string ToString()
-        {
-            return $"   Width: {Width}, Height: {Height}, DurationSeconds: {DurationSeconds}, {notes}, File: {filePath}, Result:{Result}";
-        }
-    }
-
-    public enum parseResults
-    {
-        Success,
-        Partial,
-        Failed,
-        Working
-    }
-
     public class MediaFileParser
     {
         Mp4ParserService mp4FastParse;
@@ -114,7 +91,9 @@ namespace CSharpAppPlayground.MediaParsers
                     meta.Result = parseResults.Working;
                     if (MediaChecker.IsFastParseFile(filePath))
                     {
+                        //Debug.Print($"[Trying MP4FastParse]:{filePath}");
                         ParseWithMp4Parser(ref meta);
+                        //Debug.Print(meta.ToString());
                         if (meta.Result == parseResults.Success)
                         {
                             meta.notes = "MP4FastParse";

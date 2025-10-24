@@ -228,8 +228,15 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             uint widthFixed = ReadUInt32(br);
             uint heightFixed = ReadUInt32(br);
 
-            info.Width = (int)(widthFixed >> 16);
-            info.Height = (int)(heightFixed >> 16);
+            // For some reason this function is run twice per trak, so only set if not already set
+            // the second one overrides the first correct pass, so lets keep valid values if they show up
+            int w = (int)(widthFixed >> 16);
+            int h = (int)(heightFixed >> 16);
+            if(w > 0 && h > 0)
+            {
+                info.Width = w;
+                info.Height = h;
+            }
         }
 
         private uint ReadUInt32(BinaryReader br)
