@@ -40,6 +40,7 @@ namespace CSharpAppPlayground.MediaParsers
             meta.Width = w;
             meta.Height = h;
             meta.DurationSeconds = duration;
+            meta.notes = "MP4FastParse";
             CheckParseStatus(ref meta);
         }
 
@@ -50,6 +51,7 @@ namespace CSharpAppPlayground.MediaParsers
             meta.Width = w;
             meta.Height = h;
             meta.DurationSeconds = duration;
+            meta.notes = "TagLib";
             CheckParseStatus(ref meta);
         }
 
@@ -59,6 +61,7 @@ namespace CSharpAppPlayground.MediaParsers
             meta.Width = w;
             meta.Height = h;
             meta.DurationSeconds = duration;
+            meta.notes = "Shell";
             CheckParseStatus(ref meta);
         }
 
@@ -68,7 +71,20 @@ namespace CSharpAppPlayground.MediaParsers
             meta.Width = w;
             meta.Height = h;
             meta.DurationSeconds = duration;
+            meta.notes = "FFProbeCmd";
             CheckParseStatus(ref meta);
+        }
+
+        private bool CheckContinueParsing(ref MediaMeta meta)
+        {
+            if (meta.Result == parseResults.Success)
+                return false;
+            else if (meta.Result == parseResults.Partial)
+            {
+                if(meta.DurationSeconds > 0 && MediaChecker.IsAudioFile(meta.filePath))
+                    return false;
+            }
+            return true;
         }
 
         public MediaMeta GetFileMetaData(string filePath)
@@ -94,37 +110,18 @@ namespace CSharpAppPlayground.MediaParsers
                         //Debug.Print($"[Trying MP4FastParse]:{filePath}");
                         ParseWithMp4Parser(ref meta);
                         //Debug.Print(meta.ToString());
-                        if (meta.Result == parseResults.Success)
-                        {
-                            meta.notes = "MP4FastParse";
-                            Debug.Print($"[MP4FastParse done]:{filePath}");
-                            return meta;
-                        }
+                        if(!CheckContinueParsing(ref meta)) return meta;
+                        
                     }
 
                     ParseWithTagLib(ref meta);
-                    if (meta.Result == parseResults.Success)
-                    {
-                        meta.notes = "TagLib";
-                        Debug.Print($"[TagLib done]:{filePath}");
-                        return meta;
-                    }
-
+                    if (!CheckContinueParsing(ref meta)) return meta;
+                    
                     ParseWithShell(ref meta);
-                    if (meta.Result == parseResults.Success)
-                    {
-                        meta.notes = "Shell";
-                        Debug.Print($"[Shell done]:{filePath}");
-                        return meta;
-                    }
+                    if (!CheckContinueParsing(ref meta)) return meta;
 
                     ParseWithFFProbeCmd(ref meta);
-                    if (meta.Result == parseResults.Success)
-                    {
-                        meta.notes = "FFProbeCmd";
-                        Debug.Print($"[FFProbeCmd done]:{filePath}");
-                        return meta;
-                    }
+                    // no more tries
                 }
                 else
                 {

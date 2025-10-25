@@ -39,6 +39,12 @@ namespace CSharpAppPlayground.MediaParsers
                     Array.Exists(videoExtensions, ext => ext == fileExtension);
         }
 
+        public static bool IsAudioFile(string filePath)
+        {
+            string fileExtension = Path.GetExtension(filePath).ToLower();
+            return Array.Exists(audioExtensions, ext => ext == fileExtension);
+        }
+
         public static bool IsFastParseFile(string filePath)
         {
             string fileExtension = Path.GetExtension(filePath).ToLower();
