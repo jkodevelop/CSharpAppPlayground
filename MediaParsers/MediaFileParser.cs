@@ -130,7 +130,7 @@ namespace CSharpAppPlayground.MediaParsers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting metadata: {ex.Message}");
+                Debug.Print($"Error getting metadata: {ex.Message}");
                 meta.Result = parseResults.Failed;
             }
             return meta;

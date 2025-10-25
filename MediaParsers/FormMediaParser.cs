@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.UIClasses;
+using MethodTimer;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground.MediaParsers
@@ -86,12 +87,14 @@ namespace CSharpAppPlayground.MediaParsers
         }
 
         MediaFolderParser folderParser = new MediaFolderParser();
+        [Time("folderParser.ParseFolder")]
         private void btnParseMediaFolder_Click(object sender, EventArgs e)
         {
             folderParser.ParseFolder(txtFolderPath.Text);
         }
 
         MediaFileParser fileParser = new MediaFileParser();
+        [Time("fileParser.GetFileMetaData")]
         private void btnParseMediaFile_Click(object sender, EventArgs e)
         {
             MediaMeta metaData = fileParser.GetFileMetaData(txtFolderPath.Text);
