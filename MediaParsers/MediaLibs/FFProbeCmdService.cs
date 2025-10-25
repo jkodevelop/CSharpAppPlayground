@@ -112,17 +112,31 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             string output = proc!.StandardOutput.ReadToEnd();
             proc.WaitForExit();
 
-            // FFProbe output will be three lines: width\nheight\nduration
+            // FFProbe output format: width=640\nheight=360\nduration=8505.363533
+            // For audio files, only duration may be present
             var lines = output.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (lines.Length >= 3)
+            foreach (var line in lines)
             {
-                if (int.TryParse(lines[0].Trim(), out int parsedW))
-                    w = parsedW;
-                if (int.TryParse(lines[1].Trim(), out int parsedH))
-                    h = parsedH;
-                if (double.TryParse(lines[2].Trim(), System.Globalization.CultureInfo.InvariantCulture, out double seconds))
-                    duration = (int)seconds;
+                var trimmedLine = line.Trim();
+                if (trimmedLine.StartsWith("width="))
+                {
+                    var widthValue = trimmedLine.Substring(6); // Remove "width="
+                    if (int.TryParse(widthValue, out int parsedW))
+                        w = parsedW;
+                }
+                else if (trimmedLine.StartsWith("height="))
+                {
+                    var heightValue = trimmedLine.Substring(7); // Remove "height="
+                    if (int.TryParse(heightValue, out int parsedH))
+                        h = parsedH;
+                }
+                else if (trimmedLine.StartsWith("duration="))
+                {
+                    var durationValue = trimmedLine.Substring(9); // Remove "duration="
+                    if (double.TryParse(durationValue, System.Globalization.CultureInfo.InvariantCulture, out double seconds))
+                        duration = (int)seconds;
+                }
             }
 
             return (w, h, duration);
