@@ -88,7 +88,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             }
             catch (Exception ex)
             {
-                Debug.Print($"TagLibService.GetMediaDimensions() ex: {ex.Message}");
+                Debug.Print($"TagLibService.GetVideoProperties() ex: {ex.Message}");
             }
             return (-1, -1, -1); // Return invalid dimensions if unsuccessful
         }

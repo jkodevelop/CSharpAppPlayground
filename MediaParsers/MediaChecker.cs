@@ -28,7 +28,7 @@ namespace CSharpAppPlayground.MediaParsers
     public static class MediaChecker
     {
         static string[] audioExtensions = { ".mp3", ".wav", ".aac", ".flac", ".ogg", ".opus" };
-        static string[] videoExtensions = { ".mp4", ".avi", ".mov", ".mkv", ".wmv", ".rmvb", ".mpg", ".flv" };
+        static string[] videoExtensions = { ".mp4", ".avi", ".mov", ".mkv", ".wmv", ".rmvb", ".mpg", ".flv", ".webm", ".vob" };
         static string[] fastExtensions = { ".mp4", ".mov", ".m4v" }; // this allows for quick MP4 parsing option
 
         public static bool IsMediaFile(string filePath)

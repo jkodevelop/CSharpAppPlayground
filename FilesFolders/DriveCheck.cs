@@ -111,6 +111,8 @@ namespace CSharpAppPlayground.FilesFolders
         /// <summary>
         /// Gets detailed information about all physical drives in the system
         /// Useful for debugging and understanding drive properties
+        /// 
+        /// There might be Auth exceptions for this call in some environments
         /// </summary>
         public static void PrintAllDriveDetails()
         {

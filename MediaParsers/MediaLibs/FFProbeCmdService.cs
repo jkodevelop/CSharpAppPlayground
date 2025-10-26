@@ -32,6 +32,15 @@ duration=8505.363533
 
 example output for .opus file:
 duration=10341.207500
+
+ffprobe -v error -show_entries stream=width,height,duration -show_entries format=duration -of default=noprint_wrappers=1 ".\file.avi
+
+example output for .avi file (some meta data doesn't exist):
+width=720
+height=480
+duration=N/A
+duration=N/A
+duration=8079.004500
  */
 
 namespace CSharpAppPlayground.MediaParsers.MediaLibs
@@ -52,6 +61,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+            // ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1
 
             using var proc = Process.Start(psi);
             string output = proc!.StandardOutput.ReadToEnd();
@@ -74,6 +84,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+            // ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of default=noprint_wrappers=1:nokey=1
 
             using var proc = Process.Start(psi);
             string output = proc!.StandardOutput.ReadToEnd();
@@ -107,6 +118,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+            // ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1
 
             using var proc = Process.Start(psi);
             string output = proc!.StandardOutput.ReadToEnd();
@@ -137,6 +149,12 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                     if (double.TryParse(durationValue, System.Globalization.CultureInfo.InvariantCulture, out double seconds))
                         duration = (int)seconds;
                 }
+            }
+
+            // try one more time to get duration if not found, using -show_entries format=duration (useful for audio or avi files)
+            if (duration == -1)
+            {
+                duration = GetDuration(filePath);
             }
 
             return (w, h, duration);

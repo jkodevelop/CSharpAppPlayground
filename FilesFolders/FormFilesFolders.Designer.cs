@@ -107,7 +107,7 @@
             btnReadFile.Name = "btnReadFile";
             btnReadFile.Size = new Size(205, 30);
             btnReadFile.TabIndex = 8;
-            btnReadFile.Text = "Read File";
+            btnReadFile.Text = "Read File (todo)";
             btnReadFile.UseVisualStyleBackColor = true;
             btnReadFile.Click += btnReadFile_Click;
             // 

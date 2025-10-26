@@ -115,13 +115,13 @@ namespace CSharpAppPlayground.FilesFolders
             {
                 Debug.Print("Please select a proper folder path first.");
                 DriveCheck.CheckAllDriveInfo();
+                // DriveCheck.PrintAllDriveDetails();
                 return;
             }
 
             string driveName = txtFolderPath.Text.Substring(0, 2); // Extract drive letter, e.g., "C:"
 
-            //DriveCheck.isHDD(driveName);
-            //DriveCheck.PrintAllDriveDetails();
+            DriveCheck.PrintDriveInfo(new DriveInfo(driveName));
 
             if (DriveHelper.IsDriveSSD(driveName))
                 Debug.Print($"Drive {driveName} is SSD");
