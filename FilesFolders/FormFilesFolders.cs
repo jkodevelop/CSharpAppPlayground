@@ -10,19 +10,38 @@ namespace CSharpAppPlayground.FilesFolders
         private CancellationTokenSource cts;
         private bool cancelTokenIsDisposed = true;
 
-        private bool somethingRunning = false;
+        private bool isProcessing = false;
+        private bool isFolderMode = true;
+
         public FormFilesFolders()
         {
             InitializeComponent();
             this.FormClosing += FormFilesFolders_FormClosing;
         }
 
-        public void EnableButtons()
+        public void EnableFolderButtons()
         {
             btnFileCount.Enabled = true;
             btnStorage.Enabled = true;
             btnCountAndStorage.Enabled = true;
+            DisableFileButtons();
+            isFolderMode = true;
+        }
+        public void DisableFolderButtons()
+        {
+            btnFileCount.Enabled = false;
+            btnStorage.Enabled = false;
+            btnCountAndStorage.Enabled = false;
+        }
+        public void EnableFileButtons()
+        {
             btnReadFile.Enabled = true;
+            DisableFolderButtons();
+            isFolderMode = false;
+        }
+        public void DisableFileButtons()
+        {
+            btnReadFile.Enabled = false;
         }
 
         private CancellationToken GenCancelToken()
@@ -54,59 +73,68 @@ namespace CSharpAppPlayground.FilesFolders
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 txtFolderPath.Text = folderBrowserDialog1.SelectedPath;
-                EnableButtons();
+                EnableFolderButtons();
+            }
+        }
+
+        private void btnFileBrowse_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                txtFolderPath.Text = openFileDialog1.FileName;
+                EnableFileButtons();
             }
         }
 
         private CountFilesFolders countFilesFolders = new CountFilesFolders();
         private async void btnFileCount_Click(object sender, EventArgs e)
         {
-            if (somethingRunning)
+            if (isProcessing)
             {
                 Debug.Print("btnFileCount_Click: Something is already running.");
                 return;
             }
-            somethingRunning = true;
+            isProcessing = true;
             CancellationToken cancelToken = GenCancelToken();
 
             await countFilesFolders.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
 
             CancelAndDisposeToken();
-            somethingRunning = false;
+            isProcessing = false;
         }
 
         private CountStorage countStorage = new CountStorage();
         private async void btnStorage_Click(object sender, EventArgs e)
         {
-            if (somethingRunning)
+            if (isProcessing)
             {
                 Debug.Print("btnStorage_Click: Something is already running.");
                 return;
             }
-            somethingRunning = true;
+            isProcessing = true;
             CancellationToken cancelToken = GenCancelToken();
 
             await countStorage.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
 
             CancelAndDisposeToken();
-            somethingRunning = false;
+            isProcessing = false;
         }
 
         private CountFilesFoldersStorage countAll = new CountFilesFoldersStorage();
         private async void btnCountAndStorage_Click(object sender, EventArgs e)
         {
-            if (somethingRunning)
+            if (isProcessing)
             {
                 Debug.Print("btnStorage_Click: Something is already running.");
                 return;
             }
-            somethingRunning = true;
+            isProcessing = true;
             CancellationToken cancelToken = GenCancelToken();
 
             await countAll.TestPerformanceAsync(txtFolderPath.Text, cancelToken);
 
             CancelAndDisposeToken();
-            somethingRunning = false;
+            isProcessing = false;
         }
 
         private void btnDriveInfo_Click(object sender, EventArgs e)

@@ -36,12 +36,16 @@
             btnCountAndStorage = new Button();
             btnDriveInfo = new Button();
             btnReadFile = new Button();
+            btnFileBrowse = new Button();
+            label1 = new Label();
+            openFileDialog1 = new OpenFileDialog();
+            label2 = new Label();
             SuspendLayout();
             // 
             // btnFileCount
             // 
             btnFileCount.Enabled = false;
-            btnFileCount.Location = new Point(12, 62);
+            btnFileCount.Location = new Point(12, 81);
             btnFileCount.Name = "btnFileCount";
             btnFileCount.Size = new Size(117, 30);
             btnFileCount.TabIndex = 0;
@@ -53,25 +57,25 @@
             // 
             btnFolderBrowse.Location = new Point(12, 12);
             btnFolderBrowse.Name = "btnFolderBrowse";
-            btnFolderBrowse.Size = new Size(75, 23);
+            btnFolderBrowse.Size = new Size(64, 23);
             btnFolderBrowse.TabIndex = 3;
-            btnFolderBrowse.Text = "Browse";
+            btnFolderBrowse.Text = "Folder";
             btnFolderBrowse.UseVisualStyleBackColor = true;
             btnFolderBrowse.Click += btnFolderBrowse_Click;
             // 
             // txtFolderPath
             // 
-            txtFolderPath.Location = new Point(93, 12);
+            txtFolderPath.Location = new Point(82, 12);
             txtFolderPath.Name = "txtFolderPath";
             txtFolderPath.ReadOnly = true;
             txtFolderPath.ScrollBars = ScrollBars.Horizontal;
-            txtFolderPath.Size = new Size(396, 23);
+            txtFolderPath.Size = new Size(341, 23);
             txtFolderPath.TabIndex = 4;
             // 
             // btnStorage
             // 
             btnStorage.Enabled = false;
-            btnStorage.Location = new Point(135, 62);
+            btnStorage.Location = new Point(135, 81);
             btnStorage.Name = "btnStorage";
             btnStorage.Size = new Size(117, 30);
             btnStorage.TabIndex = 5;
@@ -82,7 +86,7 @@
             // btnCountAndStorage
             // 
             btnCountAndStorage.Enabled = false;
-            btnCountAndStorage.Location = new Point(12, 108);
+            btnCountAndStorage.Location = new Point(12, 127);
             btnCountAndStorage.Name = "btnCountAndStorage";
             btnCountAndStorage.Size = new Size(240, 37);
             btnCountAndStorage.TabIndex = 6;
@@ -103,19 +107,56 @@
             // btnReadFile
             // 
             btnReadFile.Enabled = false;
-            btnReadFile.Location = new Point(284, 62);
+            btnReadFile.Location = new Point(285, 81);
             btnReadFile.Name = "btnReadFile";
-            btnReadFile.Size = new Size(205, 30);
+            btnReadFile.Size = new Size(208, 30);
             btnReadFile.TabIndex = 8;
             btnReadFile.Text = "Read File (todo)";
             btnReadFile.UseVisualStyleBackColor = true;
             btnReadFile.Click += btnReadFile_Click;
+            // 
+            // btnFileBrowse
+            // 
+            btnFileBrowse.Location = new Point(429, 11);
+            btnFileBrowse.Name = "btnFileBrowse";
+            btnFileBrowse.Size = new Size(64, 23);
+            btnFileBrowse.TabIndex = 9;
+            btnFileBrowse.Text = "File";
+            btnFileBrowse.UseVisualStyleBackColor = true;
+            btnFileBrowse.Click += btnFileBrowse_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 64);
+            label1.Name = "label1";
+            label1.Padding = new Padding(100, 0, 100, 0);
+            label1.Size = new Size(240, 15);
+            label1.TabIndex = 10;
+            label1.Text = "Folder";
+            // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(285, 62);
+            label2.Name = "label2";
+            label2.Padding = new Padding(90, 0, 90, 0);
+            label2.Size = new Size(205, 15);
+            label2.TabIndex = 11;
+            label2.Text = "File";
             // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(btnFileBrowse);
             Controls.Add(btnReadFile);
             Controls.Add(btnDriveInfo);
             Controls.Add(btnCountAndStorage);
@@ -132,6 +173,9 @@
             Controls.SetChildIndex(btnCountAndStorage, 0);
             Controls.SetChildIndex(btnDriveInfo, 0);
             Controls.SetChildIndex(btnReadFile, 0);
+            Controls.SetChildIndex(btnFileBrowse, 0);
+            Controls.SetChildIndex(label1, 0);
+            Controls.SetChildIndex(label2, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -146,5 +190,9 @@
         private Button btnCountAndStorage;
         private Button btnDriveInfo;
         private Button btnReadFile;
+        private Button btnFileBrowse;
+        private Label label1;
+        private OpenFileDialog openFileDialog1;
+        private Label label2;
     }
 }
