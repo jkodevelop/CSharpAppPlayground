@@ -1,4 +1,7 @@
-﻿namespace CSharpAppPlayground.DBClasses
+﻿using CSharpAppPlayground.DBClasses.MysqlBenchmark;
+using System.Diagnostics;
+
+namespace CSharpAppPlayground.DBClasses
 {
     public partial class FormDBBenchmark : Form
     {
@@ -7,9 +10,13 @@
             InitializeComponent();
         }
 
+        MysqlBasicBenchmarks mysqlBenchmarks = new MysqlBasicBenchmarks();
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
-            // TODO: call benchmark insert methods here
+            mysqlBenchmarks.RunBulkInsertBenchmark(10);
+            int insertedCount = mysqlBenchmarks.GetVidsCount();
+            Debug.Print($"Inserted:{insertedCount}");
+            // mysqlBenchmarks.ResetVidsTable();
         }
     }
 }
