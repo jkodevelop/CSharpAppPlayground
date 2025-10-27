@@ -1,9 +1,12 @@
-﻿using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
-using CSharpAppPlayground.Classes.DataGen.Generators;
+﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
+using MethodTimer;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Ocsp;
 using System.Configuration;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
@@ -29,37 +32,53 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             // Generate test data
             GenerateVidsSQL generator = new GenerateVidsSQL();
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
-            Debug.Print($"Generated {testData.Count} test records");
+            Debug.Print($"Generated {testData.Count} test records\n");
 
             // Example 1: Single insert loop (baseline)
-            Debug.Print("\n--- Method 1: Single Insert Loop ---");
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            int insertedCount1 = BulkInsertSingleLoop(testData);
-            sw.Stop();
-            Debug.Print($"Inserted {insertedCount1} records in {sw.ElapsedMilliseconds} ms");
+            Test_InsertSimpleLoop(testData);
 
             // Example 2: Multi-value INSERT statement
-            Debug.Print("\n--- Method 2: Multi-Value INSERT Statement ---");
-            sw.Restart();
-            int insertedCount2 = BulkInsertMultiValue(testData);
-            sw.Stop();
-            Debug.Print($"Inserted {insertedCount2} records in {sw.ElapsedMilliseconds} ms");
+            Test_InsertMultiValue(testData);
 
             // Example 3: Transaction with batched inserts
-            Debug.Print("\n--- Method 3: Transaction with Batched Inserts ---");
-            sw.Restart();
-            int insertedCount3 = BulkInsertWithTransaction(testData);
-            sw.Stop();
-            Debug.Print($"Inserted {insertedCount3} records in {sw.ElapsedMilliseconds} ms");
+            Test_InsertWithTransaction(testData);
 
             // Example 4: Prepared statement with batching
-            Debug.Print("\n--- Method 4: Prepared Statement Batching ---");
-            sw.Restart();
-            int insertedCount4 = BulkInsertWithPreparedStatement(testData);
-            sw.Stop();
-            Debug.Print($"Inserted {insertedCount4} records in {sw.ElapsedMilliseconds} ms");
+            Test_InsertWithPreparedStatement(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
+        }
+
+        [Time("BulkInsertSingleLoop:")]
+        protected void Test_InsertSimpleLoop(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 1: Single Insert Loop ---");
+            int insertedCount = BulkInsertSingleLoop(testData);
+            Debug.Print($"Inserted {insertedCount} records using Single Loop\n");
+        }
+
+        [Time("BulkInsertMultiValue:")]
+        protected void Test_InsertMultiValue(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 2: Multi-Value INSERT Statement ---");
+            int insertedCount = BulkInsertMultiValue(testData);
+            Debug.Print($"Inserted {insertedCount} records using Multi-Value\n");
+        }
+
+        [Time("BulkInsertWithTransaction:")]
+        protected void Test_InsertWithTransaction(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 3: Transaction with Batched Inserts ---");
+            int insertedCount = BulkInsertWithTransaction(testData);
+            Debug.Print($"Inserted {insertedCount} records using Transaction with Batching\n");
+        }
+
+        [Time("BulkInsertWithPreparedStatement:")]
+        protected void Test_InsertWithPreparedStatement(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 4: Prepared Statement with Batching ---");
+            int insertedCount = BulkInsertWithPreparedStatement(testData);
+            Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
         /// <summary>
@@ -83,7 +102,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         using (var command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@filename", vid.filename);
-                            command.Parameters.AddWithValue("@filesizebyte", vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value);
+                            command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
                             command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -128,8 +147,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         for (int j = 0; j < batch.Count; j++)
                         {
                             var vid = batch[j];
+                            // For multi-value SQL we inline numeric values (or NULL) — BigInteger.ToString() is safe here.
+                            string filesizeSql = vid.filesizebyte.HasValue ? vid.filesizebyte.Value.ToString() : "NULL";
                             query.Append($"('{MySqlHelper.EscapeString(vid.filename)}', " +
-                                        $"{(vid.filesizebyte.HasValue ? vid.filesizebyte.Value.ToString() : "NULL")}, " +
+                                        $"{filesizeSql}, " +
                                         $"{(vid.duration.HasValue ? vid.duration.Value.ToString() : "NULL")}, " +
                                         $"{(vid.metadatetime.HasValue ? $"'{vid.metadatetime.Value:yyyy-MM-dd HH:mm:ss}'" : "NULL")}, " +
                                         $"{(vid.width.HasValue ? vid.width.Value.ToString() : "NULL")}, " +
@@ -184,7 +205,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                     using (var command = new MySqlCommand(query, connection, transaction))
                                     {
                                         command.Parameters.AddWithValue("@filename", vid.filename);
-                                        command.Parameters.AddWithValue("@filesizebyte", vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value);
+                                        // BigInteger handling, only limited long is supported directly
+                                        // command.Parameters.AddWithValue("@filesizebyte", vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value);
+                                        command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
                                         command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -231,17 +254,17 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     
                     // Prepare the statement
                     string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
-                                  "VALUES (?filename, ?filesizebyte, ?duration, ?metadatetime, ?width, ?height)";
+                                  "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
                     
                     using (var command = new MySqlCommand(query, connection))
                     {
                         // Add parameters once
-                        command.Parameters.Add("?filename", MySqlDbType.VarChar);
-                        command.Parameters.Add("?filesizebyte", MySqlDbType.Int64);
-                        command.Parameters.Add("?duration", MySqlDbType.Int32);
-                        command.Parameters.Add("?metadatetime", MySqlDbType.DateTime);
-                        command.Parameters.Add("?width", MySqlDbType.Int32);
-                        command.Parameters.Add("?height", MySqlDbType.Int32);
+                        command.Parameters.Add("@filename", MySqlDbType.VarChar);
+                        command.Parameters.Add("@filesizebyte", MySqlDbType.Int64);
+                        command.Parameters.Add("@duration", MySqlDbType.Int32);
+                        command.Parameters.Add("@metadatetime", MySqlDbType.DateTime);
+                        command.Parameters.Add("@width", MySqlDbType.Int32);
+                        command.Parameters.Add("@height", MySqlDbType.Int32);
                         
                         // Prepare the command
                         command.Prepare();
@@ -253,12 +276,14 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                             
                             foreach (var vid in batch)
                             {
-                                command.Parameters["?filename"].Value = vid.filename;
-                                command.Parameters["?filesizebyte"].Value = vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value;
-                                command.Parameters["?duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
-                                command.Parameters["?metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
-                                command.Parameters["?width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
-                                command.Parameters["?height"].Value = vid.height.HasValue ? vid.height.Value : DBNull.Value;
+                                command.Parameters["@filename"].Value = vid.filename;
+                                // BigInteger handling, only limited long is supported directly
+                                // command.Parameters["@filesizebyte"].Value = vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value;
+                                command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
+                                command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
+                                command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
+                                command.Parameters["@height"].Value = vid.height.HasValue ? vid.height.Value : DBNull.Value;
                                 
                                 command.ExecuteNonQuery();
                                 insertedCount++;
@@ -361,6 +386,32 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             {
                 Debug.Print($"Error in GetVidsCount: {ex.Message}");
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Convert BigInteger? into a DB-friendly value.
+        /// Returns DBNull.Value when null or when the BigInteger cannot be represented as Int64.
+        /// When in-range, returns a boxed Int64 (long) which is IConvertible and accepted by MySqlParameter.
+        /// </summary>
+        private static object ConvertBigIntegerToDbValue(BigInteger? value)
+        {
+            if (!value.HasValue)
+                return DBNull.Value;
+
+            BigInteger v = value.Value;
+            var max = new BigInteger(long.MaxValue);
+            var min = new BigInteger(long.MinValue);
+
+            if (v <= max && v >= min)
+            {
+                return (long)v;
+            }
+            else
+            {
+                // Out of range for BIGINT in MySQL. Log and return NULL to avoid casting exceptions.
+                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL instead.");
+                return DBNull.Value;
             }
         }
     }

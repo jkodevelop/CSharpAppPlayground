@@ -13,10 +13,14 @@ namespace CSharpAppPlayground.DBClasses
         MysqlBasicBenchmarks mysqlBenchmarks = new MysqlBasicBenchmarks();
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
-            mysqlBenchmarks.RunBulkInsertBenchmark(10);
+            mysqlBenchmarks.RunBulkInsertBenchmark(1000);
             int insertedCount = mysqlBenchmarks.GetVidsCount();
             Debug.Print($"Inserted:{insertedCount}");
-            // mysqlBenchmarks.ResetVidsTable();
+        }
+
+        private void btnResetTables_Click(object sender, EventArgs e)
+        {
+            mysqlBenchmarks.ResetVidsTable();
         }
     }
 }

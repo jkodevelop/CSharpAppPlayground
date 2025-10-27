@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             btnBenchmarkInserts = new Button();
+            btnResetTables = new Button();
             SuspendLayout();
             // 
             // btnBenchmarkInserts
@@ -41,11 +42,22 @@
             btnBenchmarkInserts.UseVisualStyleBackColor = true;
             btnBenchmarkInserts.Click += btnBenchmarkInserts_Click;
             // 
+            // btnResetTables
+            // 
+            btnResetTables.Location = new Point(27, 86);
+            btnResetTables.Name = "btnResetTables";
+            btnResetTables.Size = new Size(146, 23);
+            btnResetTables.TabIndex = 1;
+            btnResetTables.Text = "Reset Tables";
+            btnResetTables.UseVisualStyleBackColor = true;
+            btnResetTables.Click += btnResetTables_Click;
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnResetTables);
             Controls.Add(btnBenchmarkInserts);
             Name = "FormDBBenchmark";
             Text = "FormDBBenchmark";
@@ -55,5 +67,6 @@
         #endregion
 
         private Button btnBenchmarkInserts;
+        private Button btnResetTables;
     }
 }
