@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using RepoDb;
 using System.Configuration;
 
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
@@ -10,6 +11,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         public MysqlBase()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            GlobalConfiguration.Setup().UseMySql(); // configuring "RepoDb", add more supported API to mysqlconnection
         }
 
         public T WithConnection<T>(Func<MySqlConnection, T> func)

@@ -3,11 +3,11 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Ocsp;
 using System.Configuration;
 using System.Diagnostics;
 using System.Numerics;
 using System.Text;
+using RepoDb;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -18,6 +18,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
+
+        // New: also limit batch by approximate payload size to avoid deep internal work/recursion
+        // Default 4 MB per batch (tune down if you still hit issues)
+        private int maxBatchBytes = 4 * 1024 * 1024;
 
         public MysqlBasicBenchmarks()
         {
@@ -51,6 +55,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
             // Example 5: Prepared statement with batching and transaction
             Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+
+            // Example 6: RepoDB InsertAll example
+            Test_BulkInsertWithRepoDBInsertAll(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -95,6 +102,14 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
+        [Time("BulkInsertWithRepoDBInsertAll:")]
+        protected void Test_BulkInsertWithRepoDBInsertAll(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 6: RepoDB InsertAll Example ---");
+            int insertedCount = BulkInsertWithRepoDBInsertAll(testData);
+            Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll\n");
+        }
+
         /// <summary>
         /// Method 1: Simple loop with individual INSERT statements
         /// Pros: Simple, safe for large datasets
@@ -112,7 +127,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     {
                         string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
                                       "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
-                        
+
                         using (var command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@filename", vid.filename);
@@ -121,7 +136,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                             command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@height", vid.height.HasValue ? vid.height.Value : DBNull.Value);
-                            
+
                             command.ExecuteNonQuery();
                             insertedCount++;
                         }
@@ -156,14 +171,14 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 using (var connection = new MySqlConnection(connectionStr))
                 {
                     connection.Open();
-                    
+
                     for (int i = 0; i < vids.Count; i += batchSize)
                     {
                         var batch = vids.Skip(i).Take(batchSize).ToList();
                         var query = new StringBuilder();
-                        
+
                         query.Append("INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) VALUES ");
-                        
+
                         for (int j = 0; j < batch.Count; j++)
                         {
                             var vid = batch[j];
@@ -175,7 +190,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                         $"{(vid.metadatetime.HasValue ? $"'{vid.metadatetime.Value:yyyy-MM-dd HH:mm:ss}'" : "NULL")}, " +
                                         $"{(vid.width.HasValue ? vid.width.Value.ToString() : "NULL")}, " +
                                         $"{(vid.height.HasValue ? vid.height.Value.ToString() : "NULL")})");
-                            
+
                             if (j < batch.Count - 1)
                                 query.Append(", ");
                         }
@@ -216,12 +231,12 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                             for (int i = 0; i < vids.Count; i += batchSize)
                             {
                                 var batch = vids.Skip(i).Take(batchSize).ToList();
-                                
+
                                 foreach (var vid in batch)
                                 {
                                     string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
                                                   "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
-                                    
+
                                     using (var command = new MySqlCommand(query, connection, transaction))
                                     {
                                         command.Parameters.AddWithValue("@filename", vid.filename);
@@ -232,13 +247,13 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                         command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@height", vid.height.HasValue ? vid.height.Value : DBNull.Value);
-                                        
+
                                         command.ExecuteNonQuery();
                                         insertedCount++;
                                     }
                                 }
                             }
-                            
+
                             transaction.Commit();
                         }
                         catch
@@ -271,11 +286,11 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 using (var connection = new MySqlConnection(connectionStr))
                 {
                     connection.Open();
-                    
+
                     // Prepare the statement
                     string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
                                   "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
-                    
+
                     using (var command = new MySqlCommand(query, connection))
                     {
                         // Add parameters once
@@ -285,15 +300,15 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         command.Parameters.Add("@metadatetime", MySqlDbType.DateTime);
                         command.Parameters.Add("@width", MySqlDbType.Int32);
                         command.Parameters.Add("@height", MySqlDbType.Int32);
-                        
+
                         // Prepare the command
                         command.Prepare();
-                        
+
                         // Execute in batches
                         for (int i = 0; i < vids.Count; i += batchSize)
                         {
                             var batch = vids.Skip(i).Take(batchSize).ToList();
-                            
+
                             foreach (var vid in batch)
                             {
                                 command.Parameters["@filename"].Value = vid.filename;
@@ -304,7 +319,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                 command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
                                 command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
                                 command.Parameters["@height"].Value = vid.height.HasValue ? vid.height.Value : DBNull.Value;
-                                
+
                                 command.ExecuteNonQuery();
                                 insertedCount++;
                             }
@@ -379,6 +394,125 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 Debug.Print($"Error in BulkInsertWithPreparedStatementAndTransaction: {ex.Message}");
             }
             return insertedCount;
+        }
+
+        /// <summary>
+        /// RepoDB InsertAll example.
+        /// - Demonstrates mapping the existing VidsSQL list to simple POCO objects that RepoDB can insert.
+        /// - Converts BigInteger to nullable long where in-range; out-of-range values become NULL.
+        /// - Limits batches by row count and approximate payload bytes to avoid provider/stack issues.
+        /// Notes:
+        /// - Ensure the project references the RepoDb and RepoDb.MySqlConnector packages (or the provider you're using).
+        /// - RepoDB needs the MySQL provider bootstrap initialized once before first use.
+        /// </summary>
+        private int BulkInsertWithRepoDBInsertAll(List<VidsSQL> vids)
+        {
+            int insertedCount = 0;
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionStr))
+                {
+                    connection.Open();
+
+                    // Use a concrete POCO to avoid the mapping overhead that anonymous types can trigger repeatedly.
+                    // Map and chunk by both row count and an approximate batch size in bytes.
+                    var currentBatch = new List<RepoVidInsert>(Math.Min(batchLimit, 1024));
+                    long currentBatchBytes = 0;
+
+                    foreach (var v in vids)
+                    {
+                        var entity = new RepoVidInsert
+                        {
+                            filename = v.filename,
+                            filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                            duration = v.duration,
+                            metadatetime = v.metadatetime,
+                            width = v.width,
+                            height = v.height
+                        };
+
+                        long estimatedSize = EstimateEntitySizeBytes(v);
+
+                        // If adding this row would exceed either the configured row count or approximate payload size, flush existing.
+                        if (currentBatch.Count >= batchLimit || (currentBatchBytes + estimatedSize) > maxBatchBytes)
+                        {
+                            if (currentBatch.Count > 0)
+                            {
+                                connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                                insertedCount += currentBatch.Count;
+                                currentBatch.Clear();
+                                currentBatchBytes = 0;
+                            }
+                        }
+
+                        currentBatch.Add(entity);
+                        currentBatchBytes += estimatedSize;
+                    }
+
+                    // Flush remainder
+                    if (currentBatch.Count > 0)
+                    {
+                        connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                        insertedCount += currentBatch.Count;
+                        currentBatch.Clear();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Note: StackOverflowException is not catchable/recoverable in .NET; avoid relying on catching it.
+                Debug.Print($"Error in RepoDB_InsertAll: {ex.Message}");
+            }
+
+            return insertedCount;
+        }
+
+        /// <summary>
+        /// Simple POCO used for RepoDB insertion to reduce mapping overhead vs anonymous types.
+        /// </summary>
+        private sealed class RepoVidInsert
+        {
+            public string filename { get; set; }
+            public long? filesizebyte { get; set; }
+            public int? duration { get; set; }
+            public DateTime? metadatetime { get; set; }
+            public int? width { get; set; }
+            public int? height { get; set; }
+        }
+
+        /// <summary>
+        /// Estimate approximate serialized/payload size of a VidsSQL row for batch sizing purposes.
+        /// This is a heuristic used to keep each batch under maxBatchBytes; it's not exact but helps prevent
+        /// extremely large internal allocation/processing that can lead to provider issues.
+        /// </summary>
+        private static long EstimateEntitySizeBytes(VidsSQL v)
+        {
+            long size = 0;
+
+            // filename (UTF8 bytes)
+            if (!string.IsNullOrEmpty(v.filename))
+                size += Encoding.UTF8.GetByteCount(v.filename);
+            else
+                size += 4;
+
+            // filesizebyte (8 bytes if present)
+            size += v.filesizebyte.HasValue ? 8 : 1;
+
+            // duration (4 bytes if present)
+            size += v.duration.HasValue ? 4 : 1;
+
+            // metadatetime (8 bytes if present)
+            size += v.metadatetime.HasValue ? 8 : 1;
+
+            // width/height (4 bytes each if present)
+            size += v.width.HasValue ? 4 : 1;
+            size += v.height.HasValue ? 4 : 1;
+
+            // Add overhead estimate per row for parameter names / quoting / separators
+            size += 32;
+
+            return size;
         }
 
         /// <summary>
@@ -482,8 +616,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 return DBNull.Value;
 
             BigInteger v = value.Value;
-            var max = new BigInteger(long.MaxValue);
-            var min = new BigInteger(long.MinValue);
+            BigInteger max = long.MaxValue;
+            BigInteger min = long.MinValue;
 
             if (v <= max && v >= min)
             {
@@ -494,6 +628,30 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 // Out of range for BIGINT in MySQL. Log and return NULL to avoid casting exceptions.
                 Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL instead.");
                 return DBNull.Value;
+            }
+        }
+
+        /// <summary>
+        /// Convert BigInteger? to nullable long for use with RepoDB insert objects.
+        /// Returns null for missing or out-of-range values (maps to SQL NULL).
+        /// </summary>
+        private static long? ConvertBigIntegerToNullableLong(BigInteger? value)
+        {
+            if (!value.HasValue)
+                return null;
+
+            BigInteger v = value.Value;
+            BigInteger max = long.MaxValue;
+            BigInteger min = long.MinValue;
+
+            if (v <= max && v >= min)
+            {
+                return (long)v;
+            }
+            else
+            {
+                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL (as null) instead.");
+                return null;
             }
         }
     }
