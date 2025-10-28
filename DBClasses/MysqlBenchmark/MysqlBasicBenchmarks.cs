@@ -16,6 +16,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private string connectionStr;
         private MysqlBase mysqlBase;
 
+        private int batchLimit = 5000;
+        private int overloadLimit = 50000;
+
         public MysqlBasicBenchmarks()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
@@ -140,7 +143,13 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int BulkInsertMultiValue(List<VidsSQL> vids)
         {
             int insertedCount = 0;
-            const int batchSize = 1000; // Insert in batches to avoid packet size limits
+            int batchSize = batchLimit; // Insert in batches to avoid packet size limits
+
+            if(vids.Count >= overloadLimit)
+            {
+                Debug.Print($"Dataset size {vids.Count} exceeds overload limit {overloadLimit}, skipping Multi-Value Insert to avoid packet size issues.");
+                return -1;
+            }
 
             try
             {
@@ -193,7 +202,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int BulkInsertWithTransaction(List<VidsSQL> vids)
         {
             int insertedCount = 0;
-            const int batchSize = 500;
+            int batchSize = batchLimit;
 
             try
             {
@@ -255,7 +264,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int BulkInsertWithPreparedStatement(List<VidsSQL> vids)
         {
             int insertedCount = 0;
-            const int batchSize = 1000;
+            int batchSize = batchLimit;
 
             try
             {
@@ -313,7 +322,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> vids)
         {
             int insertedCount = 0;
-            const int batchSize = 1000;
+            int batchSize = batchLimit;
 
             try
             {
