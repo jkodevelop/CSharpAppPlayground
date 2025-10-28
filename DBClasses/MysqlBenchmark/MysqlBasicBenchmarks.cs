@@ -46,6 +46,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             // Example 4: Prepared statement with batching
             Test_InsertWithPreparedStatement(testData);
 
+            // Example 5: Prepared statement with batching and transaction
+            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+
             Debug.Print("\n=== Benchmark Complete ===");
         }
 
@@ -78,6 +81,14 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         {
             Debug.Print("\n--- Method 4: Prepared Statement with Batching ---");
             int insertedCount = BulkInsertWithPreparedStatement(testData);
+            Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
+        }
+
+        [Time("BulkInsertWithPreparedStatementAndTransaction:")]
+        protected void Test_BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 5: Prepared Statement with Batching + transaction ---");
+            int insertedCount = BulkInsertWithPreparedStatementAndTransaction(testData);
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
@@ -295,6 +306,68 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             catch (Exception ex)
             {
                 Debug.Print($"Error in BulkInsertWithPreparedStatement: {ex.Message}");
+            }
+            return insertedCount;
+        }
+
+        private int BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> vids)
+        {
+            int insertedCount = 0;
+            const int batchSize = 1000;
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionStr))
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+
+                        // Prepare the statement
+                        string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
+                                  "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
+
+                        using (var command = new MySqlCommand(query, connection))
+                        {
+                            // Add parameters once
+                            command.Parameters.Add("@filename", MySqlDbType.VarChar);
+                            command.Parameters.Add("@filesizebyte", MySqlDbType.Int64);
+                            command.Parameters.Add("@duration", MySqlDbType.Int32);
+                            command.Parameters.Add("@metadatetime", MySqlDbType.DateTime);
+                            command.Parameters.Add("@width", MySqlDbType.Int32);
+                            command.Parameters.Add("@height", MySqlDbType.Int32);
+
+                            // Prepare the command
+                            command.Prepare();
+
+                            // Execute in batches
+                            for (int i = 0; i < vids.Count; i += batchSize)
+                            {
+                                var batch = vids.Skip(i).Take(batchSize).ToList();
+
+                                foreach (var vid in batch)
+                                {
+                                    command.Parameters["@filename"].Value = vid.filename;
+                                    // BigInteger handling, only limited long is supported directly
+                                    // command.Parameters["@filesizebyte"].Value = vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value;
+                                    command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                    command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
+                                    command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
+                                    command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
+                                    command.Parameters["@height"].Value = vid.height.HasValue ? vid.height.Value : DBNull.Value;
+
+                                    command.ExecuteNonQuery();
+                                    insertedCount++;
+                                }
+                            }
+                        }
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in BulkInsertWithPreparedStatementAndTransaction: {ex.Message}");
             }
             return insertedCount;
         }
