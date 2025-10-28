@@ -19,6 +19,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
 
+        private int repoDBBatchLimit = 2000;
+
         // New: also limit batch by approximate payload size to avoid deep internal work/recursion
         // Default 4 MB per batch (tune down if you still hit issues)
         private int maxBatchBytes = 4 * 1024 * 1024;
@@ -107,7 +109,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         {
             Debug.Print("\n--- Method 6: RepoDB InsertAll Example ---");
             int insertedCount = BulkInsertWithRepoDBInsertAll(testData);
-            Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll\n");
+            Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll, batchSize:{repoDBBatchLimit}\n");
         }
 
         /// <summary>
@@ -439,7 +441,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         {
                             if (currentBatch.Count > 0)
                             {
-                                connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                                // connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                                connection.InsertAll("Vids", currentBatch, batchSize: repoDBBatchLimit);
                                 insertedCount += currentBatch.Count;
                                 currentBatch.Clear();
                                 currentBatchBytes = 0;
@@ -453,7 +456,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     // Flush remainder
                     if (currentBatch.Count > 0)
                     {
-                        connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                        // connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
+                        connection.InsertAll("Vids", currentBatch, batchSize: repoDBBatchLimit);
                         insertedCount += currentBatch.Count;
                         currentBatch.Clear();
                     }

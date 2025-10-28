@@ -2,6 +2,9 @@
 using RepoDb;
 using System.Configuration;
 
+// NuGet packages required:
+// MySql.Data / RepoDb / RepoDb.MySql
+
 namespace CSharpAppPlayground.DBClasses.MysqlExamples
 {
     public class MysqlBase
