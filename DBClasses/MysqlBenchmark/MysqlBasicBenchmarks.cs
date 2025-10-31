@@ -536,11 +536,16 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
 
         /// <summary>
-        /// required: 
+        /// [TODO Document this] required: 
         /// 1. App.config connection string add key/value: [configFile] AllowLoadLocalInfile=true;
         /// 2. add user permissions: [mysql] GRANT FILE ON *.* TO 'testuser'@'localhost';
         /// 3. database allow for inline file: [mysql] SET GLOBAL local_infile = 1;
         /// 4. in .net code, under MySqlBulkLoader set attribute: Local = true
+        /// 5. set my.ini [mysqld] secure_file_priv = ''
+        /// 6. set my.ini [mysqld] local_infile = 1
+        /// 7. restart mysql service, load file with mysqld --defaults-file="path\to\my.ini"
+        /// 8. confirm with: SHOW VARIABLES LIKE 'secure_file_priv'; -- should be empty instead of NULL
+        /// 9. confirm with: SHOW GLOBAL VARIABLES LIKE 'local_infile'; -- should be on
         /// </summary>
         private int BulkInsertUseCSVOperation(List<VidsSQL> vids)
         {
@@ -609,8 +614,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         "height"
                     });
 
-                    var rowCount = bulkLoader.Load();
-                    Debug.Print($"{rowCount} rows were inserted into the 'Vids' table.");
+                    insertedCount = bulkLoader.Load();
+                    Debug.Print($"{insertedCount} rows were inserted into the 'Vids' table.");
                 }
 
             }
