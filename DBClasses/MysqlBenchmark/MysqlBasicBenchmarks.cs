@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using RepoDb;
+using CSharpAppPlayground.Classes;
+using System.Linq;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -24,6 +26,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         // New: also limit batch by approximate payload size to avoid deep internal work/recursion
         // Default 4 MB per batch (tune down if you still hit issues)
         private int maxBatchBytes = 4 * 1024 * 1024;
+
+        private string csvFilePath = @".\testdata\vids_bulk_insert.csv";
 
         public MysqlBasicBenchmarks()
         {
@@ -44,22 +48,25 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Generated {testData.Count} test records\n");
 
             // Example 1: Single insert loop (baseline)
-            Test_InsertSimpleLoop(testData);
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            // Example 6: RepoDB InsertAll example
-            Test_BulkInsertWithRepoDBInsertAll(testData);
+            //// Example 6: RepoDB InsertAll example
+            //Test_BulkInsertWithRepoDBInsertAll(testData);
+
+            // Example 7: CSV Bulk Load [TODO]
+            Test_BulkInsertUseCSVOperation(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -110,6 +117,14 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print("\n--- Method 6: RepoDB InsertAll Example ---");
             int insertedCount = BulkInsertWithRepoDBInsertAll(testData);
             Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll, batchSize:{repoDBBatchLimit}\n");
+        }
+
+        [Time("BulkInsertUseCSVOperation:")]
+        protected void Test_BulkInsertUseCSVOperation(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 7: CSV bulk command Example ---");
+            int insertedCount = BulkInsertUseCSVOperation(testData);
+            Debug.Print($"Inserted {insertedCount} records using CSV operation\n");
         }
 
         /// <summary>
@@ -517,6 +532,98 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             size += 32;
 
             return size;
+        }
+
+
+        /// <summary>
+        /// required: 
+        /// 1. App.config connection string add key/value: [configFile] AllowLoadLocalInfile=true;
+        /// 2. add user permissions: [mysql] GRANT FILE ON *.* TO 'testuser'@'localhost';
+        /// 3. database allow for inline file: [mysql] SET GLOBAL local_infile = 1;
+        /// 4. in .net code, under MySqlBulkLoader set attribute: Local = true
+        /// </summary>
+        private int BulkInsertUseCSVOperation(List<VidsSQL> vids)
+        {
+            int insertedCount = 0;
+
+            string filePath = csvFilePath;
+
+            // TODO: compare performance for remapping, removing id
+            // 1. using Select()
+            List<RepoVidInsert> csvEntities = vids
+                .Select(v => new RepoVidInsert
+                {
+                    filename = v.filename,
+                    filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                    duration = v.duration,
+                    metadatetime = v.metadatetime,
+                    width = v.width,
+                    height = v.height
+                })
+                .ToList();
+
+            // 2. loop + create
+            //var currentBatch = new List<RepoVidInsert>();
+            //foreach (var v in vids)
+            //{
+            //    var entity = new RepoVidInsert
+            //    {
+            //        filename = v.filename,
+            //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+            //        duration = v.duration,
+            //        metadatetime = v.metadatetime,
+            //        width = v.width,
+            //        height = v.height
+            //    };
+            //    currentBatch.Add(entity);
+            //}
+
+            CsvHandler.SaveListToCsv(csvEntities, filePath);
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionStr))
+                {
+                    connection.Open();
+
+                    var bulkLoader = new MySqlBulkLoader(connection)
+                    {
+                        FileName = csvFilePath,
+                        TableName = "Vids",
+                        CharacterSet = "UTF8",
+                        NumberOfLinesToSkip = 1, // Skip the header row
+                        FieldTerminator = ":",
+                        FieldQuotationCharacter = '"',
+                        FieldQuotationOptional = true,
+                        Local = true
+                    };
+
+                    // Add the database column names in the order of the CSV file
+                    bulkLoader.Columns.AddRange(new[]
+                    {
+                        "filename",
+                        "filesizebyte",
+                        "duration",
+                        "metadatetime",
+                        "width",
+                        "height"
+                    });
+
+                    var rowCount = bulkLoader.Load();
+                    Debug.Print($"{rowCount} rows were inserted into the 'Vids' table.");
+                }
+
+            }
+            catch (MySqlException ex)
+            {
+                Debug.Print($"Error during bulk insert: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in BulkInsertUseCSVOperation: {ex.Message}");
+            }
+
+            return insertedCount;
         }
 
         /// <summary>

@@ -9,9 +9,9 @@ using System.Reflection;
 // var rows = new List<VidSQL> { /* ... */ };
 // SaveToCSV.SaveListToCsv(rows, @"C:\\temp\\vids.csv"); // default ':' separator
 
-namespace CSharpAppPlayground.Classes.DataGen
+namespace CSharpAppPlayground.Classes
 {
-    public class SaveToCSV
+    public class CsvHandler
     {
         /// <summary>
         /// Saves a list of flat objects to a colon-separated CSV file.
