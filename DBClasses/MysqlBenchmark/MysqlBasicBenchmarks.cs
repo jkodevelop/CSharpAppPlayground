@@ -9,7 +9,6 @@ using System.Numerics;
 using System.Text;
 using RepoDb;
 using CSharpAppPlayground.Classes;
-using System.Linq;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -47,27 +46,30 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            // Example 1: Single insert loop (baseline)
-            //Test_InsertSimpleLoop(testData);
+            //Example 1: Single insert loop(baseline)
+            Test_InsertSimpleLoop(testData);
 
-            //// Example 2: Multi-value INSERT statement
-            //Test_InsertMultiValue(testData);
+            // Example 2: Multi-value INSERT statement
+            Test_InsertMultiValue(testData);
 
-            //// Example 3: Transaction with batched inserts
-            //Test_InsertWithTransaction(testData);
+            // Example 3: Transaction with batched inserts
+            Test_InsertWithTransaction(testData);
 
-            //// Example 4: Prepared statement with batching
-            //Test_InsertWithPreparedStatement(testData);
+            // Example 4: Prepared statement with batching
+            Test_InsertWithPreparedStatement(testData);
 
-            //// Example 5: Prepared statement with batching and transaction
-            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            // Example 5: Prepared statement with batching and transaction
+            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            //// Example 6: RepoDB InsertAll example
-            //Test_BulkInsertWithRepoDBInsertAll(testData);
+            // Example 6: RepoDB InsertAll example
+            Test_BulkInsertWithRepoDBInsertAll(testData);
 
             // Example 7: CSV Bulk Load [TODO]
-            Test_BulkInsertUseCSVOperation(testData);
-
+            if (GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseCSVOperation(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
+            
             Debug.Print("\n=== Benchmark Complete ===");
         }
 
@@ -120,10 +122,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         }
 
         [Time("BulkInsertUseCSVOperation:")]
-        protected void Test_BulkInsertUseCSVOperation(List<VidsSQL> testData)
+        protected void Test_BulkInsertUseCSVOperation(string filePath)
         {
             Debug.Print("\n--- Method 7: CSV bulk command Example ---");
-            int insertedCount = BulkInsertUseCSVOperation(testData);
+            int insertedCount = BulkInsertUseCSVOperation(filePath);
             Debug.Print($"Inserted {insertedCount} records using CSV operation\n");
         }
 
@@ -534,11 +536,55 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             return size;
         }
 
+        private bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)
+        {
+            bool success = false;
+            try
+            {
+                // TODO: compare performance for remapping, removing id
+                // 1. using Select()
+                List<RepoVidInsert> csvEntities = vids
+                    .Select(v => new RepoVidInsert
+                    {
+                        filename = v.filename,
+                        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                        duration = v.duration,
+                        metadatetime = v.metadatetime,
+                        width = v.width,
+                        height = v.height
+                    })
+                    .ToList();
+
+                // 2. loop + create
+                //var currentBatch = new List<RepoVidInsert>();
+                //foreach (var v in vids)
+                //{
+                //    var entity = new RepoVidInsert
+                //    {
+                //        filename = v.filename,
+                //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                //        duration = v.duration,
+                //        metadatetime = v.metadatetime,
+                //        width = v.width,
+                //        height = v.height
+                //    };
+                //    currentBatch.Add(entity);
+                //}
+                CsvHandler.SaveListToCsv(csvEntities, filePath);
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in GenCSVfileWithData: {ex.Message}");
+                success = false;
+            }
+            return success;
+        }
 
         /// <summary>
         /// [TODO Document this] required: 
         /// 1. App.config connection string add key/value: [configFile] AllowLoadLocalInfile=true;
-        /// 2. add user permissions: [mysql] GRANT FILE ON *.* TO 'testuser'@'localhost';
+        /// 2. add user permissions: [mysql] GRANT FILE ON *.* TO 'testuser'@'localhost'; "ALL" covers this case
         /// 3. database allow for inline file: [mysql] SET GLOBAL local_infile = 1;
         /// 4. in .net code, under MySqlBulkLoader set attribute: Local = true
         /// 5. set my.ini [mysqld] secure_file_priv = ''
@@ -547,44 +593,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// 8. confirm with: SHOW VARIABLES LIKE 'secure_file_priv'; -- should be empty instead of NULL
         /// 9. confirm with: SHOW GLOBAL VARIABLES LIKE 'local_infile'; -- should be on
         /// </summary>
-        private int BulkInsertUseCSVOperation(List<VidsSQL> vids)
+        private int BulkInsertUseCSVOperation(string filePath)
         {
             int insertedCount = 0;
-
-            string filePath = csvFilePath;
-
-            // TODO: compare performance for remapping, removing id
-            // 1. using Select()
-            List<RepoVidInsert> csvEntities = vids
-                .Select(v => new RepoVidInsert
-                {
-                    filename = v.filename,
-                    filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-                    duration = v.duration,
-                    metadatetime = v.metadatetime,
-                    width = v.width,
-                    height = v.height
-                })
-                .ToList();
-
-            // 2. loop + create
-            //var currentBatch = new List<RepoVidInsert>();
-            //foreach (var v in vids)
-            //{
-            //    var entity = new RepoVidInsert
-            //    {
-            //        filename = v.filename,
-            //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-            //        duration = v.duration,
-            //        metadatetime = v.metadatetime,
-            //        width = v.width,
-            //        height = v.height
-            //    };
-            //    currentBatch.Add(entity);
-            //}
-
-            CsvHandler.SaveListToCsv(csvEntities, filePath);
-
             try
             {
                 using (var connection = new MySqlConnection(connectionStr))
@@ -593,7 +604,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
                     var bulkLoader = new MySqlBulkLoader(connection)
                     {
-                        FileName = csvFilePath,
+                        FileName = filePath,
                         TableName = "Vids",
                         CharacterSet = "UTF8",
                         NumberOfLinesToSkip = 1, // Skip the header row
@@ -617,7 +628,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     insertedCount = bulkLoader.Load();
                     Debug.Print($"{insertedCount} rows were inserted into the 'Vids' table.");
                 }
-
             }
             catch (MySqlException ex)
             {
@@ -627,7 +637,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             {
                 Debug.Print($"Error in BulkInsertUseCSVOperation: {ex.Message}");
             }
-
             return insertedCount;
         }
 
