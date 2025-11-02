@@ -20,7 +20,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
 
-        private int repoDBBatchLimit = 2000;
+        // summary: 
+        // ~3500 is maximum before overflow/stack issues on large inserts
+        // ~500 is better than 3500, smaller inserts show no difference in timing, bigger like 1 mill 500 is slightly faster
+        private int repoDBBatchLimit = 500; 
 
         // New: also limit batch by approximate payload size to avoid deep internal work/recursion
         // Default 4 MB per batch (tune down if you still hit issues)
@@ -64,12 +67,12 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             // Example 6: RepoDB InsertAll example
             Test_BulkInsertWithRepoDBInsertAll(testData);
 
-            // Example 7: CSV Bulk Load [TODO]
+            // Example 7: CSV Bulk Load [FASTEST OPTION]
             if (GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseCSVOperation(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
-            
+
             Debug.Print("\n=== Benchmark Complete ===");
         }
 
@@ -427,7 +430,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int BulkInsertWithRepoDBInsertAll(List<VidsSQL> vids)
         {
             int insertedCount = 0;
-
             try
             {
                 using (var connection = new MySqlConnection(connectionStr))
@@ -436,8 +438,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
                     // Use a concrete POCO to avoid the mapping overhead that anonymous types can trigger repeatedly.
                     // Map and chunk by both row count and an approximate batch size in bytes.
-                    var currentBatch = new List<RepoVidInsert>(Math.Min(batchLimit, 1024));
-                    long currentBatchBytes = 0;
+                    var currentBatch = new List<RepoVidInsert>();
 
                     foreach (var v in vids)
                     {
@@ -450,24 +451,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                             width = v.width,
                             height = v.height
                         };
-
-                        long estimatedSize = EstimateEntitySizeBytes(v);
-
-                        // If adding this row would exceed either the configured row count or approximate payload size, flush existing.
-                        if (currentBatch.Count >= batchLimit || (currentBatchBytes + estimatedSize) > maxBatchBytes)
-                        {
-                            if (currentBatch.Count > 0)
-                            {
-                                // connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
-                                connection.InsertAll("Vids", currentBatch, batchSize: repoDBBatchLimit);
-                                insertedCount += currentBatch.Count;
-                                currentBatch.Clear();
-                                currentBatchBytes = 0;
-                            }
-                        }
-
                         currentBatch.Add(entity);
-                        currentBatchBytes += estimatedSize;
                     }
 
                     // Flush remainder
@@ -475,7 +459,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     {
                         // connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
                         connection.InsertAll("Vids", currentBatch, batchSize: repoDBBatchLimit);
-                        insertedCount += currentBatch.Count;
+                        insertedCount = currentBatch.Count;
                         currentBatch.Clear();
                     }
                 }
@@ -485,7 +469,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 // Note: StackOverflowException is not catchable/recoverable in .NET; avoid relying on catching it.
                 Debug.Print($"Error in RepoDB_InsertAll: {ex.Message}");
             }
-
             return insertedCount;
         }
 
@@ -500,40 +483,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             public DateTime? metadatetime { get; set; }
             public int? width { get; set; }
             public int? height { get; set; }
-        }
-
-        /// <summary>
-        /// Estimate approximate serialized/payload size of a VidsSQL row for batch sizing purposes.
-        /// This is a heuristic used to keep each batch under maxBatchBytes; it's not exact but helps prevent
-        /// extremely large internal allocation/processing that can lead to provider issues.
-        /// </summary>
-        private static long EstimateEntitySizeBytes(VidsSQL v)
-        {
-            long size = 0;
-
-            // filename (UTF8 bytes)
-            if (!string.IsNullOrEmpty(v.filename))
-                size += Encoding.UTF8.GetByteCount(v.filename);
-            else
-                size += 4;
-
-            // filesizebyte (8 bytes if present)
-            size += v.filesizebyte.HasValue ? 8 : 1;
-
-            // duration (4 bytes if present)
-            size += v.duration.HasValue ? 4 : 1;
-
-            // metadatetime (8 bytes if present)
-            size += v.metadatetime.HasValue ? 8 : 1;
-
-            // width/height (4 bytes each if present)
-            size += v.width.HasValue ? 4 : 1;
-            size += v.height.HasValue ? 4 : 1;
-
-            // Add overhead estimate per row for parameter names / quoting / separators
-            size += 32;
-
-            return size;
         }
 
         private bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)

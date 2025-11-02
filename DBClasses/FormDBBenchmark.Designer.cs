@@ -30,11 +30,14 @@
         {
             btnBenchmarkInserts = new Button();
             btnResetTables = new Button();
+            numAmount = new NumericUpDown();
+            label1 = new Label();
+            ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
             // btnBenchmarkInserts
             // 
-            btnBenchmarkInserts.Location = new Point(27, 30);
+            btnBenchmarkInserts.Location = new Point(12, 71);
             btnBenchmarkInserts.Name = "btnBenchmarkInserts";
             btnBenchmarkInserts.Size = new Size(146, 40);
             btnBenchmarkInserts.TabIndex = 0;
@@ -44,7 +47,7 @@
             // 
             // btnResetTables
             // 
-            btnResetTables.Location = new Point(27, 86);
+            btnResetTables.Location = new Point(12, 127);
             btnResetTables.Name = "btnResetTables";
             btnResetTables.Size = new Size(146, 23);
             btnResetTables.TabIndex = 1;
@@ -52,21 +55,46 @@
             btnResetTables.UseVisualStyleBackColor = true;
             btnResetTables.Click += btnResetTables_Click;
             // 
+            // numAmount
+            // 
+            numAmount.Location = new Point(12, 34);
+            numAmount.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            numAmount.Name = "numAmount";
+            numAmount.Size = new Size(146, 23);
+            numAmount.TabIndex = 3;
+            numAmount.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(97, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Amount to Insert";
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
+            Controls.Add(numAmount);
             Controls.Add(btnResetTables);
             Controls.Add(btnBenchmarkInserts);
             Name = "FormDBBenchmark";
             Text = "FormDBBenchmark";
+            ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button btnBenchmarkInserts;
         private Button btnResetTables;
+        private TextBox textboxAmount;
+        private NumericUpDown numAmount;
+        private Label label1;
     }
 }
