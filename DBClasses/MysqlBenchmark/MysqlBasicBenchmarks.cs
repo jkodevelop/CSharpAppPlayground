@@ -25,10 +25,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         // ~500 is better than 3500, smaller inserts show no difference in timing, bigger like 1 mill 500 is slightly faster
         private int repoDBBatchLimit = 500; 
 
-        // New: also limit batch by approximate payload size to avoid deep internal work/recursion
-        // Default 4 MB per batch (tune down if you still hit issues)
-        private int maxBatchBytes = 4 * 1024 * 1024;
-
         private string csvFilePath = @".\testdata\vids_bulk_insert.csv";
 
         public MysqlBasicBenchmarks()

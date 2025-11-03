@@ -47,7 +47,7 @@
             // 
             // btnResetTables
             // 
-            btnResetTables.Location = new Point(12, 127);
+            btnResetTables.Location = new Point(12, 415);
             btnResetTables.Name = "btnResetTables";
             btnResetTables.Size = new Size(146, 23);
             btnResetTables.TabIndex = 1;
