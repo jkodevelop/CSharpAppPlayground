@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using RepoDb;
 using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.DBClasses.Data;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -16,6 +17,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
     {
         private string connectionStr;
         private MysqlBase mysqlBase;
+        private DataGenHelper dataGenHelper;
 
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
@@ -25,12 +27,13 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         // ~500 is better than 3500, smaller inserts show no difference in timing, bigger like 1 mill 500 is slightly faster
         private int repoDBBatchLimit = 500; 
 
-        private string csvFilePath = @".\testdata\vids_bulk_insert.csv";
+        private string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
 
         public MysqlBasicBenchmarks()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             mysqlBase = new MysqlBase();
+            dataGenHelper = new DataGenHelper();
         }
 
         /// <summary>
@@ -45,26 +48,26 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            //Example 1: Single insert loop(baseline)
-            Test_InsertSimpleLoop(testData);
+            ////Example 1: Single insert loop(baseline)
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            // Example 6: RepoDB InsertAll example
-            Test_BulkInsertWithRepoDBInsertAll(testData);
+            //// Example 6: RepoDB InsertAll example
+            //Test_BulkInsertWithRepoDBInsertAll(testData);
 
             // Example 7: CSV Bulk Load [FASTEST OPTION]
-            if (GenCSVfileWithData(testData, csvFilePath))
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseCSVOperation(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
@@ -466,64 +469,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 Debug.Print($"Error in RepoDB_InsertAll: {ex.Message}");
             }
             return insertedCount;
-        }
-
-        /// <summary>
-        /// Simple POCO used for RepoDB insertion to reduce mapping overhead vs anonymous types.
-        /// </summary>
-        private sealed class RepoVidInsert
-        {
-            public string filename { get; set; }
-            public long? filesizebyte { get; set; }
-            public int? duration { get; set; }
-            public DateTime? metadatetime { get; set; }
-            public int? width { get; set; }
-            public int? height { get; set; }
-        }
-
-        private bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)
-        {
-            bool success = false;
-            try
-            {
-                // TODO: compare performance for remapping, removing id
-                // 1. using Select()
-                List<RepoVidInsert> csvEntities = vids
-                    .Select(v => new RepoVidInsert
-                    {
-                        filename = v.filename,
-                        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-                        duration = v.duration,
-                        metadatetime = v.metadatetime,
-                        width = v.width,
-                        height = v.height
-                    })
-                    .ToList();
-
-                // 2. loop + create
-                //var currentBatch = new List<RepoVidInsert>();
-                //foreach (var v in vids)
-                //{
-                //    var entity = new RepoVidInsert
-                //    {
-                //        filename = v.filename,
-                //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-                //        duration = v.duration,
-                //        metadatetime = v.metadatetime,
-                //        width = v.width,
-                //        height = v.height
-                //    };
-                //    currentBatch.Add(entity);
-                //}
-                CsvHandler.SaveListToCsv(csvEntities, filePath);
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Print($"Error in GenCSVfileWithData: {ex.Message}");
-                success = false;
-            }
-            return success;
         }
 
         /// <summary>

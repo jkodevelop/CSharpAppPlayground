@@ -16,10 +16,10 @@ namespace CSharpAppPlayground.DBClasses
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
             int amount = (int)numAmount.Value;
-            
-            //mysqlBenchmarks.RunBulkInsertBenchmark(amount);
-            //int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
-            //Debug.Print($"MySQL Inserted:{mysqlInsertedCount}");
+
+            mysqlBenchmarks.RunBulkInsertBenchmark(amount);
+            int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
+            Debug.Print($"MySQL Inserted:{mysqlInsertedCount}");
 
             pgsBenchmarks.RunBulkInsertBenchmark(amount);
             int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
@@ -28,7 +28,7 @@ namespace CSharpAppPlayground.DBClasses
 
         private void btnResetTables_Click(object sender, EventArgs e)
         {
-            //mysqlBenchmarks.ResetVidsTable();
+            mysqlBenchmarks.ResetVidsTable();
             pgsBenchmarks.ResetVidsTable();
         }
     }

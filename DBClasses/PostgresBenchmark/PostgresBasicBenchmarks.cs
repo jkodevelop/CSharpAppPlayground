@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CSharpAppPlayground.Classes.DataGen.Generators;
+﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using Npgsql;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Numerics;
 using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 {
@@ -20,16 +21,18 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
     {
         private string connectionStr;
         private PostgresBase postgresBase;
+        private DataGenHelper dataGenHelper;
 
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
 
-        private string csvFilePath = @".\testdata\vids_bulk_insert.csv";
+        private string csvFilePath = @".\testdata\postgres_vids_bulk_insert.csv";
 
         public PostgresBasicBenchmarks()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
             postgresBase = new PostgresBase();
+            dataGenHelper = new DataGenHelper();
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: PostgreSQL COPY command (native bulk insert)
-            if (GenCSVfileWithData(testData, csvFilePath))
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseCopyCommand(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
