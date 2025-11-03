@@ -1,5 +1,6 @@
 ﻿using CSharpAppPlayground.Classes;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
+using Google.Protobuf.WellKnownTypes;
 using System.Diagnostics;
 using System.Numerics;
 
@@ -7,6 +8,24 @@ namespace CSharpAppPlayground.DBClasses.Data
 {
     public class DataGenHelper
     {
+        public List<RepoVidInsert> ConvertListVidsDataPostgresAndRepoDBList(List<VidsSQL> vids)
+        {
+            // for whatever reason Postgres RepoDB insertAll API complains about the DateTime object, they need UTC 
+            // fixing error: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported
+            List<RepoVidInsert> csvEntities = vids
+                .Select(v => new RepoVidInsert
+                {
+                    filename = v.filename,
+                    filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                    duration = v.duration,
+                    metadatetime = (v.metadatetime != null ? DateTime.SpecifyKind(v.metadatetime.Value, DateTimeKind.Utc) : null),
+                    width = v.width,
+                    height = v.height
+                })
+                .ToList();
+            return csvEntities;
+        }
+
         public List<RepoVidInsert> ConvertListVidsData(List<VidsSQL> vids) 
         {
             // TODO: compare performance for remapping, removing id

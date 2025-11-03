@@ -22,7 +22,10 @@ namespace CSharpAppPlayground
             mongo = new _connMongoDB();
 
             // extending Mysql & Postgres with RepoDB APIs
-            GlobalConfiguration.Setup().UseMySql().UsePostgreSql();
+            GlobalConfiguration.Setup().UsePostgreSql().UseMySql();
+            // The order matters: call UsePostgreSql() before UseMySql() for Postgres RepoDb extensions to correctly register.
+            // Alternatively, if you only need Postgres:
+            // GlobalConfiguration.Setup().UsePostgreSql();
         }
 
         protected FormFactory _formMysql = new FormFactory("CSharpAppPlayground.FormDBMysql, CSharpAppPlayground");

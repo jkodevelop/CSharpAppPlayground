@@ -4,6 +4,7 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using MongoDB.Driver;
+using RepoDb;
 using Npgsql;
 using NpgsqlTypes;
 using PgPartner;
@@ -23,6 +24,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
+        private int repoDBBatchLimit = 500;
 
         private string csvFilePath = @".\testdata\postgres_vids_bulk_insert.csv";
 
@@ -45,33 +47,40 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            // Example 1: Single insert loop (baseline)
-            Test_InsertSimpleLoop(testData);
+            //// Example 1: Single insert loop (baseline)
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            // Example 6: PostgreSQL COPY command (native bulk insert)
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
-                Test_BulkInsertUseCopyCommand(csvFilePath);
-            else
-                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
+            //// Example 6: PostgreSQL COPY command (native bulk insert)
+            //if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            //    Test_BulkInsertUseCopyCommand(csvFilePath);
+            //else
+            //    Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
 
-            // Example 7: Npgsql Binary Import (fastest option)
-            Test_BulkInsertUseBinaryImport(testData);
+            //// Example 7: Npgsql Binary Import (fastest option)
+            //Test_BulkInsertUseBinaryImport(testData);
 
-            // Example 8: PgPartner BulkAdd()
-            List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
-            Test_BulkAddWithPgPartner(convertedData);
+            // used for the follwing tests
+
+
+            // Example 8: RepoDB InsertAll()
+            List<RepoVidInsert> fixedData = dataGenHelper.ConvertListVidsDataPostgresAndRepoDBList(testData);
+            Test_BulkInsertWithRepoDBInsertAll(fixedData);
+
+            //// Example 9: PgPartner BulkAdd()
+            //List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
+            //Test_BulkAddWithPgPartner(convertedData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -132,13 +141,22 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Binary Import\n");
         }
 
+        [Time("BulkInsertWithRepoDBInsertAll:")]
+        protected void Test_BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> convertedData)
+        {
+            Debug.Print("\n--- Method 8: RepoDB InsertAll() Example ---");
+            // int insertedCount = BulkAddWithPgPartner(convertedData).GetAwaiter().GetResult(); // this doesn't work
+            int insertedCount = BulkInsertWithRepoDBInsertAll(convertedData);
+            Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll()\n");
+        }
+
         [Time("BulkAddWithPgPartner:")]
         protected async void Test_BulkAddWithPgPartner(List<RepoVidInsert> convertedData)
         {
-            Debug.Print("\n--- Method 8: PgPartner BulkAdd() Example ---");
+            Debug.Print("\n--- Method 9: PgPartner BulkAdd() Example ---");
             // int insertedCount = BulkAddWithPgPartner(convertedData).GetAwaiter().GetResult(); // this doesn't work
             int insertedCount = await BulkAddWithPgPartner(convertedData);
-            Debug.Print($"Inserted {insertedCount} records using PgPartner\n");
+            Debug.Print($"Inserted {insertedCount} records using PgPartner BulkAdd()\n");
         }
 
         /// <summary>
@@ -550,8 +568,33 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             return insertedCount;
         }
 
+        private int BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> vids)
+        {
+            int insertedCount = 0;
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionStr))
+                {
+                    connection.Open();
+
+                    if (vids.Count > 0)
+                    {
+                        connection.InsertAll("Vids", vids, batchSize: repoDBBatchLimit);
+                        insertedCount = vids.Count;
+                        //vids.Clear();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Note: StackOverflowException is not catchable/recoverable in .NET; avoid relying on catching it.
+                Debug.Print($"Error in RepoDB_InsertAll: {ex.Message}");
+            }
+            return insertedCount;
+        }
+
         /// <summary>
-        /// There is something wrong with PgPartner.BulkAddAsync
+        /// There is something wrong with PgPartner.BulkAdd()
         /// </summary>
         /// <param name="vids"></param>
         /// <returns></returns>

@@ -47,29 +47,30 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            //Example 1: Single insert loop(baseline)
-            Test_InsertSimpleLoop(testData);
+            ////Example 1: Single insert loop(baseline)
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: RepoDB InsertAll example
-            Test_BulkInsertWithRepoDBInsertAll(testData);
+            List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
+            Test_BulkInsertWithRepoDBInsertAll(convertedData);
 
-            // Example 7: CSV Bulk Load [FASTEST OPTION]
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
-                Test_BulkInsertUseCSVOperation(csvFilePath);
-            else
-                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
+            //// Example 7: CSV Bulk Load [FASTEST OPTION]
+            //if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            //    Test_BulkInsertUseCSVOperation(csvFilePath);
+            //else
+            //    Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -115,10 +116,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         }
 
         [Time("BulkInsertWithRepoDBInsertAll:")]
-        protected void Test_BulkInsertWithRepoDBInsertAll(List<VidsSQL> testData)
+        protected void Test_BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 6: RepoDB InsertAll Example ---");
-            int insertedCount = BulkInsertWithRepoDBInsertAll(testData);
+            int insertedCount = BulkInsertWithRepoDBInsertAll(convertedData);
             Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll, batchSize:{repoDBBatchLimit}\n");
         }
 
@@ -425,7 +426,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// - Ensure the project references the RepoDb and RepoDb.MySqlConnector packages (or the provider you're using).
         /// - RepoDB needs the MySQL provider bootstrap initialized once before first use.
         /// </summary>
-        private int BulkInsertWithRepoDBInsertAll(List<VidsSQL> vids)
+        private int BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> vids)
         {
             int insertedCount = 0;
             try
@@ -434,31 +435,12 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 {
                     connection.Open();
 
-                    // Use a concrete POCO to avoid the mapping overhead that anonymous types can trigger repeatedly.
-                    // Map and chunk by both row count and an approximate batch size in bytes.
-                    var currentBatch = new List<RepoVidInsert>();
-
-                    foreach (var v in vids)
-                    {
-                        var entity = new RepoVidInsert
-                        {
-                            filename = v.filename,
-                            filesizebyte = DataGenHelper.ConvertBigIntegerToNullableLong(v.filesizebyte),
-                            duration = v.duration,
-                            metadatetime = v.metadatetime,
-                            width = v.width,
-                            height = v.height
-                        };
-                        currentBatch.Add(entity);
-                    }
-
-                    // Flush remainder
-                    if (currentBatch.Count > 0)
+                    if (vids.Count > 0)
                     {
                         // connection.InsertAll("Vids", currentBatch, batchSize: currentBatch.Count);
-                        connection.InsertAll("Vids", currentBatch, batchSize: repoDBBatchLimit);
-                        insertedCount = currentBatch.Count;
-                        currentBatch.Clear();
+                        connection.InsertAll("Vids", vids, batchSize: repoDBBatchLimit);
+                        insertedCount = vids.Count;
+                        // vids.Clear();
                     }
                 }
             }
