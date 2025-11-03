@@ -45,19 +45,19 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Generated {testData.Count} test records\n");
 
             // Example 1: Single insert loop (baseline)
-            Test_InsertSimpleLoop(testData);
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: PostgreSQL COPY command (native bulk insert)
             if (GenCSVfileWithData(testData, csvFilePath))
@@ -65,8 +65,8 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
 
-            // Example 7: Npgsql Binary Import (fastest option)
-            Test_BulkInsertUseBinaryImport(testData);
+            //// Example 7: Npgsql Binary Import (fastest option)
+            //Test_BulkInsertUseBinaryImport(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -142,7 +142,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     connection.Open();
                     foreach (var vid in vids)
                     {
-                        string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
+                        string query = "INSERT INTO \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) " +
                                       "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
 
                         using (var command = new NpgsqlCommand(query, connection))
@@ -194,7 +194,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                         var batch = vids.Skip(i).Take(batchSize).ToList();
                         var query = new StringBuilder();
 
-                        query.Append("INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) VALUES ");
+                        query.Append("INSERT INTO \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) VALUES ");
 
                         for (int j = 0; j < batch.Count; j++)
                         {
@@ -258,7 +258,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
                                 foreach (var vid in batch)
                                 {
-                                    string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
+                                    string query = "INSERT INTO \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) " +
                                                   "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
 
                                     using (var command = new NpgsqlCommand(query, connection, transaction))
@@ -310,7 +310,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     connection.Open();
 
                     // Prepare the statement
-                    string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
+                    string query = "INSERT INTO \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) " +
                                   "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
 
                     using (var command = new NpgsqlCommand(query, connection))
@@ -372,7 +372,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     using (var transaction = connection.BeginTransaction())
                     {
                         // Prepare the statement
-                        string query = "INSERT INTO Vids (filename, filesizebyte, duration, metadatetime, width, height) " +
+                        string query = "INSERT INTO \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) " +
                                       "VALUES (@filename, @filesizebyte, @duration, @metadatetime, @width, @height)";
 
                         using (var command = new NpgsqlCommand(query, connection, transaction))
@@ -434,7 +434,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     connection.Open();
 
                     // PostgreSQL COPY command
-                    string copyCommand = $"COPY Vids (filename, filesizebyte, duration, metadatetime, width, height) FROM STDIN WITH (FORMAT csv, HEADER true, DELIMITER ':')";
+                    string copyCommand = $"COPY \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) FROM STDIN WITH (FORMAT csv, HEADER true, DELIMITER ':')";
 
                     using (var writer = connection.BeginTextImport(copyCommand))
                     {
@@ -481,7 +481,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     connection.Open();
 
                     // Start binary COPY
-                    using (var writer = connection.BeginBinaryImport("COPY Vids (filename, filesizebyte, duration, metadatetime, width, height) FROM STDIN (FORMAT BINARY)"))
+                    using (var writer = connection.BeginBinaryImport("COPY \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) FROM STDIN (FORMAT BINARY)"))
                     {
                         foreach (var vid in vids)
                         {
@@ -632,6 +632,25 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         }
 
         /// <summary>
+        /// Get record count from Vids table
+        /// </summary>
+        public int GetVidsCount()
+        {
+            try
+            {
+                return postgresBase.WithSqlCommand(command =>
+                {
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }, "SELECT COUNT(*) FROM \"Vids\"");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in GetVidsCount: {ex.Message}");
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// Cleanup method to clear the Vids table
         /// </summary>
         public void CleanupVidsTable()
@@ -640,7 +659,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             {
                 postgresBase.WithConnection(connection =>
                 {
-                    using (var command = new NpgsqlCommand("DELETE FROM Vids", connection))
+                    using (var command = new NpgsqlCommand("DELETE FROM \"Vids\"", connection))
                     {
                         int rowsDeleted = command.ExecuteNonQuery();
                         Debug.Print($"Cleaned up {rowsDeleted} records from Vids table");
@@ -655,21 +674,32 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         }
 
         /// <summary>
-        /// Get record count from Vids table
+        /// Reset the Vids table using TRUNCATE for faster, non-logged removal.
+        /// Set cascade = true to include dependent tables (TRUNCATE ... CASCADE).
+        /// 
+        /// TRUNCATE TABLE \"Vids\";
+        /// TRUNCATE TABLE \"Vids\" CASCADE;
+        /// TRUNCATE TABLE \"Vids\" RESTART IDENTITY;
+        /// 
         /// </summary>
-        public int GetVidsCount()
+        public void ResetVidsTable()
         {
             try
             {
-                return postgresBase.WithSqlCommand(command =>
+                postgresBase.WithConnection(connection =>
                 {
-                    return Convert.ToInt32(command.ExecuteScalar());
-                }, "SELECT COUNT(*) FROM Vids");
+                    string sql = "TRUNCATE TABLE \"Vids\" RESTART IDENTITY;";
+                    using (var command = new NpgsqlCommand(sql, connection))
+                    {
+                        command.ExecuteNonQuery();
+                        Debug.Print("TRUNCATE TABLE \"Vids\" RESTART IDENTITY; done");
+                        return true;
+                    }
+                });
             }
             catch (Exception ex)
             {
-                Debug.Print($"Error in GetVidsCount: {ex.Message}");
-                return -1;
+                Debug.Print($"Error in Postgres ResetVidsTable: {ex.Message}");
             }
         }
     }

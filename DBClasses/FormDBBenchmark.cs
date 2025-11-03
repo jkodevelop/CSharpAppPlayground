@@ -28,7 +28,8 @@ namespace CSharpAppPlayground.DBClasses
 
         private void btnResetTables_Click(object sender, EventArgs e)
         {
-            mysqlBenchmarks.ResetVidsTable();
+            //mysqlBenchmarks.ResetVidsTable();
+            pgsBenchmarks.ResetVidsTable();
         }
     }
 }
