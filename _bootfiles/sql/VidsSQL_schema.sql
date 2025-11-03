@@ -1,5 +1,6 @@
 -- SQL Schema Creation Script for VidsSQL Object
 -- This script creates the Vids table based on the VidsSQL C# class properties
+-- this is MySQL reference, does not work for Postgres, and may not work for any other SQL based db
 
 -- Drop table if exists (for clean setup)
 DROP TABLE IF EXISTS vids;

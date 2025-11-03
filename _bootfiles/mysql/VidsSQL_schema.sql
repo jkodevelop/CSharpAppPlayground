@@ -1,5 +1,6 @@
 -- SQL Schema Creation Script for VidsSQL Object
 -- This script creates the Vids table based on the VidsSQL C# class properties
+-- Mysql DEFAULT engine is ENGINE=InnoDB
 
 -- Drop table if exists (for clean setup)
 DROP TABLE IF EXISTS vids;
