@@ -444,9 +444,6 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                         // Read the CSV file and write to the COPY stream
                         using (var reader = new StreamReader(filePath))
                         {
-                            // Skip header line if it exists
-                            string? header = reader.ReadLine();
-                            
                             string? line;
                             while ((line = reader.ReadLine()) != null)
                             {
@@ -465,6 +462,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             {
                 Debug.Print($"Error in BulkInsertUseCopyCommand: {ex.Message}");
             }
+            insertedCount--; // removing the HEADER line from being counted
             return insertedCount;
         }
 
