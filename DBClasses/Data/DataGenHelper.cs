@@ -7,40 +7,46 @@ namespace CSharpAppPlayground.DBClasses.Data
 {
     public class DataGenHelper
     {
+        public List<RepoVidInsert> ConvertListVidsData(List<VidsSQL> vids) 
+        {
+            // TODO: compare performance for remapping, removing id
+            // 1. using Select()
+            List<RepoVidInsert> csvEntities = vids
+                .Select(v => new RepoVidInsert
+                {
+                    filename = v.filename,
+                    filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                    duration = v.duration,
+                    metadatetime = v.metadatetime,
+                    width = v.width,
+                    height = v.height
+                })
+                .ToList();
+
+            // 2. loop + create
+            //var currentBatch = new List<RepoVidInsert>();
+            //foreach (var v in vids)
+            //{
+            //    var entity = new RepoVidInsert
+            //    {
+            //        filename = v.filename,
+            //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+            //        duration = v.duration,
+            //        metadatetime = v.metadatetime,
+            //        width = v.width,
+            //        height = v.height
+            //    };
+            //    currentBatch.Add(entity);
+            //}
+            return csvEntities;
+        }
+
         public bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)
         {
             bool success = false;
             try
             {
-                // TODO: compare performance for remapping, removing id
-                // 1. using Select()
-                List<RepoVidInsert> csvEntities = vids
-                    .Select(v => new RepoVidInsert
-                    {
-                        filename = v.filename,
-                        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-                        duration = v.duration,
-                        metadatetime = v.metadatetime,
-                        width = v.width,
-                        height = v.height
-                    })
-                    .ToList();
-
-                // 2. loop + create
-                //var currentBatch = new List<RepoVidInsert>();
-                //foreach (var v in vids)
-                //{
-                //    var entity = new RepoVidInsert
-                //    {
-                //        filename = v.filename,
-                //        filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
-                //        duration = v.duration,
-                //        metadatetime = v.metadatetime,
-                //        width = v.width,
-                //        height = v.height
-                //    };
-                //    currentBatch.Add(entity);
-                //}
+                var csvEntities = ConvertListVidsData(vids);
                 CsvHandler.SaveListToCsv(csvEntities, filePath);
                 success = true;
             }

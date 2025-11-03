@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using RepoDb;
 using System.Configuration;
 
 // NuGet packages required:
@@ -14,7 +13,9 @@ namespace CSharpAppPlayground.DBClasses.MysqlExamples
         public MysqlBase()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-            GlobalConfiguration.Setup().UseMySql(); // configuring "RepoDb", add more supported API to mysqlconnection
+
+            // This is replaced, with GlobalConfiguration.Setup().UseMySql().UsePostgreSql(); // to support both DBs
+            // GlobalConfiguration.Setup().UseMySql(); // configuring "RepoDb", add more supported API to mysqlconnection
         }
 
         public T WithConnection<T>(Func<MySqlConnection, T> func)

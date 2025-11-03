@@ -70,7 +70,8 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             //Test_BulkInsertUseBinaryImport(testData);
 
             // Example 8: PgPartner BulkAdd()
-            Test_BulkAddWithPgPartner(testData);
+            List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
+            Test_BulkAddWithPgPartner(convertedData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -132,10 +133,11 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         }
 
         [Time("BulkAddWithPgPartner:")]
-        protected async void Test_BulkAddWithPgPartner(List<VidsSQL> testData)
+        protected async void Test_BulkAddWithPgPartner(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 8: PgPartner BulkAdd() Example ---");
-            int insertedCount = await BulkAddWithPgPartner(testData);
+            // int insertedCount = BulkAddWithPgPartner(convertedData).GetAwaiter().GetResult(); // this doesn't work
+            int insertedCount = await BulkAddWithPgPartner(convertedData);
             Debug.Print($"Inserted {insertedCount} records using PgPartner\n");
         }
 
@@ -548,7 +550,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             return insertedCount;
         }
 
-        private async Task<int> BulkAddWithPgPartner(List<VidsSQL> vids)
+        /// <summary>
+        /// There is something wrong with PgPartner.BulkAddAsync
+        /// </summary>
+        /// <param name="vids"></param>
+        /// <returns></returns>
+        private async Task<int> BulkAddWithPgPartner(List<RepoVidInsert> vids)
         {
             int insertedCount = vids.Count;
             try
@@ -556,42 +563,72 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                 using (var connection = new NpgsqlConnection(connectionStr))
                 {
                     connection.Open();
-                    // await Task.Run(() => {
-                    //     connection.BulkAdd(vids, (mapper, v) =>
-                    //         {
-                    //             // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
-                    //             mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
 
-                    //             // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
-                    //             // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
-                    //             // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
-                    //             mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
-                    //             mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
-                    //             mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
-                    //             mapper.Map("width", v.width, NpgsqlDbType.Integer);
-                    //             mapper.Map("height", v.height, NpgsqlDbType.Integer);
-                    //         },
-                    //         "public",
-                    //         "\"Vids\"");
-                    //     Debug.Print("PgPartner.BulkAdd() Task Run() complete");
-                    // });
+                    // IMPORTANT ERROR: This does not work, PgPartner.BulkAdd does not return to context.
+                    //   even though the data are inserted, the program is frozen.
+                    //   There might an internal issue where BulkAdd does not return to Context so its in a deadlock state
+                    //
+                    //connection.BulkAdd(vids, (mapper, v) =>
+                    //    {
+                    //        // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
+                    //        mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
+                    //        // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
+                    //        // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
+                    //        // ALT FIX: using RepoVidInsert class instead of VidsSQL class
+                    //        mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint);
+                    //        mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
+                    //        mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
+                    //        mapper.Map("width", v.width, NpgsqlDbType.Integer);
+                    //        mapper.Map("height", v.height, NpgsqlDbType.Integer);
+                    //    },
+                    //    "public",
+                    //    "\"Vids\"");
 
-                    await connection.BulkAddAsync(vids, (mapper, v) =>
-                        {
-                            // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
-                            mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
+                    // IMPORTANT: This works, it continues properly by wrapping in Task threads.
+                    //   But it creates race condition on final step in test on grabbing number of records in the Postgres DB.
+                    //   The records are up to date because its counting before the Task is done.
+                    //
+                    await Task.Run(() =>
+                    {
+                        connection.BulkAdd(vids, (mapper, v) =>
+                            {
+                                // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
+                                mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
 
-                            // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
-                            // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
-                            // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
-                            mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
-                            mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
-                            mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
-                            mapper.Map("width", v.width, NpgsqlDbType.Integer);
-                            mapper.Map("height", v.height, NpgsqlDbType.Integer);
-                        },
-                        "public",
-                        "\"Vids\"");
+                                // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
+                                // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
+                                // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
+                                mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
+                                mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
+                                mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
+                                mapper.Map("width", v.width, NpgsqlDbType.Integer);
+                                mapper.Map("height", v.height, NpgsqlDbType.Integer);
+                            },
+                            "public",
+                            "\"Vids\"");
+                        Debug.Print("PgPartner.BulkAdd() Task Run() complete");
+                    });
+
+                    // IMPORTANT: This also works.
+                    //
+                    //connection.BulkAddAsync(vids, (mapper, v) =>
+                    //    {
+                    //        // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
+                    //        mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
+
+                    //        // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
+                    //        // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
+                    //        // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
+                    //        mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
+                    //        mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
+                    //        mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
+                    //        mapper.Map("width", v.width, NpgsqlDbType.Integer);
+                    //        mapper.Map("height", v.height, NpgsqlDbType.Integer);
+                    //    },
+                    //    "public",
+                    //    "\"Vids\"");
+                    // .GetAwaiter().GetResult(); // this line doesn't work either
+
                     Debug.Print("Inserted with BulkAddWithPgPartner complete");
                 }
             }

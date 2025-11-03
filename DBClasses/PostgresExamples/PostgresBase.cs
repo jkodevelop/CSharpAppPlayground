@@ -10,6 +10,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
         public PostgresBase()
         {
             connectionStr = ConfigurationManager.ConnectionStrings["PostgreSqlConnection"].ConnectionString;
+
+            // This is replaced, with GlobalConfiguration.Setup().UseMySql().UsePostgreSql(); // to support both DBs
+            // GlobalConfiguration.Setup().UsePostgreSql(); // configuring "RepoDb", add more supported API to postgres
         }
 
         public T WithConnection<T>(Func<NpgsqlConnection, T> func)
