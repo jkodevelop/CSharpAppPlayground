@@ -3,11 +3,15 @@ using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
+using MongoDB.Driver;
 using Npgsql;
+using NpgsqlTypes;
+using PgPartner;
 using System.Configuration;
 using System.Diagnostics;
-using System.Numerics;
 using System.Text;
+
+// Required NuGet: PgPartner + Npgsql
 
 namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 {
@@ -41,29 +45,32 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            // Example 1: Single insert loop (baseline)
-            Test_InsertSimpleLoop(testData);
+            //// Example 1: Single insert loop (baseline)
+            //Test_InsertSimpleLoop(testData);
 
-            // Example 2: Multi-value INSERT statement
-            Test_InsertMultiValue(testData);
+            //// Example 2: Multi-value INSERT statement
+            //Test_InsertMultiValue(testData);
 
-            // Example 3: Transaction with batched inserts
-            Test_InsertWithTransaction(testData);
+            //// Example 3: Transaction with batched inserts
+            //Test_InsertWithTransaction(testData);
 
-            // Example 4: Prepared statement with batching
-            Test_InsertWithPreparedStatement(testData);
+            //// Example 4: Prepared statement with batching
+            //Test_InsertWithPreparedStatement(testData);
 
-            // Example 5: Prepared statement with batching and transaction
-            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            //// Example 5: Prepared statement with batching and transaction
+            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            // Example 6: PostgreSQL COPY command (native bulk insert)
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
-                Test_BulkInsertUseCopyCommand(csvFilePath);
-            else
-                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
+            //// Example 6: PostgreSQL COPY command (native bulk insert)
+            //if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            //    Test_BulkInsertUseCopyCommand(csvFilePath);
+            //else
+            //    Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
 
-            // Example 7: Npgsql Binary Import (fastest option)
-            Test_BulkInsertUseBinaryImport(testData);
+            //// Example 7: Npgsql Binary Import (fastest option)
+            //Test_BulkInsertUseBinaryImport(testData);
+
+            // Example 8: PgPartner BulkAdd()
+            Test_BulkAddWithPgPartner(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
@@ -122,6 +129,14 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print("\n--- Method 7: Npgsql Binary Import Example ---");
             int insertedCount = BulkInsertUseBinaryImport(testData);
             Debug.Print($"Inserted {insertedCount} records using Binary Import\n");
+        }
+
+        [Time("BulkAddWithPgPartner:")]
+        protected async void Test_BulkAddWithPgPartner(List<VidsSQL> testData)
+        {
+            Debug.Print("\n--- Method 8: PgPartner BulkAdd() Example ---");
+            int insertedCount = await BulkAddWithPgPartner(testData);
+            Debug.Print($"Inserted {insertedCount} records using PgPartner\n");
         }
 
         /// <summary>
@@ -529,6 +544,60 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             catch (Exception ex)
             {
                 Debug.Print($"Error in BulkInsertUseBinaryImport: {ex.Message}");
+            }
+            return insertedCount;
+        }
+
+        private async Task<int> BulkAddWithPgPartner(List<VidsSQL> vids)
+        {
+            int insertedCount = vids.Count;
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionStr))
+                {
+                    connection.Open();
+                    // await Task.Run(() => {
+                    //     connection.BulkAdd(vids, (mapper, v) =>
+                    //         {
+                    //             // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
+                    //             mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
+
+                    //             // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
+                    //             // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
+                    //             // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
+                    //             mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
+                    //             mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
+                    //             mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
+                    //             mapper.Map("width", v.width, NpgsqlDbType.Integer);
+                    //             mapper.Map("height", v.height, NpgsqlDbType.Integer);
+                    //         },
+                    //         "public",
+                    //         "\"Vids\"");
+                    //     Debug.Print("PgPartner.BulkAdd() Task Run() complete");
+                    // });
+
+                    await connection.BulkAddAsync(vids, (mapper, v) =>
+                        {
+                            // mapper.Map("id", v.id, NpgsqlDbType.Uuid);
+                            mapper.Map("filename", v.filename, NpgsqlDbType.Varchar);
+
+                            // mapper.Map("filesizebyte", v.filesizebyte, NpgsqlDbType.Bigint); // cannot remap C#.BigInteger to postgres.Bigint
+                            // FIX: Convert BigInteger? into a DB-friendly boxed Int64 or DBNull.
+                            // DataGenHelper.ConvertBigIntegerToDbValue returns either a boxed long or DBNull.Value.
+                            mapper.Map("filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(v.filesizebyte), NpgsqlDbType.Bigint);
+                            mapper.Map("duration", v.duration, NpgsqlDbType.Integer);
+                            mapper.Map("metadatetime", v.metadatetime, NpgsqlDbType.Timestamp);
+                            mapper.Map("width", v.width, NpgsqlDbType.Integer);
+                            mapper.Map("height", v.height, NpgsqlDbType.Integer);
+                        },
+                        "public",
+                        "\"Vids\"");
+                    Debug.Print("Inserted with BulkAddWithPgPartner complete");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in BulkAddWithPgPartner: {ex.Message}");
             }
             return insertedCount;
         }
