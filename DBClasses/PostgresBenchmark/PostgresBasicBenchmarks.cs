@@ -145,7 +145,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                         using (var command = new NpgsqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@filename", vid.filename);
-                            command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
+                            command.Parameters.AddWithValue("@filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte));
                             command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -261,7 +261,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                                     using (var command = new NpgsqlCommand(query, connection, transaction))
                                     {
                                         command.Parameters.AddWithValue("@filename", vid.filename);
-                                        command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
+                                        command.Parameters.AddWithValue("@filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte));
                                         command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -331,7 +331,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                             foreach (var vid in batch)
                             {
                                 command.Parameters["@filename"].Value = vid.filename;
-                                command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                command.Parameters["@filesizebyte"].Value = DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte);
                                 command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
                                 command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
                                 command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
@@ -393,7 +393,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                                 foreach (var vid in batch)
                                 {
                                     command.Parameters["@filename"].Value = vid.filename;
-                                    command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                    command.Parameters["@filesizebyte"].Value = DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte);
                                     command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
                                     command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
                                     command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
@@ -485,7 +485,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                             writer.Write(vid.filename);
                             
                             // Handle nullable BigInteger
-                            var filesizeValue = ConvertBigIntegerToNullableLong(vid.filesizebyte);
+                            var filesizeValue = DataGenHelper.ConvertBigIntegerToNullableLong(vid.filesizebyte);
                             if (filesizeValue.HasValue)
                                 writer.Write(filesizeValue.Value, NpgsqlTypes.NpgsqlDbType.Bigint);
                             else
@@ -531,99 +531,6 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                 Debug.Print($"Error in BulkInsertUseBinaryImport: {ex.Message}");
             }
             return insertedCount;
-        }
-
-        /// <summary>
-        /// Generate CSV file with VidsSQL data for bulk import
-        /// </summary>
-        private bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)
-        {
-            bool success = false;
-            try
-            {
-                // Ensure directory exists
-                string? directory = Path.GetDirectoryName(filePath);
-                if (directory != null && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
-                {
-                    // Write header
-                    writer.WriteLine("filename:filesizebyte:duration:metadatetime:width:height");
-
-                    // Write data rows
-                    foreach (var vid in vids)
-                    {
-                        string filesizeStr = vid.filesizebyte.HasValue ? vid.filesizebyte.Value.ToString() : "";
-                        string durationStr = vid.duration.HasValue ? vid.duration.Value.ToString() : "";
-                        string datetimeStr = vid.metadatetime.HasValue ? vid.metadatetime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "";
-                        string widthStr = vid.width.HasValue ? vid.width.Value.ToString() : "";
-                        string heightStr = vid.height.HasValue ? vid.height.Value.ToString() : "";
-
-                        writer.WriteLine($"{vid.filename}:{filesizeStr}:{durationStr}:{datetimeStr}:{widthStr}:{heightStr}");
-                    }
-                }
-
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Print($"Error in GenCSVfileWithData: {ex.Message}");
-                success = false;
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// Convert BigInteger? into a DB-friendly value.
-        /// Returns DBNull.Value when null or when the BigInteger cannot be represented as Int64.
-        /// When in-range, returns a boxed Int64 (long) which is accepted by NpgsqlParameter.
-        /// </summary>
-        private static object ConvertBigIntegerToDbValue(BigInteger? value)
-        {
-            if (!value.HasValue)
-                return DBNull.Value;
-
-            BigInteger v = value.Value;
-            BigInteger max = long.MaxValue;
-            BigInteger min = long.MinValue;
-
-            if (v <= max && v >= min)
-            {
-                return (long)v;
-            }
-            else
-            {
-                // Out of range for BIGINT in PostgreSQL. Log and return NULL to avoid casting exceptions.
-                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL instead.");
-                return DBNull.Value;
-            }
-        }
-
-        /// <summary>
-        /// Convert BigInteger? to nullable long for use with binary import.
-        /// Returns null for missing or out-of-range values (maps to SQL NULL).
-        /// </summary>
-        private static long? ConvertBigIntegerToNullableLong(BigInteger? value)
-        {
-            if (!value.HasValue)
-                return null;
-
-            BigInteger v = value.Value;
-            BigInteger max = long.MaxValue;
-            BigInteger min = long.MinValue;
-
-            if (v <= max && v >= min)
-            {
-                return (long)v;
-            }
-            else
-            {
-                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL (as null) instead.");
-                return null;
-            }
         }
 
         /// <summary>

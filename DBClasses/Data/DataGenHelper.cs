@@ -52,7 +52,37 @@ namespace CSharpAppPlayground.DBClasses.Data
             return success;
         }
 
-        public long? ConvertBigIntegerToNullableLong(BigInteger? value)
+        /// <summary>
+        /// Convert BigInteger? into a DB-friendly value.
+        /// Returns DBNull.Value when null or when the BigInteger cannot be represented as Int64.
+        /// When in-range, returns a boxed Int64 (long) which is IConvertible and accepted by SqlParameter.
+        /// </summary>
+        public static object ConvertBigIntegerToDbValue(BigInteger? value)
+        {
+            if (!value.HasValue)
+                return DBNull.Value;
+
+            BigInteger v = value.Value;
+            BigInteger max = long.MaxValue;
+            BigInteger min = long.MinValue;
+
+            if (v <= max && v >= min)
+            {
+                return (long)v;
+            }
+            else
+            {
+                // Out of range for BIGINT in SQL DB. Log and return NULL to avoid casting exceptions.
+                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL instead.");
+                return DBNull.Value;
+            }
+        }
+
+        /// <summary>
+        /// Convert BigInteger? to nullable long for use with DB insert objects.
+        /// Returns null for missing or out-of-range values (maps to SQL NULL).
+        /// </summary>
+        public static long? ConvertBigIntegerToNullableLong(BigInteger? value)
         {
             if (!value.HasValue)
                 return null;

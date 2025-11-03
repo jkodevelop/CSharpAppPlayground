@@ -151,7 +151,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         using (var command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@filename", vid.filename);
-                            command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
+                            command.Parameters.AddWithValue("@filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte));
                             command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                             command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -262,7 +262,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                         command.Parameters.AddWithValue("@filename", vid.filename);
                                         // BigInteger handling, only limited long is supported directly
                                         // command.Parameters.AddWithValue("@filesizebyte", vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value);
-                                        command.Parameters.AddWithValue("@filesizebyte", ConvertBigIntegerToDbValue(vid.filesizebyte));
+                                        command.Parameters.AddWithValue("@filesizebyte", DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte));
                                         command.Parameters.AddWithValue("@duration", vid.duration.HasValue ? vid.duration.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@metadatetime", vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value);
                                         command.Parameters.AddWithValue("@width", vid.width.HasValue ? vid.width.Value : DBNull.Value);
@@ -334,7 +334,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                 command.Parameters["@filename"].Value = vid.filename;
                                 // BigInteger handling, only limited long is supported directly
                                 // command.Parameters["@filesizebyte"].Value = vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value;
-                                command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                command.Parameters["@filesizebyte"].Value = DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte);
                                 command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
                                 command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
                                 command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
@@ -394,7 +394,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                                     command.Parameters["@filename"].Value = vid.filename;
                                     // BigInteger handling, only limited long is supported directly
                                     // command.Parameters["@filesizebyte"].Value = vid.filesizebyte.HasValue ? vid.filesizebyte.Value : DBNull.Value;
-                                    command.Parameters["@filesizebyte"].Value = ConvertBigIntegerToDbValue(vid.filesizebyte);
+                                    command.Parameters["@filesizebyte"].Value = DataGenHelper.ConvertBigIntegerToDbValue(vid.filesizebyte);
                                     command.Parameters["@duration"].Value = vid.duration.HasValue ? vid.duration.Value : DBNull.Value;
                                     command.Parameters["@metadatetime"].Value = vid.metadatetime.HasValue ? vid.metadatetime.Value : DBNull.Value;
                                     command.Parameters["@width"].Value = vid.width.HasValue ? vid.width.Value : DBNull.Value;
@@ -443,7 +443,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         var entity = new RepoVidInsert
                         {
                             filename = v.filename,
-                            filesizebyte = ConvertBigIntegerToNullableLong(v.filesizebyte),
+                            filesizebyte = DataGenHelper.ConvertBigIntegerToNullableLong(v.filesizebyte),
                             duration = v.duration,
                             metadatetime = v.metadatetime,
                             width = v.width,
@@ -616,56 +616,6 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             {
                 Debug.Print($"Error in GetVidsCount: {ex.Message}");
                 return -1;
-            }
-        }
-
-        /// <summary>
-        /// Convert BigInteger? into a DB-friendly value.
-        /// Returns DBNull.Value when null or when the BigInteger cannot be represented as Int64.
-        /// When in-range, returns a boxed Int64 (long) which is IConvertible and accepted by MySqlParameter.
-        /// </summary>
-        private static object ConvertBigIntegerToDbValue(BigInteger? value)
-        {
-            if (!value.HasValue)
-                return DBNull.Value;
-
-            BigInteger v = value.Value;
-            BigInteger max = long.MaxValue;
-            BigInteger min = long.MinValue;
-
-            if (v <= max && v >= min)
-            {
-                return (long)v;
-            }
-            else
-            {
-                // Out of range for BIGINT in MySQL. Log and return NULL to avoid casting exceptions.
-                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL instead.");
-                return DBNull.Value;
-            }
-        }
-
-        /// <summary>
-        /// Convert BigInteger? to nullable long for use with RepoDB insert objects.
-        /// Returns null for missing or out-of-range values (maps to SQL NULL).
-        /// </summary>
-        private static long? ConvertBigIntegerToNullableLong(BigInteger? value)
-        {
-            if (!value.HasValue)
-                return null;
-
-            BigInteger v = value.Value;
-            BigInteger max = long.MaxValue;
-            BigInteger min = long.MinValue;
-
-            if (v <= max && v >= min)
-            {
-                return (long)v;
-            }
-            else
-            {
-                Debug.Print($"BigInteger value {v} is outside Int64 range; inserting NULL (as null) instead.");
-                return null;
             }
         }
     }
