@@ -1,10 +1,11 @@
 ﻿using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
+using CSharpAppPlayground.UIClasses;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses
 {
-    public partial class FormDBBenchmark : Form
+    public partial class FormDBBenchmark : FormWithRichText
     {
         public FormDBBenchmark()
         {
@@ -19,11 +20,11 @@ namespace CSharpAppPlayground.DBClasses
 
             mysqlBenchmarks.RunBulkInsertBenchmark(amount);
             int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
-            Debug.Print($"MySQL Inserted:{mysqlInsertedCount}");
+            Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
 
             pgsBenchmarks.RunBulkInsertBenchmark(amount);
             int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
-            Debug.Print($"PostgreSQL Inserted:{pgsInsertedCount}");
+            Debug.Print($"** PostgreSQL Inserted:{pgsInsertedCount}\n");
         }
 
         private void btnResetTables_Click(object sender, EventArgs e)

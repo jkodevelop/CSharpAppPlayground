@@ -4,16 +4,10 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using Npgsql;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 {
@@ -48,19 +42,19 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Generated {testData.Count} test records\n");
 
             // Example 1: Single insert loop (baseline)
-            //Test_InsertSimpleLoop(testData);
+            Test_InsertSimpleLoop(testData);
 
-            //// Example 2: Multi-value INSERT statement
-            //Test_InsertMultiValue(testData);
+            // Example 2: Multi-value INSERT statement
+            Test_InsertMultiValue(testData);
 
-            //// Example 3: Transaction with batched inserts
-            //Test_InsertWithTransaction(testData);
+            // Example 3: Transaction with batched inserts
+            Test_InsertWithTransaction(testData);
 
-            //// Example 4: Prepared statement with batching
-            //Test_InsertWithPreparedStatement(testData);
+            // Example 4: Prepared statement with batching
+            Test_InsertWithPreparedStatement(testData);
 
-            //// Example 5: Prepared statement with batching and transaction
-            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            // Example 5: Prepared statement with batching and transaction
+            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: PostgreSQL COPY command (native bulk insert)
             if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
@@ -68,8 +62,8 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
 
-            //// Example 7: Npgsql Binary Import (fastest option)
-            //Test_BulkInsertUseBinaryImport(testData);
+            // Example 7: Npgsql Binary Import (fastest option)
+            Test_BulkInsertUseBinaryImport(testData);
 
             Debug.Print("\n=== Benchmark Complete ===");
         }
