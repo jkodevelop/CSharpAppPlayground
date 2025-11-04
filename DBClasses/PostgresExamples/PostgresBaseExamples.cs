@@ -1,4 +1,3 @@
-using Npgsql;
 using CSharpAppPlayground.DBClasses.Data;
 using System.Diagnostics;
 

@@ -1,6 +1,7 @@
 ﻿using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
 using CSharpAppPlayground.UIClasses;
+using RepoDb;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses
@@ -18,10 +19,16 @@ namespace CSharpAppPlayground.DBClasses
         {
             int amount = (int)numAmount.Value;
 
-            mysqlBenchmarks.RunBulkInsertBenchmark(amount);
-            int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
-            Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
+            // !!IMPORTANT NOTE: in order to test RepoDB with Mysql and Postgres, this can only be down one at a time
+            // SO to test mysql with RepoInsertAll option then comment out postgres benchmark: pgsBenchmarks
+            // Vice Versa for Postgres testing
 
+            //GlobalConfiguration.Setup().UseMySql(); // RepoDb.MySqlBootstrap.Initialize(); [deprecated]
+            //mysqlBenchmarks.RunBulkInsertBenchmark(amount);
+            //int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
+            //Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
+
+            GlobalConfiguration.Setup().UsePostgreSql(); // RepoDb.PostgreSqlBootstrap.Initialize(); [deprecated]
             pgsBenchmarks.RunBulkInsertBenchmark(amount);
             int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
             Debug.Print($"** PostgreSQL Inserted:{pgsInsertedCount}\n");

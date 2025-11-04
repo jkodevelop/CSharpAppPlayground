@@ -47,30 +47,30 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
-            ////Example 1: Single insert loop(baseline)
-            //Test_InsertSimpleLoop(testData);
+            //Example 1: Single insert loop(baseline)
+            Test_InsertSimpleLoop(testData);
 
-            //// Example 2: Multi-value INSERT statement
-            //Test_InsertMultiValue(testData);
+            // Example 2: Multi-value INSERT statement
+            Test_InsertMultiValue(testData);
 
-            //// Example 3: Transaction with batched inserts
-            //Test_InsertWithTransaction(testData);
+            // Example 3: Transaction with batched inserts
+            Test_InsertWithTransaction(testData);
 
-            //// Example 4: Prepared statement with batching
-            //Test_InsertWithPreparedStatement(testData);
+            // Example 4: Prepared statement with batching
+            Test_InsertWithPreparedStatement(testData);
 
-            //// Example 5: Prepared statement with batching and transaction
-            //Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+            // Example 5: Prepared statement with batching and transaction
+            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: RepoDB InsertAll example
             List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
             Test_BulkInsertWithRepoDBInsertAll(convertedData);
 
-            //// Example 7: CSV Bulk Load [FASTEST OPTION]
-            //if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
-            //    Test_BulkInsertUseCSVOperation(csvFilePath);
-            //else
-            //    Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
+            // Example 7: CSV Bulk Load [FASTEST OPTION]
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseCSVOperation(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
 
             Debug.Print("\n=== Benchmark Complete ===");
         }

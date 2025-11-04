@@ -2,7 +2,6 @@
 using CSharpAppPlayground.DBClasses.MongoDBExamples;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
-using RepoDb;
 using System.Diagnostics;
 
 namespace CSharpAppPlayground
@@ -20,12 +19,6 @@ namespace CSharpAppPlayground
             mysql = new _connMysql();
             postgres = new _connPostgres();
             mongo = new _connMongoDB();
-
-            // extending Mysql & Postgres with RepoDB APIs
-            GlobalConfiguration.Setup().UsePostgreSql().UseMySql();
-            // The order matters: call UsePostgreSql() before UseMySql() for Postgres RepoDb extensions to correctly register.
-            // Alternatively, if you only need Postgres:
-            // GlobalConfiguration.Setup().UsePostgreSql();
         }
 
         protected FormFactory _formMysql = new FormFactory("CSharpAppPlayground.FormDBMysql, CSharpAppPlayground");
