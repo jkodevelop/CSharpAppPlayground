@@ -4,7 +4,7 @@ namespace CSharpAppPlayground.DBClasses.Data.SQLbenchmark
 {
     public class VidsSQL
     {
-        private string tableName = "Vids";
+        public static string table = "Vids";
 
         public int id { get; set; }
         public string filename { get; set; }
@@ -16,7 +16,7 @@ namespace CSharpAppPlayground.DBClasses.Data.SQLbenchmark
 
         public override string ToString()
         {
-            return $"SQL Table: {tableName}";
+            return $"SQL Table: {table}";
         }
     }
 }

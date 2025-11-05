@@ -2,6 +2,7 @@
 using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
+using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MongoDB.Driver;
 using System.Configuration;
@@ -120,6 +121,21 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
                 Debug.Print($"Error deleting all documents: {ex.Message}");
             }
             return 0;
+        }
+
+        public long GetVidsCount()
+        {
+            try
+            {
+                long count = collection.CountDocuments(_ => true);
+                Debug.Print($"Total documents in collection: {count}");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error counting documents: {ex.Message}");
+            }
+            return -1;
         }
     }
 }

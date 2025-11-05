@@ -8,7 +8,7 @@ namespace CSharpAppPlayground.DBClasses.Data.BSONbenchmark
     // Else there is going to be duplicate key errors on inserts on multiple methods tests
     public class VidsBSON : Vids
     {
-        private string collection = "Vids";
+        public static string collection = "Vids";
 
         [BsonElement("_id")]
         [BsonId]

@@ -44,6 +44,8 @@ namespace CSharpAppPlayground.DBClasses
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             mongoDBBenchmark.RunBulkInsertBenchmark(amount);
+            long mongoInsertCount = mongoDBBenchmark.GetVidsCount();
+            Debug.Print($"** MongoDB Inserted:{mongoInsertCount}\n");
         }
 
         private void btnResetTables_Click(object sender, EventArgs e)
