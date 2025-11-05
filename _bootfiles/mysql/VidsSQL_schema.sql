@@ -3,7 +3,7 @@
 -- Mysql DEFAULT engine is ENGINE=InnoDB
 
 -- Drop table if exists (for clean setup)
-DROP TABLE IF EXISTS vids;
+DROP TABLE IF EXISTS Vids;
 
 -- Create Vids table
 CREATE TABLE Vids (

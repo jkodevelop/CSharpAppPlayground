@@ -3,7 +3,7 @@
 -- this is MySQL reference, does not work for Postgres, and may not work for any other SQL based db
 
 -- Drop table if exists (for clean setup)
-DROP TABLE IF EXISTS vids;
+DROP TABLE IF EXISTS Vids;
 
 -- Create Vids table
 CREATE TABLE Vids (

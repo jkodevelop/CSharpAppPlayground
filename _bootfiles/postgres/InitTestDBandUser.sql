@@ -1,5 +1,6 @@
 -- to run this in postgres cmd
 -- \i 'PATH with \\ or / and single quotes, double quotes an \ slash will not work'
+-- NOTE: might have to rerun some of the grant privileges command again by root/postgres user
 
 CREATE DATABASE testdb;
 

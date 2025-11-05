@@ -5,7 +5,6 @@ using MethodTimer;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Diagnostics;
-using System.Numerics;
 using System.Text;
 using RepoDb;
 using CSharpAppPlayground.DBClasses.Data;
