@@ -12,6 +12,10 @@ namespace CSharpAppPlayground.DBClasses
         public FormDBBenchmark()
         {
             InitializeComponent();
+            whichRepoDBSelect.Items.Add("disable RepoDB tests");
+            whichRepoDBSelect.SelectedIndex = 0;
+            whichRepoDBSelect.Items.Add("enable Mysql RepoDB tests");
+            whichRepoDBSelect.Items.Add("enable Postgres RepoDB tests");
         }
 
         PostgresBasicBenchmarks pgsBenchmarks = new PostgresBasicBenchmarks();
@@ -19,6 +23,8 @@ namespace CSharpAppPlayground.DBClasses
         MongoDBBasicBenchmarks mongoDBBenchmark = new MongoDBBasicBenchmarks();
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
+            Debug.Print($"select index {whichRepoDBSelect.SelectedIndex}");
+
             int amount = (int)numAmount.Value;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,15 +35,23 @@ namespace CSharpAppPlayground.DBClasses
             // SO to test mysql with RepoInsertAll option then comment out postgres benchmark: pgsBenchmarks
             // Vice Versa for Postgres testing
 
-            //GlobalConfiguration.Setup().UseMySql(); // RepoDb.MySqlBootstrap.Initialize(); [deprecated]
-            //mysqlBenchmarks.RunBulkInsertBenchmark(amount);
-            //int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
-            //Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
+            if (whichRepoDBSelect.SelectedIndex == 1)
+            {
+                GlobalConfiguration.Setup().UseMySql(); // RepoDb.MySqlBootstrap.Initialize(); [deprecated]
+                mysqlBenchmarks.repoDBTestEnabled = true;
+            }
+            mysqlBenchmarks.RunBulkInsertBenchmark(amount);
+            int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
+            Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
 
-            //GlobalConfiguration.Setup().UsePostgreSql(); // RepoDb.PostgreSqlBootstrap.Initialize(); [deprecated]
-            //pgsBenchmarks.RunBulkInsertBenchmark(amount);
-            //int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
-            //Debug.Print($"** PostgreSQL Inserted:{pgsInsertedCount}\n");
+            if (whichRepoDBSelect.SelectedIndex == 2)
+            {
+                GlobalConfiguration.Setup().UsePostgreSql(); // RepoDb.PostgreSqlBootstrap.Initialize(); [deprecated]
+                pgsBenchmarks.repoDBTestEnabled = true;
+            }
+            pgsBenchmarks.RunBulkInsertBenchmark(amount);
+            int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
+            Debug.Print($"** PostgreSQL Inserted:{pgsInsertedCount}\n");
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             /// MongoDB

@@ -24,7 +24,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
         private int batchLimit = 5000;
         private int overloadLimit = 50000;
+
         private int repoDBBatchLimit = 500;
+        public bool repoDBTestEnabled { set; get; } = false;
 
         private string csvFilePath = @".\testdata\postgres_vids_bulk_insert.csv";
 
@@ -71,10 +73,15 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             // Example 7: Npgsql Binary Import [FASTEST OPTION]
             Test_BulkInsertUseBinaryImport(testData);
 
-            // Example 8: RepoDB InsertAll()
-            List<RepoVidInsert> fixedData = dataGenHelper.ConvertListVidsDataPostgresAndRepoDBList(testData);
-            Test_BulkInsertWithRepoDBInsertAll(fixedData);
-
+            if (repoDBTestEnabled)
+            {
+                // Example 8: RepoDB InsertAll()
+                List<RepoVidInsert> fixedData = dataGenHelper.ConvertListVidsDataPostgresAndRepoDBList(testData);
+                Test_BulkInsertWithRepoDBInsertAll(fixedData);
+            }
+            else
+                Debug.Print("skipping RepoDB InsertAll() test Postgres");
+            
             //// Example 9: PgPartner BulkAdd()
             List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
             Test_BulkAddWithPgPartner(convertedData);

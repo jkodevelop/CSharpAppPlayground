@@ -32,6 +32,7 @@
             btnResetTables = new Button();
             numAmount = new NumericUpDown();
             label1 = new Label();
+            whichRepoDBSelect = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
@@ -73,17 +74,31 @@
             label1.TabIndex = 4;
             label1.Text = "Amount to Insert";
             // 
+            // whichRepoDBSelect
+            // 
+            whichRepoDBSelect.FormattingEnabled = true;
+            whichRepoDBSelect.Location = new Point(12, 117);
+            whichRepoDBSelect.Name = "whichRepoDBSelect";
+            whichRepoDBSelect.Size = new Size(146, 23);
+            whichRepoDBSelect.TabIndex = 6;
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(whichRepoDBSelect);
             Controls.Add(label1);
             Controls.Add(numAmount);
             Controls.Add(btnResetTables);
             Controls.Add(btnBenchmarkInserts);
             Name = "FormDBBenchmark";
             Text = "FormDBBenchmark";
+            Controls.SetChildIndex(btnBenchmarkInserts, 0);
+            Controls.SetChildIndex(btnResetTables, 0);
+            Controls.SetChildIndex(numAmount, 0);
+            Controls.SetChildIndex(label1, 0);
+            Controls.SetChildIndex(whichRepoDBSelect, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -96,5 +111,6 @@
         private TextBox textboxAmount;
         private NumericUpDown numAmount;
         private Label label1;
+        private ComboBox whichRepoDBSelect;
     }
 }

@@ -23,7 +23,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         // summary: 
         // ~3500 is maximum before overflow/stack issues on large inserts
         // ~500 is better than 3500, smaller inserts show no difference in timing, bigger like 1 mill 500 is slightly faster
-        private int repoDBBatchLimit = 500; 
+        private int repoDBBatchLimit = 500;
+        public bool repoDBTestEnabled { set; get; } = false;
 
         private string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
 
@@ -61,10 +62,15 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             // Example 5: Prepared statement with batching and transaction
             Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
-            // Example 6: RepoDB InsertAll example
-            List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
-            Test_BulkInsertWithRepoDBInsertAll(convertedData);
-
+            if (repoDBTestEnabled)
+            {
+                // Example 6: RepoDB InsertAll example
+                List<RepoVidInsert> convertedData = dataGenHelper.ConvertListVidsData(testData);
+                Test_BulkInsertWithRepoDBInsertAll(convertedData);
+            }
+            else
+                Debug.Print("Skipping RepoDB InsertAll() test MySQL");
+            
             // Example 7: CSV Bulk Load [FASTEST OPTION]
             if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseCSVOperation(csvFilePath);
