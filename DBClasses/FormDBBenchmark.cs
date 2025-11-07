@@ -17,7 +17,7 @@ namespace CSharpAppPlayground.DBClasses
             whichRepoDBSelect.Items.Add("enable Mysql RepoDB tests");
             whichRepoDBSelect.Items.Add("enable Postgres RepoDB tests");
 
-            if(GlobalState.GetRepoDBGlobalConfigState())
+            if (GlobalState.GetRepoDBGlobalConfigState())
             {
                 int choice = GlobalState.GetRepoDBGlobalConfigChoice();
                 whichRepoDBSelect.SelectedIndex = choice;
@@ -32,6 +32,14 @@ namespace CSharpAppPlayground.DBClasses
         PostgresBasicBenchmarks pgsBenchmarks = new PostgresBasicBenchmarks();
         MysqlBasicBenchmarks mysqlBenchmarks = new MysqlBasicBenchmarks();
         MongoDBBasicBenchmarks mongoDBBenchmark = new MongoDBBasicBenchmarks();
+
+        private void btnResetTables_Click(object sender, EventArgs e)
+        {
+            mysqlBenchmarks.ResetVidsTable();
+            pgsBenchmarks.ResetVidsTable();
+            mongoDBBenchmark.DeleteAll();
+        }
+
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
             Debug.Print($"select index {whichRepoDBSelect.SelectedIndex}");
@@ -70,17 +78,19 @@ namespace CSharpAppPlayground.DBClasses
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             /// MongoDB
             //////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             mongoDBBenchmark.RunBulkInsertBenchmark(amount);
             long mongoInsertCount = mongoDBBenchmark.GetVidsCount();
             Debug.Print($"** MongoDB Inserted:{mongoInsertCount}\n");
         }
 
-        private void btnResetTables_Click(object sender, EventArgs e)
+        private void btnBenchmarkInsertsFast_Click(object sender, EventArgs e)
         {
-            //mysqlBenchmarks.ResetVidsTable();
-            //pgsBenchmarks.ResetVidsTable();
-            mongoDBBenchmark.DeleteAll();
+            int amount = (int)numAmount.Value;
+            mysqlBenchmarks.FastestCompareBenchmark(amount);
+            pgsBenchmarks.FastestCompareBenchmark(amount);
+            mongoDBBenchmark.FastestCompareBenchmark(amount);
+            Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Ocsp;
+using RepoDb;
 using System.Configuration;
 using System.Diagnostics;
 using System.Text;
-using RepoDb;
-using CSharpAppPlayground.DBClasses.Data;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -33,6 +34,17 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             mysqlBase = new MysqlBase();
             dataGenHelper = new DataGenHelper();
+        }
+
+        public void FastestCompareBenchmark(int dataSetSize)
+        {
+            // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseCSVOperation(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");
         }
 
         /// <summary>

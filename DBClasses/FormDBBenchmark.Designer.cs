@@ -33,12 +33,13 @@
             numAmount = new NumericUpDown();
             label1 = new Label();
             whichRepoDBSelect = new ComboBox();
+            btnBenchmarkInsertsFast = new Button();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
             // btnBenchmarkInserts
             // 
-            btnBenchmarkInserts.Location = new Point(12, 71);
+            btnBenchmarkInserts.Location = new Point(12, 101);
             btnBenchmarkInserts.Name = "btnBenchmarkInserts";
             btnBenchmarkInserts.Size = new Size(146, 40);
             btnBenchmarkInserts.TabIndex = 0;
@@ -77,16 +78,27 @@
             // whichRepoDBSelect
             // 
             whichRepoDBSelect.FormattingEnabled = true;
-            whichRepoDBSelect.Location = new Point(12, 117);
+            whichRepoDBSelect.Location = new Point(12, 71);
             whichRepoDBSelect.Name = "whichRepoDBSelect";
             whichRepoDBSelect.Size = new Size(146, 23);
             whichRepoDBSelect.TabIndex = 6;
+            // 
+            // btnBenchmarkInsertsFast
+            // 
+            btnBenchmarkInsertsFast.Location = new Point(12, 147);
+            btnBenchmarkInsertsFast.Name = "btnBenchmarkInsertsFast";
+            btnBenchmarkInsertsFast.Size = new Size(146, 23);
+            btnBenchmarkInsertsFast.TabIndex = 7;
+            btnBenchmarkInsertsFast.Text = "Fastest Inserts Compare";
+            btnBenchmarkInsertsFast.UseVisualStyleBackColor = true;
+            btnBenchmarkInsertsFast.Click += btnBenchmarkInsertsFast_Click;
             // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnBenchmarkInsertsFast);
             Controls.Add(whichRepoDBSelect);
             Controls.Add(label1);
             Controls.Add(numAmount);
@@ -99,6 +111,7 @@
             Controls.SetChildIndex(numAmount, 0);
             Controls.SetChildIndex(label1, 0);
             Controls.SetChildIndex(whichRepoDBSelect, 0);
+            Controls.SetChildIndex(btnBenchmarkInsertsFast, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -112,5 +125,6 @@
         private NumericUpDown numAmount;
         private Label label1;
         private ComboBox whichRepoDBSelect;
+        private Button btnBenchmarkInsertsFast;
     }
 }

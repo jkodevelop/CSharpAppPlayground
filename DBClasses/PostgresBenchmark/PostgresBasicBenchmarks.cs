@@ -37,6 +37,18 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             dataGenHelper = new DataGenHelper();
         }
 
+        public void FastestCompareBenchmark(int dataSetSize)
+        {
+            // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            Test_BulkInsertUseBinaryImport(testData);
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseCopyCommand(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
+        }
+
         /// <summary>
         /// Runs all bulk insert benchmarks with VidsSQL objects
         /// </summary>

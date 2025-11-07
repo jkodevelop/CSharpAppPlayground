@@ -5,6 +5,7 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MongoDB.Driver;
+using Org.BouncyCastle.Ocsp;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -26,6 +27,13 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             client = new MongoClient(connectionStr);
             database = client.GetDatabase("testdb");
             collection = database.GetCollection<Vids>("Vids");
+        }
+
+        public void FastestCompareBenchmark(int dataSetSize)
+        {
+            GenerateVidsMongo generator = new GenerateVidsMongo();
+            List<Vids> testData = generator.GenerateData(dataSetSize);
+            Test_InsertManyAPI(testData);
         }
 
         public void RunBulkInsertBenchmark(int dataSetSize)
