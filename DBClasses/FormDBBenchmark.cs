@@ -1,4 +1,5 @@
-﻿using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
+﻿using CSharpAppPlayground.Classes.AppSettings;
+using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
 using CSharpAppPlayground.UIClasses;
@@ -13,9 +14,19 @@ namespace CSharpAppPlayground.DBClasses
         {
             InitializeComponent();
             whichRepoDBSelect.Items.Add("disable RepoDB tests");
-            whichRepoDBSelect.SelectedIndex = 0;
             whichRepoDBSelect.Items.Add("enable Mysql RepoDB tests");
             whichRepoDBSelect.Items.Add("enable Postgres RepoDB tests");
+
+            if(GlobalState.GetRepoDBGlobalConfigState())
+            {
+                int choice = GlobalState.GetRepoDBGlobalConfigChoice();
+                whichRepoDBSelect.SelectedIndex = choice;
+                whichRepoDBSelect.Enabled = false;
+            }
+            else
+            {
+                whichRepoDBSelect.SelectedIndex = 0; // default to disabled
+            }
         }
 
         PostgresBasicBenchmarks pgsBenchmarks = new PostgresBasicBenchmarks();
@@ -24,7 +35,6 @@ namespace CSharpAppPlayground.DBClasses
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
             Debug.Print($"select index {whichRepoDBSelect.SelectedIndex}");
-
             int amount = (int)numAmount.Value;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,6 +49,8 @@ namespace CSharpAppPlayground.DBClasses
             {
                 GlobalConfiguration.Setup().UseMySql(); // RepoDb.MySqlBootstrap.Initialize(); [deprecated]
                 mysqlBenchmarks.repoDBTestEnabled = true;
+                whichRepoDBSelect.Enabled = false;
+                GlobalState.RepoDBGlobalConfigActivated(1);
             }
             mysqlBenchmarks.RunBulkInsertBenchmark(amount);
             int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
@@ -48,6 +60,8 @@ namespace CSharpAppPlayground.DBClasses
             {
                 GlobalConfiguration.Setup().UsePostgreSql(); // RepoDb.PostgreSqlBootstrap.Initialize(); [deprecated]
                 pgsBenchmarks.repoDBTestEnabled = true;
+                whichRepoDBSelect.Enabled = false;
+                GlobalState.RepoDBGlobalConfigActivated(2);
             }
             pgsBenchmarks.RunBulkInsertBenchmark(amount);
             int pgsInsertedCount = pgsBenchmarks.GetVidsCount();
