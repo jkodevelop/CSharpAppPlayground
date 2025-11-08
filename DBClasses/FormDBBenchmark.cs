@@ -92,5 +92,13 @@ namespace CSharpAppPlayground.DBClasses
             mongoDBBenchmark.FastestCompareBenchmark(amount);
             Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
         }
+
+
+        MongoDBSearchBenchmark mongoSearch = new MongoDBSearchBenchmark();
+        private void btnSearchText_Click(object sender, EventArgs e)
+        {
+            string searchTerm = tbSearchText.Text;
+            mongoSearch.SearchContain(searchTerm);
+        }
     }
 }

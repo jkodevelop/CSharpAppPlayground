@@ -1,11 +1,7 @@
 ﻿using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
-using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
-using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
-using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MongoDB.Driver;
-using Org.BouncyCastle.Ocsp;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -118,6 +114,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
 
         public long DeleteAll()
         {
+            // this is slow because its deletes row by row, there is a faster option: Drop()
+            // BUT this would also remove all indexes, so don't do that
             try
             {
                 DeleteResult result = collection.DeleteMany(_ => true);

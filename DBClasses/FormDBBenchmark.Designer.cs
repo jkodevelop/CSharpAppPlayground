@@ -34,6 +34,9 @@
             label1 = new Label();
             whichRepoDBSelect = new ComboBox();
             btnBenchmarkInsertsFast = new Button();
+            btnSearchText = new Button();
+            tbSearchText = new TextBox();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
@@ -93,11 +96,40 @@
             btnBenchmarkInsertsFast.UseVisualStyleBackColor = true;
             btnBenchmarkInsertsFast.Click += btnBenchmarkInsertsFast_Click;
             // 
+            // btnSearchText
+            // 
+            btnSearchText.Location = new Point(192, 71);
+            btnSearchText.Name = "btnSearchText";
+            btnSearchText.Size = new Size(173, 38);
+            btnSearchText.TabIndex = 8;
+            btnSearchText.Text = "Text Search Benchmark";
+            btnSearchText.UseVisualStyleBackColor = true;
+            btnSearchText.Click += btnSearchText_Click;
+            // 
+            // tbSearchText
+            // 
+            tbSearchText.Location = new Point(192, 33);
+            tbSearchText.Name = "tbSearchText";
+            tbSearchText.Size = new Size(173, 23);
+            tbSearchText.TabIndex = 9;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(192, 16);
+            label2.Name = "label2";
+            label2.Size = new Size(42, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Search";
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label2);
+            Controls.Add(tbSearchText);
+            Controls.Add(btnSearchText);
             Controls.Add(btnBenchmarkInsertsFast);
             Controls.Add(whichRepoDBSelect);
             Controls.Add(label1);
@@ -112,6 +144,9 @@
             Controls.SetChildIndex(label1, 0);
             Controls.SetChildIndex(whichRepoDBSelect, 0);
             Controls.SetChildIndex(btnBenchmarkInsertsFast, 0);
+            Controls.SetChildIndex(btnSearchText, 0);
+            Controls.SetChildIndex(tbSearchText, 0);
+            Controls.SetChildIndex(label2, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -126,5 +161,8 @@
         private Label label1;
         private ComboBox whichRepoDBSelect;
         private Button btnBenchmarkInsertsFast;
+        private Button btnSearchText;
+        private TextBox tbSearchText;
+        private Label label2;
     }
 }
