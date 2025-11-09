@@ -94,11 +94,13 @@ namespace CSharpAppPlayground.DBClasses
         }
 
 
-        MongoDBSearchBenchmark mongoSearch = new MongoDBSearchBenchmark();
+        MongoDBSearchBenchmarks mongoSearch = new MongoDBSearchBenchmarks();
+        MysqlSearchBenchmarks mysqlSearch = new MysqlSearchBenchmarks();
         private void btnSearchText_Click(object sender, EventArgs e)
         {
             string searchTerm = tbSearchText.Text;
-            mongoSearch.SearchContain(searchTerm);
+            mongoSearch.RunTest(searchTerm);
+            mysqlSearch.RunTest(searchTerm);
         }
     }
 }

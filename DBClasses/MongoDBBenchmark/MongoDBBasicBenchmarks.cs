@@ -2,6 +2,7 @@
 using CSharpAppPlayground.DBClasses.Data;
 using MethodTimer;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -112,6 +113,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             return vids.Count;
         }
 
+        // [TODO] check `compact` command
+        // cleans deleted rows indexed data, after deleteMany the index data are still there which is useless cause the rows are gone
+        // db.runCommand({ compact: "collectionName" })
         public long DeleteAll()
         {
             // this is slow because its deletes row by row, there is a faster option: Drop()
@@ -120,6 +124,12 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             {
                 DeleteResult result = collection.DeleteMany(_ => true);
                 Debug.Print($"Deleted {result.DeletedCount} documents from collection");
+                var command = new BsonDocument
+                {
+                    { "compact", "Vids" }
+                };
+                var compactResult = database.RunCommand<BsonDocument>(command);
+                Debug.Print("Collection compacted: " + compactResult.ToJson());
                 return result.DeletedCount;
             }
             catch (Exception ex)

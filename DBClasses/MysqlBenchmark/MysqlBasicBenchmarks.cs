@@ -4,7 +4,6 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Ocsp;
 using RepoDb;
 using System.Configuration;
 using System.Diagnostics;
