@@ -36,23 +36,38 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             mysqlBase = new MysqlBase();
         }
 
-        public void RunTest(string searchTerm)
+        public void RunSimpleSearchTest(string searchTerm)
         {
+            Debug.Print("\n/////////////////////////////////////////////////////////" +
+                "\nMYSQL simple search" +
+                "\n/////////////////////////////////////////////////////////");
             Test_GetFilenameByLike(searchTerm);
+            Test_GetFilenameByLikeCaseSensitive(searchTerm);
+            Test_GetFilename(searchTerm);
         }
 
         [Time("GetFilenameByLike")]
         public void Test_GetFilenameByLike(string searchTerm)
         {
             Debug.Print("\n--- Method 1: Search Using LIKE ---");
-            GetFilenameByLike(searchTerm);
+            var v = GetFilenameByLike(searchTerm);
+            Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
+        }
+
+        [Time("GetFilenameByLikeCaseSensitive")]
+        public void Test_GetFilenameByLikeCaseSensitive(string searchTerm)
+        {
+            Debug.Print("\n--- Method 2: Search Using LIKE casesensitive ---");
+            var v = GetFilenameByLikeCaseSensitive(searchTerm);
+            Debug.Print($"Found {v.Count} LIKE + case searchTerm:{searchTerm}");
         }
 
         [Time("GetFilename")]
         public void Test_GetFilename(string searchTerm)
         {
-            Debug.Print("\n--- Method 2: Search Exact ---");
-            GetFilename(searchTerm);
+            Debug.Print("\n--- Method 3: Search Exact ---");
+            var v = GetFilename(searchTerm);
+            Debug.Print($"Found {v.Count} EXACT searchTerm:{searchTerm}");
         }
 
         public List<VidsSQL> GetFilenameByLike(string searchTerm)

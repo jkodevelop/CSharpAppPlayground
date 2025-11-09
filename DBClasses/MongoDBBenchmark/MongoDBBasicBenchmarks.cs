@@ -26,6 +26,13 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             collection = database.GetCollection<Vids>("Vids");
         }
 
+        public void GenData(int dataSetSize)
+        {
+            GenerateVidsMongo generator = new GenerateVidsMongo();
+            List<Vids> testData = generator.GenerateData(dataSetSize);
+            InsertManyAPI(testData);
+        }
+
         public void FastestCompareBenchmark(int dataSetSize)
         {
             GenerateVidsMongo generator = new GenerateVidsMongo();
@@ -113,17 +120,16 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             return vids.Count;
         }
 
-        // [TODO] check `compact` command
-        // cleans deleted rows indexed data, after deleteMany the index data are still there which is useless cause the rows are gone
-        // db.runCommand({ compact: "collectionName" })
         public long DeleteAll()
         {
             // this is slow because its deletes row by row, there is a faster option: Drop()
             // BUT this would also remove all indexes, so don't do that
             try
             {
+                // 1. Delete all rows
                 DeleteResult result = collection.DeleteMany(_ => true);
                 Debug.Print($"Deleted {result.DeletedCount} documents from collection");
+                // 2. Truncate all indexed data, free up the spaces and reset
                 var command = new BsonDocument
                 {
                     { "compact", "Vids" }

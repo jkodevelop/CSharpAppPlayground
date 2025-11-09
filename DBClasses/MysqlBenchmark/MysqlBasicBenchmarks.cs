@@ -4,6 +4,7 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Ocsp;
 using RepoDb;
 using System.Configuration;
 using System.Diagnostics;
@@ -33,6 +34,23 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             connectionStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             mysqlBase = new MysqlBase();
             dataGenHelper = new DataGenHelper();
+        }
+
+        public void GenData(int dataSetSize)
+        {
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            if (dataSetSize >= overloadLimit)
+            {
+                if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                    BulkInsertUseCSVOperation(csvFilePath);
+                else
+                    Debug.Print("Failed to generate CSV file for bulk Gen Data");
+            }
+            else
+            {
+                BulkInsertMultiValue(testData);
+            }
         }
 
         public void FastestCompareBenchmark(int dataSetSize)

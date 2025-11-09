@@ -37,6 +37,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             dataGenHelper = new DataGenHelper();
         }
 
+        public void GenData(int dataSetSize)
+        {
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            BulkInsertUseBinaryImport(testData);
+        }
         public void FastestCompareBenchmark(int dataSetSize)
         {
             // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless

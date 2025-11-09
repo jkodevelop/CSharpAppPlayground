@@ -27,8 +27,11 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             collection = database.GetCollection<VidsBSON>("Vids");
         }
 
-        public void RunTest(string searchTerm)
+        public void RunSimpleSearchTest(string searchTerm)
         {
+            Debug.Print("\n/////////////////////////////////////////////////////////" +
+                "\nMONGO simple search" +
+                "\n/////////////////////////////////////////////////////////");
             Test_SearchContain(searchTerm);
             Test_SearchContainCaseSensitive(searchTerm);
             Test_SearchExact(searchTerm);
@@ -38,21 +41,24 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         public void Test_SearchContain(string searchTerm)
         {
             Debug.Print("\n--- Method 1: Search Using Contains + Case Insensitive ---");
-            SearchContain(searchTerm);
+            var v = SearchContain(searchTerm);
+            Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
         }
 
         [Time("SearchContainCaseSensitive")]
         public void Test_SearchContainCaseSensitive(string searchTerm)
         {
             Debug.Print("\n--- Method 2: Search Using Contains + Case Sensitive ---");
-            SearchContainCaseSensitive(searchTerm);
+            var v = SearchContainCaseSensitive(searchTerm);
+            Debug.Print($"Found {v.Count} LIKE + case searchTerm:{searchTerm}");
         }
 
         [Time("SearchExact")]
         public void Test_SearchExact(string searchTerm)
         {
             Debug.Print("\n--- Method 3: Search Exact ---");
-            SearchExact(searchTerm);
+            var v = SearchExact(searchTerm);
+            Debug.Print($"Found {v.Count} EXACT searchTerm:{searchTerm}");
         }
 
         public List<VidsBSON> SearchContain(string searchTerm)

@@ -94,13 +94,25 @@ namespace CSharpAppPlayground.DBClasses
         }
 
 
+        private void btnGenData_Click(object sender, EventArgs e)
+        {
+            int amount = (int)numAmount.Value;
+            mysqlBenchmarks.GenData(amount);
+            pgsBenchmarks.GenData(amount);
+            mongoDBBenchmark.GenData(amount);
+            Debug.Print($"Generated Data: {amount}");
+        }
+
+
         MongoDBSearchBenchmarks mongoSearch = new MongoDBSearchBenchmarks();
         MysqlSearchBenchmarks mysqlSearch = new MysqlSearchBenchmarks();
+        PostgresSearchBenchmarks postgresSearch = new PostgresSearchBenchmarks();
         private void btnSearchText_Click(object sender, EventArgs e)
         {
             string searchTerm = tbSearchText.Text;
-            mongoSearch.RunTest(searchTerm);
-            mysqlSearch.RunTest(searchTerm);
+            mongoSearch.RunSimpleSearchTest(searchTerm);
+            mysqlSearch.RunSimpleSearchTest(searchTerm);
+            postgresSearch.RunSimpleSearchTest(searchTerm);
         }
     }
 }

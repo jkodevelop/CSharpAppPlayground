@@ -37,6 +37,7 @@
             btnSearchText = new Button();
             tbSearchText = new TextBox();
             label2 = new Label();
+            btnGenData = new Button();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
@@ -122,11 +123,22 @@
             label2.TabIndex = 10;
             label2.Text = "Search";
             // 
+            // btnGenData
+            // 
+            btnGenData.Location = new Point(12, 372);
+            btnGenData.Name = "btnGenData";
+            btnGenData.Size = new Size(146, 37);
+            btnGenData.TabIndex = 11;
+            btnGenData.Text = "Generate";
+            btnGenData.UseVisualStyleBackColor = true;
+            btnGenData.Click += btnGenData_Click;
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnGenData);
             Controls.Add(label2);
             Controls.Add(tbSearchText);
             Controls.Add(btnSearchText);
@@ -147,6 +159,7 @@
             Controls.SetChildIndex(btnSearchText, 0);
             Controls.SetChildIndex(tbSearchText, 0);
             Controls.SetChildIndex(label2, 0);
+            Controls.SetChildIndex(btnGenData, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -164,5 +177,6 @@
         private Button btnSearchText;
         private TextBox tbSearchText;
         private Label label2;
+        private Button btnGenData;
     }
 }
