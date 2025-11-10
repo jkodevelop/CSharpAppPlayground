@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
+using System.Numerics;
 using System.Reflection;
-using static MongoDB.Driver.WriteConcern;
 
 // alternatively use Nuget:using CsvHelper;
 namespace CSharpAppPlayground.Classes
@@ -252,6 +251,10 @@ namespace CSharpAppPlayground.Classes
             else if (targetType == typeof(Guid))
             {
                 return Guid.Parse(raw);
+            }
+            else if (targetType == typeof(BigInteger))
+            {
+                return BigInteger.Parse(raw, CultureInfo.InvariantCulture);
             }
             // fallback, try system conversion
             return Convert.ChangeType(raw, targetType, CultureInfo.InvariantCulture);

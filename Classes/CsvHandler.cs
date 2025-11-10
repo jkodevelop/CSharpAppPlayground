@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Numerics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 
 // usage:
@@ -247,6 +244,10 @@ namespace CSharpAppPlayground.Classes
                 else if (targetType == typeof(Guid))
                 {
                     return Guid.Parse(raw);
+                }
+                else if (targetType == typeof(BigInteger))
+                {
+                    return BigInteger.Parse(raw, CultureInfo.InvariantCulture);
                 }
                 // fallback, try system conversion
                 return Convert.ChangeType(raw, targetType, CultureInfo.InvariantCulture);
