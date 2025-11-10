@@ -34,6 +34,8 @@ namespace CSharpAppPlayground.Classes
             return type.IsPrimitive ||
                    type == typeof(string) ||
                    type == typeof(decimal) ||
+                   type == typeof(long) ||
+                   type == typeof(BigInteger) ||
                    type == typeof(DateTime) ||
                    type == typeof(DateTimeOffset) ||
                    type == typeof(TimeSpan) ||

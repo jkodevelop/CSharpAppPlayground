@@ -103,8 +103,8 @@ namespace CSharpAppPlayground.DBClasses
             int amount = (int)numAmount.Value;
 
             // create the CSV file
-            //List<Vids> testData = generator.GenerateData(amount);
-            // csvMan.WriteToCSV(testData);
+            List<Vids> testData = generator.GenerateData(amount);
+            csvMan.WriteToCSV(testData);
 
             List<Vids> vids = csvMan.ReadFromCSV<Vids>();
 
