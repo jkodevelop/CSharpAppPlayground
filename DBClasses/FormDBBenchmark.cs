@@ -2,6 +2,7 @@
 using CSharpAppPlayground.Classes.AppSettings;
 using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
+using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
@@ -13,6 +14,9 @@ namespace CSharpAppPlayground.DBClasses
 {
     public partial class FormDBBenchmark : FormWithRichText
     {
+        private string bulkVidsCSVFilePath = @".\testdata\vids_bulk_inserts.csv";
+        CsvManager csvMan;
+
         public FormDBBenchmark()
         {
             InitializeComponent();
@@ -30,17 +34,18 @@ namespace CSharpAppPlayground.DBClasses
             {
                 whichRepoDBSelect.SelectedIndex = 0; // default to disabled
             }
+            csvMan = new CsvManager(bulkVidsCSVFilePath);
         }
 
         PostgresBasicBenchmarks pgsBenchmarks = new PostgresBasicBenchmarks();
         MysqlBasicBenchmarks mysqlBenchmarks = new MysqlBasicBenchmarks();
-        MongoDBBasicBenchmarks mongoDBBenchmark = new MongoDBBasicBenchmarks();
+        MongoDBBasicBenchmarks mongoDBBenchmarks = new MongoDBBasicBenchmarks();
 
         private void btnResetTables_Click(object sender, EventArgs e)
         {
             mysqlBenchmarks.ResetVidsTable();
             pgsBenchmarks.ResetVidsTable();
-            mongoDBBenchmark.DeleteAll();
+            mongoDBBenchmarks.DeleteAll();
         }
 
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
@@ -82,8 +87,8 @@ namespace CSharpAppPlayground.DBClasses
             /// MongoDB
             //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            mongoDBBenchmark.RunBulkInsertBenchmark(amount);
-            long mongoInsertCount = mongoDBBenchmark.GetVidsCount();
+            mongoDBBenchmarks.RunBulkInsertBenchmark(amount);
+            long mongoInsertCount = mongoDBBenchmarks.GetVidsCount();
             Debug.Print($"** MongoDB Inserted:{mongoInsertCount}\n");
         }
 
@@ -92,11 +97,10 @@ namespace CSharpAppPlayground.DBClasses
             int amount = (int)numAmount.Value;
             mysqlBenchmarks.FastestCompareBenchmark(amount);
             pgsBenchmarks.FastestCompareBenchmark(amount);
-            mongoDBBenchmark.FastestCompareBenchmark(amount);
+            mongoDBBenchmarks.FastestCompareBenchmark(amount);
             Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
         }
 
-        CsvManager csvMan = new CsvManager(@".\testdata\vids_bulk_inserts.csv");
         GenerateVids generator = new GenerateVids();
         private void btnGenData_Click(object sender, EventArgs e)
         {
@@ -106,11 +110,18 @@ namespace CSharpAppPlayground.DBClasses
             List<Vids> testData = generator.GenerateData(amount);
             csvMan.WriteToCSV(testData);
 
-            List<Vids> vids = csvMan.ReadFromCSV<Vids>();
+            List<VidsSQL> vids = csvMan.ReadFromCSV<VidsSQL>();
 
-            //mysqlBenchmarks.GenData(amount);
-            //pgsBenchmarks.GenData(amount);
-            //mongoDBBenchmark.GenData(amount);
+            // 1. This will generate separate data
+            mysqlBenchmarks.GenData(amount);
+            pgsBenchmarks.GenData(amount);
+            mongoDBBenchmarks.GenData(amount);
+
+            // 2. This will keep them all the same, good for benchmark search etc..
+            //mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
+            //pgsBenchmarks.ImportData(vids);
+            //mongoDBBenchmarks.ImportData(testData);
+
             Debug.Print($"Generated Data: {amount}");
         }
 

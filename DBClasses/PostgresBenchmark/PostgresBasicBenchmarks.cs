@@ -4,10 +4,11 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using MongoDB.Driver;
-using RepoDb;
 using Npgsql;
 using NpgsqlTypes;
+using Org.BouncyCastle.Ocsp;
 using PgPartner;
+using RepoDb;
 using System.Configuration;
 using System.Diagnostics;
 using System.Text;
@@ -43,6 +44,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             BulkInsertUseBinaryImport(testData);
         }
+
+        public void ImportData(List<VidsSQL> testData)
+        {
+            BulkInsertUseBinaryImport(testData);
+        }
+
         public void FastestCompareBenchmark(int dataSetSize)
         {
             // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless

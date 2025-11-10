@@ -1,8 +1,8 @@
 ﻿using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
 using MethodTimer;
-using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -30,6 +30,11 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         {
             GenerateVids generator = new GenerateVids();
             List<Vids> testData = generator.GenerateData(dataSetSize);
+            InsertManyAPI(testData);
+        }
+
+        public void ImportData(List<Vids> testData)
+        {
             InsertManyAPI(testData);
         }
 

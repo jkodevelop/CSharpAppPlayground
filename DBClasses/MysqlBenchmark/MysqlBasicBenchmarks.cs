@@ -8,6 +8,7 @@ using Org.BouncyCastle.Ocsp;
 using RepoDb;
 using System.Configuration;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
@@ -51,6 +52,11 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             {
                 BulkInsertMultiValue(testData);
             }
+        }
+
+        public void ImportCSV(string csvFilePath)
+        {
+            BulkInsertUseCSVOperation(csvFilePath);
         }
 
         public void FastestCompareBenchmark(int dataSetSize)
