@@ -4,11 +4,11 @@ using MethodTimer;
 using System.Collections.Concurrent;
 namespace CSharpAppPlayground.Classes.DataGen.Generators
 {
-    public class GenerateVidsMongo : IDataGenerator<Vids>
+    public class GenerateVids : IDataGenerator<Vids>
     {
         private static int[] randHeights, randWidths;
 
-        public GenerateVidsMongo()
+        public GenerateVids()
         {
             // randHeights = [ 144, 240, 360, 480, 720, 1080, 1440, 2160, 4320 ]; // Common video heights (p)
             // randWidths = [ 256, 426, 640, 854, 1280, 1920, 2560, 3840, 7680 ]; // Common video widths (p)

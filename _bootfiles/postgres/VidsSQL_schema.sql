@@ -23,6 +23,23 @@ CREATE INDEX idx_duration ON "Vids" ("duration");
 CREATE INDEX idx_metadatetime ON "Vids" ("metadatetime");
 CREATE INDEX idx_dimensions ON "Vids" ("width", "height");
 
+-- better full text search, enable pg_trgm
+-- check what is enabled
+----- SELECT name, installed_version FROM pg_available_extensions;
+----- SELECT name, installed_version FROM pg_available_extensions WHERE name = 'pg_trgm';
+
+-- enable pg_trgm extension
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- case sensitive
+CREATE INDEX idx_filename_trgm ON "Vids" USING GIN (filename gin_trgm_ops);
+-- SELECT * FROM vids WHERE filename LIKE '%Example%';
+
+-- case insensitive
+CREATE INDEX idx_filename_trgm_nocase ON "Vids" USING GIN (lower(filename) gin_trgm_ops);   
+-- SELECT * FROM vids WHERE lower(filename) LIKE '%example%';
+-- or with ILIKE (though LIKE with lower() is more explicit)
+
 -- Add table comment
 COMMENT ON TABLE "Vids" IS 'Video metadata storage table';
  

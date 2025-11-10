@@ -1,4 +1,7 @@
-﻿using CSharpAppPlayground.Classes.AppSettings;
+﻿using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.Classes.AppSettings;
+using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
@@ -93,13 +96,21 @@ namespace CSharpAppPlayground.DBClasses
             Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
         }
 
-
+        CsvManager csvMan = new CsvManager(@".\testdata\vids_bulk_inserts.csv");
+        GenerateVids generator = new GenerateVids();
         private void btnGenData_Click(object sender, EventArgs e)
         {
             int amount = (int)numAmount.Value;
-            mysqlBenchmarks.GenData(amount);
-            pgsBenchmarks.GenData(amount);
-            mongoDBBenchmark.GenData(amount);
+
+            // create the CSV file
+            //List<Vids> testData = generator.GenerateData(amount);
+            // csvMan.WriteToCSV(testData);
+
+            List<Vids> vids = csvMan.ReadFromCSV<Vids>();
+
+            //mysqlBenchmarks.GenData(amount);
+            //pgsBenchmarks.GenData(amount);
+            //mongoDBBenchmark.GenData(amount);
             Debug.Print($"Generated Data: {amount}");
         }
 

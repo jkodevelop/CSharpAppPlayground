@@ -126,5 +126,11 @@ namespace CSharpAppPlayground.DBClasses.Data
                 return null;
             }
         }
+
+        public List<T> GenFromCSV<T>(int dataSize)
+        {
+
+            return null;
+        }
     }
 }

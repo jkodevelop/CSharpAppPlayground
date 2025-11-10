@@ -28,14 +28,14 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
 
         public void GenData(int dataSetSize)
         {
-            GenerateVidsMongo generator = new GenerateVidsMongo();
+            GenerateVids generator = new GenerateVids();
             List<Vids> testData = generator.GenerateData(dataSetSize);
             InsertManyAPI(testData);
         }
 
         public void FastestCompareBenchmark(int dataSetSize)
         {
-            GenerateVidsMongo generator = new GenerateVidsMongo();
+            GenerateVids generator = new GenerateVids();
             List<Vids> testData = generator.GenerateData(dataSetSize);
             Test_InsertManyAPI(testData);
         }
@@ -45,7 +45,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print("=== MySQL Bulk Insert Examples with VidsSQL ===");
 
             // Generate test data
-            GenerateVidsMongo generator = new GenerateVidsMongo();
+            GenerateVids generator = new GenerateVids();
             List<Vids> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
