@@ -15,6 +15,12 @@ namespace CSharpAppPlayground.Classes.DataGen
         {
             return _random.Next(min, max);
         }
+
+        public long RandomLong(long min, long max)
+        {
+            return _random.NextInt64(min, max);
+        }
+
         public double RandomDouble(double min, double max)
         {
             return _random.NextDouble() * (max - min) + min;

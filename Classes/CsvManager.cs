@@ -106,7 +106,7 @@ namespace CSharpAppPlayground.Classes
             }
             catch(Exception ex)
             {
-                Debug.Print("Failed WriteToCSV()");
+                Debug.Print($"Failed WriteToCSV() {ex.Message}");
                 success = false;
             }
             return success;
@@ -197,7 +197,7 @@ namespace CSharpAppPlayground.Classes
             }
             catch(Exception ex)
             {
-                Debug.Print("Failed ReadFromCSV()");
+                Debug.Print($"Failed ReadFromCSV() {ex.Message}");
             }
             return records;
         }

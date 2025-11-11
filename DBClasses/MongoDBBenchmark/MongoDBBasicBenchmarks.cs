@@ -1,5 +1,5 @@
 ﻿using CSharpAppPlayground.Classes.DataGen.Generators;
-using CSharpAppPlayground.DBClasses.Data;
+using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using MethodTimer;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,7 +13,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         private string connectionStr = string.Empty;
         private MongoClient client;
         private IMongoDatabase database;
-        private IMongoCollection<Vids> collection;
+        private IMongoCollection<VidsBSON> collection;
+
+        private string dbName = "testdb";
 
         public MongoDBBasicBenchmarks()
         {
@@ -22,26 +24,26 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
 
             // Initialize MongoDB client and database
             client = new MongoClient(connectionStr);
-            database = client.GetDatabase("testdb");
-            collection = database.GetCollection<Vids>("Vids");
+            database = client.GetDatabase(dbName);
+            collection = database.GetCollection<VidsBSON>(VidsBSON.collection);
         }
 
         public void GenData(int dataSetSize)
         {
-            GenerateVids generator = new GenerateVids();
-            List<Vids> testData = generator.GenerateData(dataSetSize);
+            GenerateVidsBSON generator = new GenerateVidsBSON();
+            List<VidsBSON> testData = generator.GenerateData(dataSetSize);
             InsertManyAPI(testData);
         }
 
-        public void ImportData(List<Vids> testData)
+        public void ImportData(List<VidsBSON> testData)
         {
             InsertManyAPI(testData);
         }
 
         public void FastestCompareBenchmark(int dataSetSize)
         {
-            GenerateVids generator = new GenerateVids();
-            List<Vids> testData = generator.GenerateData(dataSetSize);
+            GenerateVidsBSON generator = new GenerateVidsBSON();
+            List<VidsBSON> testData = generator.GenerateData(dataSetSize);
             Test_InsertManyAPI(testData);
         }
 
@@ -50,8 +52,8 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print("=== MySQL Bulk Insert Examples with VidsSQL ===");
 
             // Generate test data
-            GenerateVids generator = new GenerateVids();
-            List<Vids> testData = generator.GenerateData(dataSetSize);
+            GenerateVidsBSON generator = new GenerateVidsBSON();
+            List<VidsBSON> testData = generator.GenerateData(dataSetSize);
             Debug.Print($"Generated {testData.Count} test records\n");
 
             //Example 1: Single insert loop(baseline)
@@ -63,7 +65,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         }
 
         [Time("InsertSimpleLoop:")]
-        protected void Test_InsertSimpleLoop(List<Vids> testData)
+        protected void Test_InsertSimpleLoop(List<VidsBSON> testData)
         {
             Debug.Print("\n--- Method 1: Single Insert Loop ---");
             int insertedCount = InsertSimpleLoop(testData);
@@ -71,7 +73,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         }
 
         [Time("InsertManyAPI:")]
-        protected void Test_InsertManyAPI(List<Vids> testData)
+        protected void Test_InsertManyAPI(List<VidsBSON> testData)
         {
             Debug.Print("\n--- Method 2: InserMany() ---");
             int insertedCount = InsertManyAPI(testData);
@@ -82,7 +84,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         /// Insert documents one-by-one using InsertOne.
         /// Returns the elapsed milliseconds taken to insert all documents.
         /// </summary>
-        public int InsertSimpleLoop(List<Vids> vids)
+        public int InsertSimpleLoop(List<VidsBSON> vids)
         {
             if (vids == null) return 0;
 
@@ -107,7 +109,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         /// Insert documents in batches using InsertMany. Batch size defaults to 1000.
         /// Returns the elapsed milliseconds taken to insert all documents.
         /// </summary>
-        public int InsertManyAPI(List<Vids> vids)
+        public int InsertManyAPI(List<VidsBSON> vids)
         {
             if (vids == null) return 0;
             try
@@ -137,10 +139,10 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
                 // 2. Truncate all indexed data, free up the spaces and reset
                 var command = new BsonDocument
                 {
-                    { "compact", "Vids" }
+                    { "compact", VidsBSON.collection }
                 };
                 var compactResult = database.RunCommand<BsonDocument>(command);
-                Debug.Print("Collection compacted: " + compactResult.ToJson());
+                Debug.Print($"Collection compacted: {compactResult.ToJson()}");
                 return result.DeletedCount;
             }
             catch (Exception ex)

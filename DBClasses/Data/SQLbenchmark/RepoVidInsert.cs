@@ -3,13 +3,8 @@
     /// <summary>
     /// Simple POCO used for RepoDB insertion to reduce mapping overhead vs anonymous types.
     /// </summary>
-    public class RepoVidInsert
+    public class RepoVidInsert : Vids
     {
-        public string filename { get; set; }
         public long? filesizebyte { get; set; }
-        public int? duration { get; set; } // duration in seconds
-        public DateTime? metadatetime { get; set; }
-        public int? width { get; set; }
-        public int? height { get; set; }
     }
 }

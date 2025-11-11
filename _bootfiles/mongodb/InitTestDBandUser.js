@@ -7,13 +7,18 @@
 
 use testdb
 
-db.createUser(
-   {
-     user: "testuser",
-     pwd: "testpassword",
-     roles: [ { role: "readWrite", db: "testdb" } ]
-   }
-);
+if (db.getUser("testuser")) {
+    db.dropUser("testuser");
+}
+
+db.createUser({
+    user: "testuser",
+    pwd: "testpassword",
+    roles: [
+        { role: "readWrite", db: "testdb" },
+        { role: "dbAdmin", db: "testdb" },
+    ]
+});
 
 /*
 db.createUser(

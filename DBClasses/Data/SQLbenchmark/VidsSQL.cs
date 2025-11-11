@@ -1,13 +1,16 @@
 ﻿using System.Data.Common;
+using System.Numerics;
 
 namespace CSharpAppPlayground.DBClasses.Data.SQLbenchmark
 {
     public class VidsSQL : Vids
     {
-        public static string table = "Vids";
+        public static string table = "\"Vids\"";
 
         public int id { get; set; }
-        
+
+        public BigInteger? filesizebyte { get; set; }
+
         public override string ToString()
         {
             return $"SQL Table: {table}";

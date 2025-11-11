@@ -14,7 +14,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         private string connectionStr = string.Empty;
         private MongoClient client;
         private IMongoDatabase database;
-        private IMongoCollection<VidsBSON> collection;
+        private IMongoCollection<VidsBSONwithId> collection;
 
         public MongoDBSearchBenchmarks()
         {
@@ -24,7 +24,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             // Initialize MongoDB client and database
             client = new MongoClient(connectionStr);
             database = client.GetDatabase("testdb");
-            collection = database.GetCollection<VidsBSON>("Vids");
+            collection = database.GetCollection<VidsBSONwithId>("Vids");
         }
 
         public void RunSimpleSearchTest(string searchTerm)
@@ -61,32 +61,32 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print($"Found {v.Count} EXACT searchTerm:{searchTerm}");
         }
 
-        public List<VidsBSON> SearchContain(string searchTerm)
+        public List<VidsBSONwithId> SearchContain(string searchTerm)
         {
-            var filter = Builders<VidsBSON>.Filter.Regex(
+            var filter = Builders<VidsBSONwithId>.Filter.Regex(
                 f => f.filename, 
                 new BsonRegularExpression($".*{Regex.Escape(searchTerm)}.*", "i") // "i" makes it case-insensitive
             );
-            List<VidsBSON> results = collection.Find(filter).ToList();
+            List<VidsBSONwithId> results = collection.Find(filter).ToList();
             Debug.Print($"found number {results.Count}");
             return results;
         }
 
-        public List<VidsBSON> SearchContainCaseSensitive(string searchTerm)
+        public List<VidsBSONwithId> SearchContainCaseSensitive(string searchTerm)
         {
-            var filter = Builders<VidsBSON>.Filter.Regex(
+            var filter = Builders<VidsBSONwithId>.Filter.Regex(
                 f => f.filename,
                 new BsonRegularExpression($".*{Regex.Escape(searchTerm)}.*") // case-insensitive + contains
             );
-            List<VidsBSON> results = collection.Find(filter).ToList();
+            List<VidsBSONwithId> results = collection.Find(filter).ToList();
             Debug.Print($"found number {results.Count}");
             return results;
         }
 
-        public List<VidsBSON> SearchExact(string searchTerm)
+        public List<VidsBSONwithId> SearchExact(string searchTerm)
         {
-            var filter = Builders<VidsBSON>.Filter.Eq(f => f.filename, searchTerm);
-            List<VidsBSON> results = collection.Find(filter).ToList();
+            var filter = Builders<VidsBSONwithId>.Filter.Eq(f => f.filename, searchTerm);
+            List<VidsBSONwithId> results = collection.Find(filter).ToList();
             Debug.Print($"found number {results.Count}");
             return results;
         }
