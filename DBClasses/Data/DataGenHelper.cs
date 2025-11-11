@@ -65,8 +65,8 @@ namespace CSharpAppPlayground.DBClasses.Data
             bool success = false;
             try
             {
-                var csvEntities = ConvertListVidsData(vids);
-                CsvHandler.SaveListToCsv(csvEntities, filePath);
+                CsvManager csvMan = new CsvManager(filePath);
+                csvMan.WriteToCSV<VidsSQL>(vids);
                 success = true;
             }
             catch (Exception ex)

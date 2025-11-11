@@ -2,6 +2,7 @@
 using CSharpAppPlayground.Classes.AppSettings;
 using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
+using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
@@ -101,24 +102,24 @@ namespace CSharpAppPlayground.DBClasses
             Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
         }
 
-        GenerateVidsBSON generator = new GenerateVidsBSON();
+        GenerateVidsSQL generatorSQL = new GenerateVidsSQL();
         private void btnGenData_Click(object sender, EventArgs e)
         {
             int amount = (int)numAmount.Value;
 
             // 1. This will generate separate data
-            mysqlBenchmarks.GenData(amount);
-            pgsBenchmarks.GenData(amount);
-            mongoDBBenchmarks.GenData(amount);
+            //mysqlBenchmarks.GenData(amount);
+            //pgsBenchmarks.GenData(amount);
+            //mongoDBBenchmarks.GenData(amount);
 
             // 2. This will keep them all the same, good for benchmark search etc..
             // create the CSV file
-            //List<Vids> testData = generator.GenerateData(amount);
-            //csvMan.WriteToCSV(testData);
-            //List<VidsSQL> vids = csvMan.ReadFromCSV<VidsSQL>();
-            //mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
-            //pgsBenchmarks.ImportData(vids);
-            //mongoDBBenchmarks.ImportData(testData);
+            List<VidsSQL> testData = generatorSQL.GenerateData(amount);
+            csvMan.WriteToCSV(testData);
+            List<VidsBSON> vids = csvMan.ReadFromCSV<VidsBSON>();
+            mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
+            pgsBenchmarks.ImportData(testData);
+            mongoDBBenchmarks.ImportData(vids);
 
             Debug.Print($"Generated Data: {amount}");
         }

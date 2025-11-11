@@ -525,15 +525,16 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                         Local = true
                     };
 
-                    // Add the database column names in the order of the CSV file
+                    // Add the database column names in the order of the CSV file, CsvManager writes them in Alphabetical order
                     bulkLoader.Columns.AddRange(new[]
                     {
-                        "filesizebyte",
-                        "filename",
                         "duration",
+                        "filename",
+                        "filesizebyte",
+                        "height",
+                        "id",
                         "metadatetime",
-                        "width",
-                        "height"
+                        "width"
                     });
 
                     insertedCount = bulkLoader.Load();
