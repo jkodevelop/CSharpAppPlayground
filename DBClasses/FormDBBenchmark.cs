@@ -118,8 +118,11 @@ namespace CSharpAppPlayground.DBClasses
             csvMan.WriteToCSV(testData);
             List<VidsBSON> vids = csvMan.ReadFromCSV<VidsBSON>();
             mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
+            Debug.Print(">>>>> MySQL DONE <<<<<");
             pgsBenchmarks.ImportData(testData);
+            Debug.Print(">>>>> Postgres DONE <<<<<");
             mongoDBBenchmarks.ImportData(vids);
+            Debug.Print(">>>>> MongoDB DONE <<<<<");
 
             Debug.Print($"Generated Data: {amount}");
         }
