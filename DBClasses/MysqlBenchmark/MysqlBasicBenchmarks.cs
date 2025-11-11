@@ -528,8 +528,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                     // Add the database column names in the order of the CSV file
                     bulkLoader.Columns.AddRange(new[]
                     {
-                        "filename",
                         "filesizebyte",
+                        "filename",
                         "duration",
                         "metadatetime",
                         "width",
