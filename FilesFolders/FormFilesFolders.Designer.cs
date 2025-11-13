@@ -35,7 +35,7 @@
             btnStorage = new Button();
             btnCountAndStorage = new Button();
             btnDriveInfo = new Button();
-            btnReadFile = new Button();
+            btnParseBookmark = new Button();
             btnFileBrowse = new Button();
             label1 = new Label();
             openFileDialog1 = new OpenFileDialog();
@@ -104,16 +104,16 @@
             btnDriveInfo.UseVisualStyleBackColor = true;
             btnDriveInfo.Click += btnDriveInfo_Click;
             // 
-            // btnReadFile
+            // btnParseBookmark
             // 
-            btnReadFile.Enabled = false;
-            btnReadFile.Location = new Point(285, 81);
-            btnReadFile.Name = "btnReadFile";
-            btnReadFile.Size = new Size(208, 30);
-            btnReadFile.TabIndex = 8;
-            btnReadFile.Text = "Read File (todo)";
-            btnReadFile.UseVisualStyleBackColor = true;
-            btnReadFile.Click += btnReadFile_Click;
+            btnParseBookmark.Enabled = false;
+            btnParseBookmark.Location = new Point(285, 81);
+            btnParseBookmark.Name = "btnParseBookmark";
+            btnParseBookmark.Size = new Size(208, 30);
+            btnParseBookmark.TabIndex = 8;
+            btnParseBookmark.Text = "Read Bookmarks";
+            btnParseBookmark.UseVisualStyleBackColor = true;
+            btnParseBookmark.Click += btnParseBookmark_Click;
             // 
             // btnFileBrowse
             // 
@@ -157,7 +157,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(btnFileBrowse);
-            Controls.Add(btnReadFile);
+            Controls.Add(btnParseBookmark);
             Controls.Add(btnDriveInfo);
             Controls.Add(btnCountAndStorage);
             Controls.Add(btnStorage);
@@ -172,7 +172,7 @@
             Controls.SetChildIndex(btnStorage, 0);
             Controls.SetChildIndex(btnCountAndStorage, 0);
             Controls.SetChildIndex(btnDriveInfo, 0);
-            Controls.SetChildIndex(btnReadFile, 0);
+            Controls.SetChildIndex(btnParseBookmark, 0);
             Controls.SetChildIndex(btnFileBrowse, 0);
             Controls.SetChildIndex(label1, 0);
             Controls.SetChildIndex(label2, 0);
@@ -189,7 +189,7 @@
         private Button btnStorage;
         private Button btnCountAndStorage;
         private Button btnDriveInfo;
-        private Button btnReadFile;
+        private Button btnParseBookmark;
         private Button btnFileBrowse;
         private Label label1;
         private OpenFileDialog openFileDialog1;

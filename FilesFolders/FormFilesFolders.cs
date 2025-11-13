@@ -1,4 +1,5 @@
-﻿using CSharpAppPlayground.MediaParsers;
+﻿using CSharpAppPlayground.FilesFolders.Files;
+using CSharpAppPlayground.MediaParsers;
 using CSharpAppPlayground.UIClasses;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -35,13 +36,13 @@ namespace CSharpAppPlayground.FilesFolders
         }
         public void EnableFileButtons()
         {
-            btnReadFile.Enabled = true;
+            btnParseBookmark.Enabled = true;
             DisableFolderButtons();
             isFolderMode = false;
         }
         public void DisableFileButtons()
         {
-            btnReadFile.Enabled = false;
+            btnParseBookmark.Enabled = false;
         }
 
         private CancellationToken GenCancelToken()
@@ -157,9 +158,11 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print($"Drive {driveName} is HDD");
         }
 
-        private void btnReadFile_Click(object sender, EventArgs e)
+        BookmarkParsersBenchmark bookmarkBenchmark = new BookmarkParsersBenchmark();
+        private void btnParseBookmark_Click(object sender, EventArgs e)
         {
-            //[TODO] Implement file reading functionality
+            string bookmarkFilePath = txtFolderPath.Text;
+            bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
         }
     }
 }
