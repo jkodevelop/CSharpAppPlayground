@@ -19,16 +19,16 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print("\n/////////////////////////////////////////////////////////" +
                 "\nPOSTGRES simple search" +
                 "\n/////////////////////////////////////////////////////////");
-            Test_GetFilenameByLike(searchTerm);
+            Test_GetFilenameByILike(searchTerm);
             Test_GetFilenameByLikeCaseSensitive(searchTerm);
             Test_GetFilename(searchTerm);
         }
 
-        [Time("GetFilenameByLike")]
-        public void Test_GetFilenameByLike(string searchTerm)
+        [Time("GetFilenameByILike")]
+        public void Test_GetFilenameByILike(string searchTerm)
         {
-            Debug.Print("\n--- Method 1: Search Using LIKE ---");
-            var v = GetFilenameByLike(searchTerm);
+            Debug.Print("\n--- Method 1: Search Using ILIKE ---");
+            var v = GetFilenameByILike(searchTerm);
             Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
         }
 
@@ -48,13 +48,13 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Found {v.Count} EXACT searchTerm:{searchTerm}");
         }
 
-        public List<VidsSQL> GetFilenameByLike(string searchTerm)
+        public List<VidsSQL> GetFilenameByILike(string searchTerm)
         {
             var objects = new List<VidsSQL>();
             var vidSQL = new VidsSQL();
             try
             {
-                string query = "SELECT * FROM \"Vids\" WHERE filename LIKE @filename;";
+                string query = "SELECT * FROM \"Vids\" WHERE filename ILIKE @filename;";
                 psqlBase.WithSqlCommand<object>(command =>
                 {
                     command.Parameters.AddWithValue("@filename", $"%{searchTerm}%");
@@ -85,6 +85,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             try
             {
                 string query = "SELECT * FROM \"Vids\" WHERE filename LIKE @filename COLLATE \"C\";";
+                // "SELECT * FROM \"Vids\" WHERE filename LIKE @filename;";
                 psqlBase.WithSqlCommand<object>(command =>
                 {
                     command.Parameters.AddWithValue("@filename", $"%{searchTerm}%");
