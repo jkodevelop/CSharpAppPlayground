@@ -60,12 +60,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     command.Parameters.AddWithValue("@filename", $"%{searchTerm}%");
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                objects.Add(vidSQL.MapReaderToObject(reader));
-                            }
+                            objects.Add(vidSQL.MapReaderToObject(reader));
                         }
                     }
                     return true; // doesn't matter cause objects is populated by reference
@@ -91,12 +88,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     command.Parameters.AddWithValue("@filename", $"%{searchTerm}%");
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                objects.Add(vidSQL.MapReaderToObject(reader));
-                            }
+                            objects.Add(vidSQL.MapReaderToObject(reader));
                         }
                     }
                     return true; // doesn't matter cause objects is populated by reference
@@ -121,12 +115,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     command.Parameters.AddWithValue("@filename", searchTerm);
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                objects.Add(vidSQL.MapReaderToObject(reader));
-                            }
+                            objects.Add(vidSQL.MapReaderToObject(reader));
                         }
                     }
                     return true; // doesn't matter cause objects is populated by reference

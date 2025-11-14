@@ -1,10 +1,8 @@
 ﻿using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.MongoDBExamples.Collections;
-using CSharpAppPlayground.DIExample.median;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Configuration;
 using System.Diagnostics;
 
 // source:
@@ -417,6 +415,33 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
             }
         }
 
+        #endregion
+
+        #region Indexes Operations
+        
+        // Example of creating indexes programmatically
+        public void CreateIndexes()
+        {
+            // BASIC: add index to field "MongoDBObject.CreatedAt"
+            var indexKeys = Builders<MongoDBObject>.IndexKeys.Ascending(mdl => mdl.CreatedAt);
+            var indexModel = new CreateIndexModel<MongoDBObject>(indexKeys);
+            collection.Indexes.CreateOne(indexModel);
+
+            // COMPOUND
+            var compoundKeys = Builders<MongoDBObject>.IndexKeys
+                .Ascending(m => m.Name)
+                .Ascending(m => m.CreatedAt);
+            var compoundModel = new CreateIndexModel<MongoDBObject>(compoundKeys);
+            collection.Indexes.CreateOne(compoundModel);
+
+            // adding options: Unique Key
+            var options = new CreateIndexOptions { Unique = true };
+            var uniqueKey = new CreateIndexModel<MongoDBObject>(
+                Builders<MongoDBObject>.IndexKeys.Ascending(mdl => mdl.Name),
+                options
+            );
+            collection.Indexes.CreateOne(uniqueKey);
+        }
         #endregion
 
         public void RunBasicExample()

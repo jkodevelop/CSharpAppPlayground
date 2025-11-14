@@ -1,7 +1,6 @@
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
-using MySql.Data.MySqlClient;
 using System.Diagnostics;
 
 // [TO DOCUMENT] LIKE BINARY
