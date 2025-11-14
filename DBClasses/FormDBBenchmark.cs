@@ -113,10 +113,29 @@ namespace CSharpAppPlayground.DBClasses
             //mongoDBBenchmarks.GenData(amount);
 
             // 2. This will keep them all the same, good for benchmark search etc..
+            List<VidsSQL> testData = new List<VidsSQL>();
+            List<VidsBSON> vids = new List<VidsBSON>();
+            if (tbCSVPath.Text.Length > 0)
+            {
+                if (!File.Exists(tbCSVPath.Text))
+                {
+                    Debug.Print("filepath invalid...");
+                    return ;
+                }
+                // import from existing csv data
+                bulkVidsCSVFilePath = tbCSVPath.Text;
+                testData = csvMan.ReadFromCSV<VidsSQL>(bulkVidsCSVFilePath);
+                vids = csvMan.ReadFromCSV<VidsBSON>(bulkVidsCSVFilePath);
+            }
+            else
+            {
+                // generate new data for this import
+                testData = generatorSQL.GenerateData(amount);
+                csvMan.WriteToCSV(testData);
+                vids = csvMan.ReadFromCSV<VidsBSON>();
+            }
             // create the CSV file
-            List<VidsSQL> testData = generatorSQL.GenerateData(amount);
-            csvMan.WriteToCSV(testData);
-            List<VidsBSON> vids = csvMan.ReadFromCSV<VidsBSON>();
+
             mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
             Debug.Print(">>>>> MySQL DONE <<<<<");
             pgsBenchmarks.ImportData(testData);

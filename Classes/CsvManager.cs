@@ -131,6 +131,12 @@ namespace CSharpAppPlayground.Classes
             return Array.Empty<string>();
         }
 
+        public List<T> ReadFromCSV<T>(string filePath) where T : new()
+        {
+            this.filePath = filePath;
+            return ReadFromCSV<T>();
+        }
+
         public List<T> ReadFromCSV<T>() where T : new(){
 
             var records = new List<T>();

@@ -38,6 +38,8 @@
             tbSearchText = new TextBox();
             label2 = new Label();
             btnGenData = new Button();
+            tbCSVPath = new TextBox();
+            label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
@@ -55,7 +57,7 @@
             // 
             btnResetTables.Location = new Point(12, 415);
             btnResetTables.Name = "btnResetTables";
-            btnResetTables.Size = new Size(146, 23);
+            btnResetTables.Size = new Size(327, 23);
             btnResetTables.TabIndex = 1;
             btnResetTables.Text = "Reset Tables";
             btnResetTables.UseVisualStyleBackColor = true;
@@ -125,19 +127,37 @@
             // 
             // btnGenData
             // 
-            btnGenData.Location = new Point(12, 372);
+            btnGenData.Location = new Point(12, 376);
             btnGenData.Name = "btnGenData";
-            btnGenData.Size = new Size(146, 37);
+            btnGenData.Size = new Size(327, 33);
             btnGenData.TabIndex = 11;
             btnGenData.Text = "Generate";
             btnGenData.UseVisualStyleBackColor = true;
             btnGenData.Click += btnGenData_Click;
+            // 
+            // tbCSVPath
+            // 
+            tbCSVPath.Location = new Point(12, 347);
+            tbCSVPath.Name = "tbCSVPath";
+            tbCSVPath.Size = new Size(327, 23);
+            tbCSVPath.TabIndex = 12;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(12, 308);
+            label3.Name = "label3";
+            label3.Size = new Size(327, 30);
+            label3.TabIndex = 13;
+            label3.Text = "CSV data path, column order must be respected\r\nIf empty then \"Generate\" will create new based on \"Amount\"";
             // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label3);
+            Controls.Add(tbCSVPath);
             Controls.Add(btnGenData);
             Controls.Add(label2);
             Controls.Add(tbSearchText);
@@ -160,6 +180,8 @@
             Controls.SetChildIndex(tbSearchText, 0);
             Controls.SetChildIndex(label2, 0);
             Controls.SetChildIndex(btnGenData, 0);
+            Controls.SetChildIndex(tbCSVPath, 0);
+            Controls.SetChildIndex(label3, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -178,5 +200,7 @@
         private TextBox tbSearchText;
         private Label label2;
         private Button btnGenData;
+        private TextBox tbCSVPath;
+        private Label label3;
     }
 }
