@@ -164,5 +164,15 @@ namespace CSharpAppPlayground.FilesFolders
             string bookmarkFilePath = txtFolderPath.Text;
             bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
         }
+
+        private void btnTestQuery_Click(object sender, EventArgs e)
+        {
+            if (!isFolderMode && tbQuery.Text != string.Empty)
+            {
+                string bookmarkFilePath = txtFolderPath.Text;
+                bookmarkBenchmark.QueryTest(bookmarkFilePath, tbQuery.Text);
+            }
+            Debug.Print("Query test skipped. File is not specified | Query: is empty");
+        }
     }
 }

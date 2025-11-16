@@ -14,9 +14,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
         public void Run(string filePath)
         {
             this.filePath = filePath;
-
             string htmlContent = File.ReadAllText(filePath);
-
             var config = Configuration.Default.WithDefaultLoader();
             var context = BrowsingContext.New(config);
 
@@ -28,7 +26,25 @@ namespace CSharpAppPlayground.FilesFolders.Files
             // Or query elements
             foreach (var element in doc.QuerySelectorAll("p"))
             {
-                Debug.Print($"Paragraph Text: {element.TextContent}");
+                //Debug.Print($"Paragraph Text: {element.TextContent}");
+            }
+        }
+
+        public void Query(string filePath, string query)
+        {
+            this.filePath = filePath;
+            string htmlContent = File.ReadAllText(filePath);
+            var config = Configuration.Default.WithDefaultLoader();
+            var context = BrowsingContext.New(config);
+
+            IDocument doc = context.OpenAsync(req => req.Content(htmlContent)).GetAwaiter().GetResult();
+            try {
+                var elements = doc.QuerySelectorAll(query);
+                Debug.Print($"Query: {query}, Count: {elements.Length}");
+            } 
+            catch (Exception ex)
+            {
+                Debug.Print($"AngleSharp Query Exception: {ex.Message}");
             }
         }
     }

@@ -40,6 +40,9 @@
             label1 = new Label();
             openFileDialog1 = new OpenFileDialog();
             label2 = new Label();
+            label3 = new Label();
+            tbQuery = new TextBox();
+            btnTestQuery = new Button();
             SuspendLayout();
             // 
             // btnFileCount
@@ -149,11 +152,40 @@
             label2.TabIndex = 11;
             label2.Text = "File";
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(285, 130);
+            label3.Name = "label3";
+            label3.Size = new Size(42, 15);
+            label3.TabIndex = 12;
+            label3.Text = "Query:";
+            // 
+            // tbQuery
+            // 
+            tbQuery.Location = new Point(330, 127);
+            tbQuery.Name = "tbQuery";
+            tbQuery.Size = new Size(160, 23);
+            tbQuery.TabIndex = 13;
+            // 
+            // btnTestQuery
+            // 
+            btnTestQuery.Location = new Point(285, 169);
+            btnTestQuery.Name = "btnTestQuery";
+            btnTestQuery.Size = new Size(208, 26);
+            btnTestQuery.TabIndex = 14;
+            btnTestQuery.Text = "Test Query";
+            btnTestQuery.UseVisualStyleBackColor = true;
+            btnTestQuery.Click += btnTestQuery_Click;
+            // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnTestQuery);
+            Controls.Add(tbQuery);
+            Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(btnFileBrowse);
@@ -176,6 +208,9 @@
             Controls.SetChildIndex(btnFileBrowse, 0);
             Controls.SetChildIndex(label1, 0);
             Controls.SetChildIndex(label2, 0);
+            Controls.SetChildIndex(label3, 0);
+            Controls.SetChildIndex(tbQuery, 0);
+            Controls.SetChildIndex(btnTestQuery, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -194,5 +229,8 @@
         private Label label1;
         private OpenFileDialog openFileDialog1;
         private Label label2;
+        private Label label3;
+        private TextBox tbQuery;
+        private Button btnTestQuery;
     }
 }
