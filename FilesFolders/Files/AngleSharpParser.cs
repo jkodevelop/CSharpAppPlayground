@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace CSharpAppPlayground.FilesFolders.Files
 {
-    public class AngleSharpParsers
+    public class AngleSharpParser
     {
         public string filePath = "";
 

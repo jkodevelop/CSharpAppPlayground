@@ -110,11 +110,11 @@
             // btnParseBookmark
             // 
             btnParseBookmark.Enabled = false;
-            btnParseBookmark.Location = new Point(285, 81);
+            btnParseBookmark.Location = new Point(288, 155);
             btnParseBookmark.Name = "btnParseBookmark";
             btnParseBookmark.Size = new Size(208, 30);
             btnParseBookmark.TabIndex = 8;
-            btnParseBookmark.Text = "Read Bookmarks";
+            btnParseBookmark.Text = "Parse Bookmarks";
             btnParseBookmark.UseVisualStyleBackColor = true;
             btnParseBookmark.Click += btnParseBookmark_Click;
             // 
@@ -155,7 +155,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(285, 130);
+            label3.Location = new Point(288, 84);
             label3.Name = "label3";
             label3.Size = new Size(42, 15);
             label3.TabIndex = 12;
@@ -163,14 +163,15 @@
             // 
             // tbQuery
             // 
-            tbQuery.Location = new Point(330, 127);
+            tbQuery.Location = new Point(333, 81);
             tbQuery.Name = "tbQuery";
+            tbQuery.PlaceholderText = "XPath or CSS selector";
             tbQuery.Size = new Size(160, 23);
             tbQuery.TabIndex = 13;
             // 
             // btnTestQuery
             // 
-            btnTestQuery.Location = new Point(285, 169);
+            btnTestQuery.Location = new Point(288, 110);
             btnTestQuery.Name = "btnTestQuery";
             btnTestQuery.Size = new Size(208, 26);
             btnTestQuery.TabIndex = 14;

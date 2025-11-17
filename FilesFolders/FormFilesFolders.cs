@@ -90,6 +90,8 @@ namespace CSharpAppPlayground.FilesFolders
             }
         }
 
+        #region FOLDERS
+
         private CountFilesFolders countFilesFolders = new CountFilesFolders();
         private async void btnFileCount_Click(object sender, EventArgs e)
         {
@@ -141,6 +143,31 @@ namespace CSharpAppPlayground.FilesFolders
             isProcessing = false;
         }
 
+        #endregion FOLDERS
+
+        #region FILES
+
+        private void btnParseBookmark_Click(object sender, EventArgs e)
+        {
+            string bookmarkFilePath = txtFolderPath.Text;
+            bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
+        }
+
+        private void btnTestQuery_Click(object sender, EventArgs e)
+        {
+            if (!isFolderMode && tbQuery.Text != string.Empty)
+            {
+                string bookmarkFilePath = txtFolderPath.Text;
+                bookmarkBenchmark.QueryTest(bookmarkFilePath, tbQuery.Text);
+            }
+            else
+                updateLabelMain("Query test skipped. \nFile is not specified | Query: is empty");
+        }
+
+        #endregion FILES
+
+        #region MISC
+
         private void btnDriveInfo_Click(object sender, EventArgs e)
         {
             if (txtFolderPath.Text == string.Empty || txtFolderPath.Text.Length < 2 || txtFolderPath.Text[1] != ':')
@@ -161,24 +188,6 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print($"Drive {driveName} is HDD");
         }
 
-        private void btnParseBookmark_Click(object sender, EventArgs e)
-        {
-            string bookmarkFilePath = txtFolderPath.Text;
-            bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
-        }
-
-        private void btnTestQuery_Click(object sender, EventArgs e)
-        {
-            if (!isFolderMode && tbQuery.Text != string.Empty)
-            {
-                string bookmarkFilePath = txtFolderPath.Text;
-                bookmarkBenchmark.QueryTest(bookmarkFilePath, tbQuery.Text);
-            }
-            else 
-            {
-                Debug.Print("Query test skipped. File is not specified | Query: is empty");
-            }
-                
-        }
+        #endregion MISC
     }
 }
