@@ -13,6 +13,8 @@ namespace CSharpAppPlayground.FilesFolders.Files
         BookmarksManagerParser bookmarksManagerParser = new BookmarksManagerParser();
         public FormWithRichText f { get; set; }
 
+        private string cleanedOutPath = @".\testdata\bookmarks\cleanedBookmark.html";
+
         public BookmarkParsersBenchmark(FormWithRichText _f)
         {
             f = _f;
@@ -91,6 +93,11 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
             // angleSharpParsers.Query(filePath, query); // TODO
             
+        }
+
+        public void CleanHtml(string filePath)
+        {
+            bool success = htmlAgilityPackParser.CleanUpBookmarkFile(filePath, cleanedOutPath);
         }
     }
 }

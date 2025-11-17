@@ -150,7 +150,10 @@ namespace CSharpAppPlayground.FilesFolders
         private void btnParseBookmark_Click(object sender, EventArgs e)
         {
             string bookmarkFilePath = txtFolderPath.Text;
-            bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
+
+            bookmarkBenchmark.CleanHtml(bookmarkFilePath);
+
+            // bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
         }
 
         private void btnTestQuery_Click(object sender, EventArgs e)
