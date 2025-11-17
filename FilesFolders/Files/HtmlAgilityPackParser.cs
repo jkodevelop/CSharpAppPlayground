@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using AngleSharp.Dom;
+using HtmlAgilityPack;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Windows.Media.AppBroadcasting;
@@ -169,16 +170,27 @@ namespace CSharpAppPlayground.FilesFolders.Files
                     dd.ParentNode.RemoveChild(dd);
                 }
             }
+            if(aa != null)
+            {
+                var attributesToRemove = new[] { "icon", "icon_url" };
+                foreach (var a in aa)
+                {
+                    foreach (var attrName in attributesToRemove)
+                    {
+                        if (a.Attributes[attrName] != null)
+                            a.Attributes.Remove(attrName);
+                    }
+                }
+            }
 
             // Printout the final html
             //string cleanedHTML = doc_lessTags.DocumentNode.OuterHtml;
             //Debug.Print($"Cleaned HTML Content:\n {cleanedHTML}");
-
-            // TODO SAVE TO DOCS
             try
             {
                 // 1. create the folders to the filePath
                 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath)) ?? ".");
+                // 2. save the cleaned html to a file
                 doc_lessTags.Save(outPath);
             }
             catch(Exception ex)
@@ -186,11 +198,6 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 Debug.Print($"HtmlAgilityPackParser.CleanUpBookmarkFile({outPath}): Exception saving cleaned file: {ex.Message}");
                 return false;
             }
-
-            //after deleting all impeding tags we save the result to a new file so that we can keep our original file untouched
-            //string BookmarksFile_less_tags = $@"{sysPart}Users\{userName}\Desktop\bookmarks_less_tags";
-            //doc_lessTags.Save(BookmarksFile_less_tags);
-
             return true;
         }
 
