@@ -9,7 +9,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
     public class BookmarkParsersBenchmark
     {
         HtmlAgilityPackParser htmlAgilityPackParser = new HtmlAgilityPackParser();
-        AngleSharpParsers angleSharpParsers = new AngleSharpParsers();
+        AngleSharpParser angleSharpParsers = new AngleSharpParser();
         public FormWithRichText f { get; set; }
 
         public BookmarkParsersBenchmark(FormWithRichText _f)
@@ -80,3 +80,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
     }
 }
+
+//sources:
+// https://stackoverflow.com/questions/40300596/how-to-use-bookmarksmanager-chrome-to-get-bookmark-hierarchy
+// https://www.nuget.org/packages/BookmarksManager

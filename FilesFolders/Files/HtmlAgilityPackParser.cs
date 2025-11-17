@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
 using System.Diagnostics;
 
+// NuGet Package: HtmlAgilityPack
+
 // [TO DOCUMENT]
 //
 // HtmlAgilityPack common APIs, note this library uses XPath for querying

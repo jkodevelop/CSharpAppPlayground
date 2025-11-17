@@ -2,6 +2,8 @@
 using AngleSharp.Dom;
 using System.Diagnostics;
 
+// NuGet Package: AngleSharp
+
 // sources:
 // https://sd.blackball.lv/en/articles/read/18989-csharp-parse-html-with-anglesharp
 
