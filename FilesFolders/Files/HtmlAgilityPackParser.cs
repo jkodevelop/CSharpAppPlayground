@@ -30,6 +30,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         HtmlAgilityPack.HtmlDocument doc;
 
+        public void PrintHtmlContent(HtmlAgilityPack.HtmlDocument d)
+        {
+            string htmlContent = d.DocumentNode.OuterHtml;
+            Debug.Print(htmlContent);
+        }
+
         private void LoadFile(string filePath)
         {
             if(this.filePath != filePath)
@@ -46,8 +52,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 doc = new HtmlAgilityPack.HtmlDocument();
                 doc.Load(filePath);
 
-                string htmlContent = doc.DocumentNode.OuterHtml;
-                // Debug.Print(htmlContent);
+                // PrintHtmlContent(doc);
             }
         }
 
@@ -172,7 +177,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
             if(aa != null)
             {
-                var attributesToRemove = new[] { "icon", "icon_url" };
+                var attributesToRemove = new[] { "icon", "icon_uri" }; // "icon_url" - not used
                 foreach (var a in aa)
                 {
                     foreach (var attrName in attributesToRemove)
@@ -184,8 +189,8 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
 
             // Printout the final html
-            //string cleanedHTML = doc_lessTags.DocumentNode.OuterHtml;
-            //Debug.Print($"Cleaned HTML Content:\n {cleanedHTML}");
+            PrintHtmlContent(doc_lessTags);
+            
             try
             {
                 // 1. create the folders to the filePath

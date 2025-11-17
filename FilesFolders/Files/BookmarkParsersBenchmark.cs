@@ -15,6 +15,11 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         private string cleanedOutPath = @".\testdata\bookmarks\cleanedBookmark.html";
 
+        public string GetCleanedOutPath()
+        {
+            return cleanedOutPath;
+        }
+
         public BookmarkParsersBenchmark(FormWithRichText _f)
         {
             f = _f;
