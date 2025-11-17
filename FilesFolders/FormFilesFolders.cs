@@ -14,10 +14,13 @@ namespace CSharpAppPlayground.FilesFolders
         private bool isProcessing = false;
         private bool isFolderMode = true;
 
+        BookmarkParsersBenchmark bookmarkBenchmark;
+
         public FormFilesFolders()
         {
             InitializeComponent();
             this.FormClosing += FormFilesFolders_FormClosing;
+            bookmarkBenchmark = new BookmarkParsersBenchmark(this);
         }
 
         public void EnableFolderButtons()
@@ -158,7 +161,6 @@ namespace CSharpAppPlayground.FilesFolders
                 Debug.Print($"Drive {driveName} is HDD");
         }
 
-        BookmarkParsersBenchmark bookmarkBenchmark = new BookmarkParsersBenchmark();
         private void btnParseBookmark_Click(object sender, EventArgs e)
         {
             string bookmarkFilePath = txtFolderPath.Text;
@@ -172,7 +174,11 @@ namespace CSharpAppPlayground.FilesFolders
                 string bookmarkFilePath = txtFolderPath.Text;
                 bookmarkBenchmark.QueryTest(bookmarkFilePath, tbQuery.Text);
             }
-            Debug.Print("Query test skipped. File is not specified | Query: is empty");
+            else 
+            {
+                Debug.Print("Query test skipped. File is not specified | Query: is empty");
+            }
+                
         }
     }
 }
