@@ -26,7 +26,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->Run()")]
-        public List<BookmarkItem> Test_HtmlAgilityPackParser(string filePath)
+        public List<BookmarkLibrary> Test_HtmlAgilityPackParser(string filePath)
         {
             return htmlAgilityPackParser.Run(filePath);
         }
@@ -53,10 +53,10 @@ namespace CSharpAppPlayground.FilesFolders.Files
             //Test_AngleSharpParser(filePath);
 
             // BookmarksManager
-            Test_BookmarksManagerParser(filePath);
+            //Test_BookmarksManagerParser(filePath);
         }
 
-        public void PrintResults(List<BookmarkItem> items)
+        public void PrintResults(List<BookmarkLibrary> items)
         {
             foreach(var item in items)
             {
@@ -64,18 +64,18 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        public void PrintBookmarkItems(BookmarkItem item, int indentLevel)
+        public void PrintBookmarkItems(BookmarkLibrary item, int indentLevel)
         {
-            string indent = new string(' ', indentLevel * 2);
-            string output = $"{indent}Name: {item.Name}, Url: {item.Url}";
+            //string indent = new string(' ', indentLevel * 2);
+            //string output = $"{indent}Name: {item.Name}, Url: {item.Url}";
 
-            Debug.Print(output);
-            f.updateRichTextBoxMain(output);
+            //Debug.Print(output);
+            //f.updateRichTextBoxMain(output);
 
-            foreach (var child in item.Children)
-            {
-                PrintBookmarkItems(child, indentLevel + 1);
-            }
+            //foreach (var child in item.Children)
+            //{
+            //    PrintBookmarkItems(child, indentLevel + 1);
+            //}
         }
 
         [Time("HtmlAgilityPack->Query()")]

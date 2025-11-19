@@ -1,6 +1,8 @@
 ﻿using AngleSharp.Dom;
 using HtmlAgilityPack;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Net;
 using System.Text.RegularExpressions;
 using Windows.Media.AppBroadcasting;
 
@@ -56,6 +58,37 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
+        public void RemoveElements(HtmlAgilityPack.HtmlDocument d, string key)
+        {
+            var elements = d.DocumentNode.SelectNodes(key);
+            foreach (var e in elements)
+            {
+                e.Remove();
+            }
+        }
+
+        public void RearrangeElements(HtmlAgilityPack.HtmlDocument d, string key)
+        {
+            var elements = d.DocumentNode.SelectNodes(key);
+            if (elements != null)
+            {
+                foreach (var e in elements)
+                {
+                    if (!e.HasChildNodes)
+                    {
+                        e.ParentNode.RemoveChild(e);
+                        continue;
+                    }
+                    for (var i = e.ChildNodes.Count - 1; i >= 0; i--)
+                    {
+                        var child = e.ChildNodes[i];
+                        e.ParentNode.InsertAfter(child, e);
+                    }
+                    e.ParentNode.RemoveChild(e);
+                }
+            }
+        }
+
         // source: https://stackoverflow.com/questions/40300596/how-to-use-bookmarksmanager-chrome-to-get-bookmark-hierarchy
         public bool CleanUpBookmarkFile(string filePath, string outPath)
         {
@@ -68,114 +101,23 @@ namespace CSharpAppPlayground.FilesFolders.Files
             string DD = "(<DD>[a-zA-Z0-9]+[^<]+)"; //Regex-Pattern
             doc_lessTags.LoadHtml(Regex.Replace(content, DD, ""));
 
-            //variable for each tag that could be impeding for displaying the correct hierarchy
-            var metas = doc_lessTags.DocumentNode.SelectNodes("//meta");
-            var titles = doc_lessTags.DocumentNode.SelectNodes("//title");
-            var h1s = doc_lessTags.DocumentNode.SelectNodes("//h1");
-            var dts = doc_lessTags.DocumentNode.SelectNodes("//dt");
-            var ps = doc_lessTags.DocumentNode.SelectNodes("//p");
-            var hrs = doc_lessTags.DocumentNode.SelectNodes("//hr");
-            var dds = doc_lessTags.DocumentNode.SelectNodes("//dd");
+            string[] elementsToDelete = new string[] { "/comment()[starts-with(.,'<!DOCTYPE')]", "//comment()",
+                "//meta", "//title", "//h1" };
+            string[] elementsToRearrange = new string[] { "//dt","//p","//hr","//dd" };
+
+            foreach(string key in elementsToDelete)
+            {
+                RemoveElements(doc_lessTags, key);
+            }
+
+            foreach(string key in elementsToRearrange)
+            {
+                RearrangeElements(doc_lessTags, key);
+            }
+
+            // clean up <a> tags - remove icon and icon_uri attributes, too much data not needed
             var aa = doc_lessTags.DocumentNode.SelectNodes("//a");
-            var h3s = doc_lessTags.DocumentNode.SelectNodes("//h3");
-
-            //delete all tags that could be impeding (comments too)
-            var doctype = doc_lessTags.DocumentNode.SelectSingleNode("/comment()[starts-with(.,'<!DOCTYPE')]");
-            if (doctype != null)
-            {
-                doctype.Remove();
-            }
-            
-            var comments = doc_lessTags.DocumentNode.SelectSingleNode("//comment()");
-            if (comments != null)
-            {
-                comments.Remove();
-            }
-            foreach (var meta in metas)
-            {
-                meta.Remove();
-            }
-            foreach (var title in titles)
-            {
-                title.Remove();
-            }
-            foreach (var h1 in h1s)
-            {
-                h1.Remove();
-            }
-            if (dts != null)
-            {
-                foreach (var dt in dts)
-                {
-                    if (!dt.HasChildNodes)
-                    {
-                        dt.ParentNode.RemoveChild(dt);
-                        continue;
-                    }
-
-                    for (var i = dt.ChildNodes.Count - 1; i >= 0; i--)
-                    {
-                        var child = dt.ChildNodes[i];
-                        dt.ParentNode.InsertAfter(child, dt);
-                    }
-                    dt.ParentNode.RemoveChild(dt);
-                }
-            }
-            if (ps != null)
-            {
-                foreach (var p in ps)
-                {
-                    if (!p.HasChildNodes)
-                    {
-                        p.ParentNode.RemoveChild(p);
-                        continue;
-                    }
-
-                    for (var i = p.ChildNodes.Count - 1; i >= 0; i--)
-                    {
-                        var child = p.ChildNodes[i];
-                        p.ParentNode.InsertAfter(child, p);
-                    }
-                    p.ParentNode.RemoveChild(p);
-                }
-            }
-            if (hrs != null)
-            {
-                foreach (var hr in hrs)
-                {
-                    if (!hr.HasChildNodes)
-                    {
-                        hr.ParentNode.RemoveChild(hr);
-                        continue;
-                    }
-
-                    for (var i = hr.ChildNodes.Count - 1; i >= 0; i--)
-                    {
-                        var child = hr.ChildNodes[i];
-                        hr.ParentNode.InsertAfter(child, hr);
-                    }
-                    hr.ParentNode.RemoveChild(hr);
-                }
-            }
-            if (dds != null)
-            {
-                foreach (var dd in dds)
-                {
-                    if (!dd.HasChildNodes)
-                    {
-                        dd.ParentNode.RemoveChild(dd);
-                        continue;
-                    }
-
-                    for (var i = dd.ChildNodes.Count - 1; i >= 0; i--)
-                    {
-                        var child = dd.ChildNodes[i];
-                        dd.ParentNode.InsertAfter(child, dd);
-                    }
-                    dd.ParentNode.RemoveChild(dd);
-                }
-            }
-            if(aa != null)
+            if (aa != null)
             {
                 var attributesToRemove = new[] { "icon", "icon_uri" }; // "icon_url" - not used
                 foreach (var a in aa)
@@ -188,7 +130,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 }
             }
 
-            // Printout the final html
+            // DEBUG: Printout the final html
             PrintHtmlContent(doc_lessTags);
             
             try
@@ -206,10 +148,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
             return true;
         }
 
-        public List<BookmarkItem> Run(string filePath)
+        public List<BookmarkLibrary> Run(string filePath)
         {
+            // TODO
             LoadFile(filePath);
-            List<BookmarkItem> res = Parse();
+//             List<BookmarkLibrary> res = Parse();
+            List<BookmarkLibrary> res = new List<BookmarkLibrary>();
             return res;
         }
 
@@ -236,46 +180,46 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
             return count;
         }
-        public List<BookmarkItem> Parse()
-        {
-           var dl = doc.DocumentNode.SelectSingleNode("//dl/p");
-           var items = ParseDL(dl);
-           return items;
-        }
+        //public List<BookmarkLibrary> Parse()
+        //{
+        //   var dl = doc.DocumentNode.SelectSingleNode("//dl/p");
+        //   var items = ParseDL(dl);
+        //   return items;
+        //}
 
-        public List<BookmarkItem> ParseDL(HtmlNode dlNode)
-        {
-            List<BookmarkItem> items = new List<BookmarkItem>();
-            var dtNodes = dlNode.SelectNodes("./dt");
-            if (dtNodes != null)
-            {
-                foreach (var dtNode in dtNodes)
-                {
-                    BookmarkItem item = new BookmarkItem();
-                    var h3Node = dtNode.SelectSingleNode("./h3");
-                    if (h3Node != null)
-                    {
-                        item.Name = h3Node.InnerText;
-                        var subDlNode = dtNode.SelectSingleNode("./dl/p"); // ./following-sibling::dl[1]
-                        if (subDlNode != null)
-                        {
-                            item.Children = ParseDL(subDlNode);
-                        }
-                    }
-                    else
-                    {
-                        var aNode = dtNode.SelectSingleNode("./a[@href]");
-                        if (aNode != null)
-                        {
-                            item.Name = System.Net.WebUtility.UrlDecode(aNode.InnerText);
-                            item.Url = aNode.Attributes["href"].Value;
-                        }
-                    }
-                    items.Add(item);
-                }
-            }
-            return items;
-        }
+        //public List<BookmarkLibrary> ParseDL(HtmlNode dlNode)
+        //{
+        //    List<BookmarkLibrary> items = new List<BookmarkLibrary>();
+        //    var dtNodes = dlNode.SelectNodes("./dt");
+        //    if (dtNodes != null)
+        //    {
+        //        foreach (var dtNode in dtNodes)
+        //        {
+        //            BookmarkLibrary item = new BookmarkLibrary();
+        //            var h3Node = dtNode.SelectSingleNode("./h3");
+        //            if (h3Node != null)
+        //            {
+        //                item.Name = h3Node.InnerText;
+        //                var subDlNode = dtNode.SelectSingleNode("./dl/p"); // ./following-sibling::dl[1]
+        //                if (subDlNode != null)
+        //                {
+        //                    item.Children = ParseDL(subDlNode);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                var aNode = dtNode.SelectSingleNode("./a[@href]");
+        //                if (aNode != null)
+        //                {
+        //                    item.Name = System.Net.WebUtility.UrlDecode(aNode.InnerText);
+        //                    item.Url = aNode.Attributes["href"].Value;
+        //                }
+        //            }
+        //            items.Add(item);
+        //        }
+        //    }
+        //    return items;
+        //}
 
         /// <summary>
         /// Structure of Bookmarks.html
