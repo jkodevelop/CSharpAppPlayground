@@ -32,6 +32,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         HtmlAgilityPack.HtmlDocument doc;
 
+        // For debugging purposes
         public void PrintHtmlContent(HtmlAgilityPack.HtmlDocument d)
         {
             string htmlContent = d.DocumentNode.OuterHtml;
@@ -43,6 +44,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             if(this.filePath != filePath)
             {
                 this.filePath = filePath;
+                
                 //HtmlWeb web = new HtmlWeb();
                 //// Load the HTML file from the specified path
                 //doc = web.Load(filePath);
@@ -58,7 +60,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        public void RemoveElements(HtmlAgilityPack.HtmlDocument d, string key)
+        private void RemoveElements(HtmlAgilityPack.HtmlDocument d, string key)
         {
             var elements = d.DocumentNode.SelectNodes(key);
             foreach (var e in elements)
@@ -67,7 +69,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        public void RearrangeElements(HtmlAgilityPack.HtmlDocument d, string key)
+        private void RearrangeElements(HtmlAgilityPack.HtmlDocument d, string key)
         {
             var elements = d.DocumentNode.SelectNodes(key);
             if (elements != null)

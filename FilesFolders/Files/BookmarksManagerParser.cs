@@ -15,7 +15,6 @@ namespace CSharpAppPlayground.FilesFolders.Files
         {
             NetscapeBookmarksReader r = new NetscapeBookmarksReader();
 
-            /*
             // option 1: 
             string bookmarkHtml = File.ReadAllText(filePath);
             var bookmarks = r.Read(bookmarkHtml);
@@ -57,7 +56,6 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 //    Debug.Print($"Type: {b.GetType().Name}, Url: {b.Url}; Title: {b.Title}");
                 //}
             }
-            */
         }
     }
 }
