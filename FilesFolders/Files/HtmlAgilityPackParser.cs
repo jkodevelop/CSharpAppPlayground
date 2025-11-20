@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Dom;
+using BookmarksManager;
 using HtmlAgilityPack;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -259,7 +260,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        private void GetFolderName(HtmlNode node)
+        public void GetFolderName(HtmlNode node)
         {
             var h3Node = node.SelectSingleNode(".//h3");
             if (h3Node != null)
@@ -269,7 +270,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        private void GetBookmarkLinks(HtmlNode node)
+        public void GetBookmarkLinks(HtmlNode node)
         {
             var linkNodes = node.SelectNodes(".//a[@href]");
             if (linkNodes != null)
@@ -281,6 +282,14 @@ namespace CSharpAppPlayground.FilesFolders.Files
                     Debug.Print($"Bookmark: {name}, URL: {url}");
                 }
             }
+        }
+
+        // use for benchmarking which lib gets all links fastest
+        public HtmlNodeCollection GetAllLinks(string filePath)
+        {
+            LoadFile(filePath);
+            HtmlNodeCollection links = doc.DocumentNode.SelectNodes("//a");
+            return links;
         }
     }
 }

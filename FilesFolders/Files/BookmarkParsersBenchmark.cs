@@ -79,9 +79,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->Query()")]
-        public void Test_HtmlAgilityPackParserQuery(string filePath, string query)
+        public int Test_HtmlAgilityPackParserQuery(string filePath, string query)
         {
-            htmlAgilityPackParser.Query(filePath, query);
+            return htmlAgilityPackParser.Query(filePath, query);
         }
 
         [Time("AngleSharp->Query()")]
@@ -93,13 +93,13 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         public void QueryTest(string filePath, string query)
         {
-            int htmlAgileQueryCount = htmlAgilityPackParser.Query(filePath, query);
-            f.updateRichTextBoxMain($"HtmlAgilityPack:{query}, count:{htmlAgileQueryCount}");
+            int hapCount = Test_HtmlAgilityPackParserQuery(filePath, query);
+            f.updateRichTextBoxMain($"HtmlAgilityPack:{query}, count:{hapCount}");
 
-            // angleSharpParsers.Query(filePath, query); // TODO
-            
+            Test_AngleSharpParserQuery(filePath, query);
         }
 
+        // This will return a cleaner HTML file with unnecessary tags removed and return clean/structured html tree
         public void CleanHtml(string filePath)
         {
             bool success = htmlAgilityPackParser.CleanUpBookmarkFile(filePath, cleanedOutPath);

@@ -11,10 +11,10 @@ namespace CSharpAppPlayground.FilesFolders.Files
 {
     public class BookmarksManagerParser
     {
+        NetscapeBookmarksReader r = new NetscapeBookmarksReader();
+
         public void Run(string filePath)
         {
-            NetscapeBookmarksReader r = new NetscapeBookmarksReader();
-
             // option 1: 
             string bookmarkHtml = File.ReadAllText(filePath);
             var bookmarks = r.Read(bookmarkHtml);
@@ -22,7 +22,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             {
                 Debug.Print($"AllLinks() => Url: {b.Url}; Title: {b.Title}");
             }
-
+            
             // option 2:
             using (var file = File.OpenRead(filePath))
             {
@@ -47,15 +47,22 @@ namespace CSharpAppPlayground.FilesFolders.Files
                     });
                 });
 
-                // A)
-                //foreach (var b in bk.AllLinks.Where(l => l.LastVisit < DateTime.Today))
+                //// A)
+                //foreach (var b in bk.AllLinks.Where(l => l.LastVisit < DateTime.Today)) { }
 
-                // B)
+                //// B)
                 //foreach (var b in bk.AllLinks)
                 //{
                 //    Debug.Print($"Type: {b.GetType().Name}, Url: {b.Url}; Title: {b.Title}");
                 //}
             }
+        }
+
+        // use for benchmarking which lib gets all links fastest
+        public List<BookmarkLink> GetAllLinks(string bookmarkHtmlStr)
+        {
+            BookmarkFolder bk = r.Read(bookmarkHtmlStr);
+            return bk.AllLinks.ToList();
         }
     }
 }

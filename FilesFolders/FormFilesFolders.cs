@@ -153,7 +153,7 @@ namespace CSharpAppPlayground.FilesFolders
             string bookmarkFilePath = txtFolderPath.Text;
 
             bookmarkBenchmark.CleanHtml(bookmarkFilePath);
-            
+
             // bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
         }
 
@@ -229,5 +229,10 @@ namespace CSharpAppPlayground.FilesFolders
         }
 
         #endregion MISC
+
+        private void btnBenchmarkGetLinks_Click(object sender, EventArgs e)
+        {
+            // compare getting all links from a bookmark file using different parsers
+        }
     }
 }

@@ -43,6 +43,7 @@
             label3 = new Label();
             tbQuery = new TextBox();
             btnTestQuery = new Button();
+            btnBenchmarkGetLinks = new Button();
             SuspendLayout();
             // 
             // btnFileCount
@@ -179,11 +180,22 @@
             btnTestQuery.UseVisualStyleBackColor = true;
             btnTestQuery.Click += btnTestQuery_Click;
             // 
+            // btnBenchmarkGetLinks
+            // 
+            btnBenchmarkGetLinks.Location = new Point(288, 191);
+            btnBenchmarkGetLinks.Name = "btnBenchmarkGetLinks";
+            btnBenchmarkGetLinks.Size = new Size(205, 30);
+            btnBenchmarkGetLinks.TabIndex = 15;
+            btnBenchmarkGetLinks.Text = "Benchmark Get Links";
+            btnBenchmarkGetLinks.UseVisualStyleBackColor = true;
+            btnBenchmarkGetLinks.Click += btnBenchmarkGetLinks_Click;
+            // 
             // FormFilesFolders
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnBenchmarkGetLinks);
             Controls.Add(btnTestQuery);
             Controls.Add(tbQuery);
             Controls.Add(label3);
@@ -212,6 +224,7 @@
             Controls.SetChildIndex(label3, 0);
             Controls.SetChildIndex(tbQuery, 0);
             Controls.SetChildIndex(btnTestQuery, 0);
+            Controls.SetChildIndex(btnBenchmarkGetLinks, 0);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -233,5 +246,6 @@
         private Label label3;
         private TextBox tbQuery;
         private Button btnTestQuery;
+        private Button btnBenchmarkGetLinks;
     }
 }

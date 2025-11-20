@@ -1,6 +1,9 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using HtmlAgilityPack;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Windows.Controls;
 
 // NuGet Package: AngleSharp
 
@@ -48,6 +51,16 @@ namespace CSharpAppPlayground.FilesFolders.Files
             {
                 Debug.Print($"AngleSharp Query Exception: {ex.Message}");
             }
+        }
+
+        // use for benchmarking which lib gets all links fastest
+        public List<IElement> GetAllLinks(string bookmarkHtmlStr)
+        {
+            var config = Configuration.Default.WithDefaultLoader();
+            var context = BrowsingContext.New(config);
+            IDocument doc = context.OpenAsync(req => req.Content(bookmarkHtmlStr)).GetAwaiter().GetResult();
+            List<IElement> links = doc.QuerySelectorAll("a").ToList();
+            return links;
         }
     }
 }

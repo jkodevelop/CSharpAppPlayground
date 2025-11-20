@@ -1,6 +1,6 @@
 ﻿namespace CSharpAppPlayground.FilesFolders.Files
 {
-    public class Link
+    public class LinkBookmark
     {
         public string Name { get; set; }
         public string Url { get; set; }
@@ -8,17 +8,17 @@
         public DateTime ModifiedDate { get; set; }
     }
 
-    public class BookmarkFolder
+    public class FolderBookmark
     {
         public string Name { get; set; }
         public DateTime AddDate { get; set; }
         public DateTime ModifiedDate { get; set; }
-        public List<Link> Links { get; set; }
-        public List<BookmarkFolder> SubFolders { get; set; }
-        public BookmarkFolder()
+        public List<LinkBookmark> Links { get; set; }
+        public List<FolderBookmark> SubFolders { get; set; }
+        public FolderBookmark()
         {
-            Links = new List<Link>();
-            SubFolders = new List<BookmarkFolder>();
+            Links = new List<LinkBookmark>();
+            SubFolders = new List<FolderBookmark>();
         }
     }
 
