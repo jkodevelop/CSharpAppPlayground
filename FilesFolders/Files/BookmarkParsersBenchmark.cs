@@ -26,19 +26,20 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->Run()")]
-        public List<BookmarkLibrary> Test_HtmlAgilityPackParser(string filePath)
+        private List<BookmarkLibrary> Test_HtmlAgilityPackParser(string filePath)
         {
             return htmlAgilityPackParser.Run(filePath);
         }
 
         [Time("AngleSharp->Run()")]
-        public void Test_AngleSharpParser(string filePath)
+        private void Test_AngleSharpParser(string filePath)
         {
             angleSharpParsers.Run(filePath);
         }
 
+        // MOVE THIS TO QUERY TEST, its not good for folder tree extraction
         [Time("BookmarksManager->Run()")]
-        public void Test_BookmarksManagerParser(string filePath)
+        private void Test_BookmarksManagerParser(string filePath)
         {
             bookmarksManagerParser.Run(filePath);
         }
@@ -79,13 +80,13 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->Query()")]
-        public int Test_HtmlAgilityPackParserQuery(string filePath, string query)
+        private int Test_HtmlAgilityPackParserQuery(string filePath, string query)
         {
             return htmlAgilityPackParser.Query(filePath, query);
         }
 
         [Time("AngleSharp->Query()")]
-        public void Test_AngleSharpParserQuery(string filePath, string query)
+        private void Test_AngleSharpParserQuery(string filePath, string query)
         {
             // TODO
             angleSharpParsers.Query(filePath, query);
@@ -97,6 +98,34 @@ namespace CSharpAppPlayground.FilesFolders.Files
             f.updateRichTextBoxMain($"HtmlAgilityPack:{query}, count:{hapCount}");
 
             Test_AngleSharpParserQuery(filePath, query);
+        }
+
+        [Time("HtmlAgilityPack->GetAllLinks()")]
+        private void Test_HtmlAgilityPackParserGetAllLinks(string filePath)
+        {
+            htmlAgilityPackParser.GetAllLinks(filePath);
+        }
+
+        [Time("BookmarksManager->GetAllLinks()")]
+        private void Test_BookmarksManagerParserGetAllLinks(string fileContent)
+        {
+            bookmarksManagerParser.GetAllLinks(fileContent);
+        }
+
+        [Time("AngleSharp->GetAllLinks()")]
+        private void Test_AngleSharpParserGetAllLinks(string fileContent)
+        {
+            angleSharpParsers.GetAllLinks(fileContent);
+        }
+
+        public void RunGetLinksBenchmark(string filePath)
+        {
+            Test_HtmlAgilityPackParserGetAllLinks(filePath);
+
+            string bookmarkHtml = File.ReadAllText(filePath);
+            Test_BookmarksManagerParserGetAllLinks(bookmarkHtml);
+
+            Test_AngleSharpParserGetAllLinks(bookmarkHtml);
         }
 
         // This will return a cleaner HTML file with unnecessary tags removed and return clean/structured html tree

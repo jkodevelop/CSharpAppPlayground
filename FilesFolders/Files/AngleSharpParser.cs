@@ -1,9 +1,7 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
-using HtmlAgilityPack;
+using AngleSharp.Html.Parser;
 using System.Diagnostics;
-using System.Net.Http;
-using System.Windows.Controls;
 
 // NuGet Package: AngleSharp
 
@@ -54,12 +52,18 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         // use for benchmarking which lib gets all links fastest
-        public List<IElement> GetAllLinks(string bookmarkHtmlStr)
+        public IHtmlCollection<IElement> GetAllLinks(string bookmarkHtmlStr)
         {
-            var config = Configuration.Default.WithDefaultLoader();
-            var context = BrowsingContext.New(config);
-            IDocument doc = context.OpenAsync(req => req.Content(bookmarkHtmlStr)).GetAwaiter().GetResult();
-            List<IElement> links = doc.QuerySelectorAll("a").ToList();
+            //var config = Configuration.Default.WithDefaultLoader();
+            //var context = BrowsingContext.New(config);
+            //IDocument doc = context.OpenAsync(req => req.Content(bookmarkHtmlStr)).GetAwaiter().GetResult();
+            //List<IElement> links = doc.QuerySelectorAll("a").ToList();
+
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(bookmarkHtmlStr);
+            // Query all <a> elements
+            var links = document.QuerySelectorAll("a");
+
             return links;
         }
     }

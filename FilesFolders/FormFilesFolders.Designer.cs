@@ -182,11 +182,12 @@
             // 
             // btnBenchmarkGetLinks
             // 
+            btnBenchmarkGetLinks.Enabled = false;
             btnBenchmarkGetLinks.Location = new Point(288, 191);
             btnBenchmarkGetLinks.Name = "btnBenchmarkGetLinks";
             btnBenchmarkGetLinks.Size = new Size(205, 30);
             btnBenchmarkGetLinks.TabIndex = 15;
-            btnBenchmarkGetLinks.Text = "Benchmark Get Links";
+            btnBenchmarkGetLinks.Text = "Benchmark Query All Links";
             btnBenchmarkGetLinks.UseVisualStyleBackColor = true;
             btnBenchmarkGetLinks.Click += btnBenchmarkGetLinks_Click;
             // 

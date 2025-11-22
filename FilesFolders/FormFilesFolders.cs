@@ -41,12 +41,14 @@ namespace CSharpAppPlayground.FilesFolders
         public void EnableFileButtons()
         {
             btnParseBookmark.Enabled = true;
+            btnBenchmarkGetLinks.Enabled = true;
             DisableFolderButtons();
             isFolderMode = false;
         }
         public void DisableFileButtons()
         {
             btnParseBookmark.Enabled = false;
+            btnBenchmarkGetLinks.Enabled = false;
         }
 
         private CancellationToken GenCancelToken()
@@ -204,6 +206,13 @@ namespace CSharpAppPlayground.FilesFolders
                 updateLabelMain("Query test skipped. \nFile is not specified | Query: is empty");
         }
 
+        private void btnBenchmarkGetLinks_Click(object sender, EventArgs e)
+        {
+            // compare getting all links from a bookmark file using different parsers
+            string bookmarkFilePath = txtFolderPath.Text;
+            bookmarkBenchmark.RunGetLinksBenchmark(bookmarkFilePath);
+        }
+
         #endregion FILES
 
         #region MISC
@@ -230,9 +239,5 @@ namespace CSharpAppPlayground.FilesFolders
 
         #endregion MISC
 
-        private void btnBenchmarkGetLinks_Click(object sender, EventArgs e)
-        {
-            // compare getting all links from a bookmark file using different parsers
-        }
     }
 }
