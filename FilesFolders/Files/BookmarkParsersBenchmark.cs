@@ -77,6 +77,8 @@ namespace CSharpAppPlayground.FilesFolders.Files
             //}
         }
 
+        #region Full Query Benchmark, includes file processing time
+
         [Time("HtmlAgilityPack->Query()")]
         private int Test_HtmlAgilityPackParserQuery(string filePath, string query)
         {
@@ -84,10 +86,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("AngleSharp->Query()")]
-        private void Test_AngleSharpParserQuery(string filePath, string query)
+        private int Test_AngleSharpParserQuery(string filePath, string query)
         {
-            // TODO
-            angleSharpParsers.Query(filePath, query);
+            return angleSharpParsers.Query(filePath, query);
         }
 
         public void QueryTest(string filePath, string query)
@@ -95,8 +96,13 @@ namespace CSharpAppPlayground.FilesFolders.Files
             int hapCount = Test_HtmlAgilityPackParserQuery(filePath, query);
             f.updateRichTextBoxMain($"HtmlAgilityPack:{query}, count:{hapCount}");
 
-            Test_AngleSharpParserQuery(filePath, query);
+            int angCount = Test_AngleSharpParserQuery(filePath, query);
+            f.updateRichTextBoxMain($"AngleSharp:{query}, count:{angCount}");
         }
+
+        #endregion
+
+        #region GetAllLinks <a> Benchmark
 
         [Time("HtmlAgilityPack->GetAllLinks()")]
         private HtmlNodeCollection Test_HtmlAgilityPackParserGetAllLinks(string filePath)
@@ -128,6 +134,8 @@ namespace CSharpAppPlayground.FilesFolders.Files
             IHtmlCollection<IElement> angleSharpResults = Test_AngleSharpParserGetAllLinks(bookmarkHtml);
             Debug.Print($"AngleSharp <a> Count: {angleSharpResults.Count}");
         }
+
+        #endregion
 
         // This will return a cleaner HTML file with unnecessary tags removed and return clean/structured html tree
         public void CleanHtml(string filePath)

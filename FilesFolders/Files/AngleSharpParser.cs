@@ -33,8 +33,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
         }
 
-        public void Query(string filePath, string query)
+        public int Query(string filePath, string query)
         {
+            int count = 0;
             this.filePath = filePath;
             string htmlContent = File.ReadAllText(filePath);
             var parser = new HtmlParser();
@@ -42,12 +43,14 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
             try {
                 var elements = document.QuerySelectorAll(query);
-                Debug.Print($"Query: {query}, Count: {elements.Length}");
+                count = elements.Length;
+                Debug.Print($"AngleSharp: Query: {query}, Count: {elements.Length}");
             } 
             catch (Exception ex)
             {
-                Debug.Print($"AngleSharp Query Exception: {ex.Message}");
+                Debug.Print($"AngleSharp: Query Exception: {ex.Message}");
             }
+            return count;
         }   
 
         public void QueryAlt(string filePath, string query)

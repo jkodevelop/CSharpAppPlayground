@@ -167,10 +167,10 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 if (nodes != null)
                 {
                     count = nodes.Count;
-                    Debug.Print($"Query: {q}, Count: {count}");
+                    Debug.Print($"HtmlAgilityPackParser: Query: {q}, Count: {count}");
                 }
                 else
-                    Debug.Print($"Query: {q}=null");  
+                    Debug.Print($"HtmlAgilityPackParser: Query: {q}=null");  
             } 
             catch (Exception ex)
             {
