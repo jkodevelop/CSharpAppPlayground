@@ -37,6 +37,23 @@ namespace CSharpAppPlayground.FilesFolders.Files
         {
             this.filePath = filePath;
             string htmlContent = File.ReadAllText(filePath);
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(htmlContent);
+
+            try {
+                var elements = document.QuerySelectorAll(query);
+                Debug.Print($"Query: {query}, Count: {elements.Length}");
+            } 
+            catch (Exception ex)
+            {
+                Debug.Print($"AngleSharp Query Exception: {ex.Message}");
+            }
+        }   
+
+        public void QueryAlt(string filePath, string query)
+        {
+            this.filePath = filePath;
+            string htmlContent = File.ReadAllText(filePath);
             var config = Configuration.Default.WithDefaultLoader();
             var context = BrowsingContext.New(config);
 

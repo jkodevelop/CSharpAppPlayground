@@ -1,11 +1,6 @@
-﻿using AngleSharp.Dom;
-using BookmarksManager;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Net;
 using System.Text.RegularExpressions;
-using Windows.Media.AppBroadcasting;
 
 // NuGet Package: HtmlAgilityPack
 

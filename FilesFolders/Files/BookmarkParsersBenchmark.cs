@@ -1,6 +1,10 @@
 ﻿using CSharpAppPlayground.UIClasses;
 using MethodTimer;
+using HtmlAgilityPack;
+using BookmarksManager;
+using AngleSharp;
 using System.Diagnostics;
+using AngleSharp.Dom;
 
 // source: https://webscraping.ai/faq/c/what-are-the-differences-between-htmlagilitypack-and-anglesharp-for-c-web-scraping
 
@@ -37,12 +41,6 @@ namespace CSharpAppPlayground.FilesFolders.Files
             angleSharpParsers.Run(filePath);
         }
 
-        // MOVE THIS TO QUERY TEST, its not good for folder tree extraction
-        [Time("BookmarksManager->Run()")]
-        private void Test_BookmarksManagerParser(string filePath)
-        {
-            bookmarksManagerParser.Run(filePath);
-        }
 
         public void RunBenchmarks(string filePath)
         {
@@ -101,31 +99,34 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->GetAllLinks()")]
-        private void Test_HtmlAgilityPackParserGetAllLinks(string filePath)
+        private HtmlNodeCollection Test_HtmlAgilityPackParserGetAllLinks(string filePath)
         {
-            htmlAgilityPackParser.GetAllLinks(filePath);
+            return htmlAgilityPackParser.GetAllLinks(filePath);
         }
 
         [Time("BookmarksManager->GetAllLinks()")]
-        private void Test_BookmarksManagerParserGetAllLinks(string fileContent)
+        private List<BookmarkLink> Test_BookmarksManagerParserGetAllLinks(string fileContent)
         {
-            bookmarksManagerParser.GetAllLinks(fileContent);
+            return bookmarksManagerParser.GetAllLinks(fileContent);
         }
 
         [Time("AngleSharp->GetAllLinks()")]
-        private void Test_AngleSharpParserGetAllLinks(string fileContent)
+        private IHtmlCollection<IElement> Test_AngleSharpParserGetAllLinks(string fileContent)
         {
-            angleSharpParsers.GetAllLinks(fileContent);
+            return angleSharpParsers.GetAllLinks(fileContent);
         }
 
         public void RunGetLinksBenchmark(string filePath)
         {
-            Test_HtmlAgilityPackParserGetAllLinks(filePath);
+            HtmlNodeCollection htmlAgileResults = Test_HtmlAgilityPackParserGetAllLinks(filePath);
+            Debug.Print($"HtmlAgilityPack <a> Count: {htmlAgileResults.Count}");
 
             string bookmarkHtml = File.ReadAllText(filePath);
-            Test_BookmarksManagerParserGetAllLinks(bookmarkHtml);
+            List<BookmarkLink> bookmarkResults = Test_BookmarksManagerParserGetAllLinks(bookmarkHtml);
+            Debug.Print($"BookmarksManager <a> Count: {bookmarkResults.Count}");
 
-            Test_AngleSharpParserGetAllLinks(bookmarkHtml);
+            IHtmlCollection<IElement> angleSharpResults = Test_AngleSharpParserGetAllLinks(bookmarkHtml);
+            Debug.Print($"AngleSharp <a> Count: {angleSharpResults.Count}");
         }
 
         // This will return a cleaner HTML file with unnecessary tags removed and return clean/structured html tree
