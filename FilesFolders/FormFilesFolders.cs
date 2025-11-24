@@ -154,9 +154,7 @@ namespace CSharpAppPlayground.FilesFolders
         {
             string bookmarkFilePath = txtFolderPath.Text;
 
-            bookmarkBenchmark.CleanHtml(bookmarkFilePath);
-
-            // bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
+            bookmarkBenchmark.RunBenchmarks(bookmarkFilePath);
         }
 
         public void BuildTree(XDocument xdoc)

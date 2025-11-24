@@ -20,6 +20,36 @@ using System.Text.RegularExpressions;
 // sources:
 // https://html-agility-pack.net/from-file
 
+/// Structure of Bookmarks.html
+//
+//  <!DOCTYPE NETSCAPE-Bookmark-file-1>
+//  <dt>
+//    <h3>Folder Name</h3>
+//    <dl><p>
+//      <dt><h3>Sub Folder Name</h3>
+//      <dt><a href="Url" ADD_DATE="unix epoch">Name URL encoded</a></dt>
+//      ...
+//    </dl>
+//  </dt>
+//
+//  Browser specific keys:
+//  Firefox => <a LAST_MODIFIED="unix epoch">
+// 
+
+/// Structure of Cleaned Bookmarks.html
+/*
+<dl>
+  <h3>Folder Name</h3>
+  <dl>
+      <h3>Sub Folder Name</h3>
+      <a href="Url" ADD_DATE="unix epoch">Name URL encoded</a>
+      ...
+  </dl>
+  ...
+  <a>
+</dl>
+*/
+
 namespace CSharpAppPlayground.FilesFolders.Files
 {
     public class HtmlAgilityPackParser
@@ -146,15 +176,89 @@ namespace CSharpAppPlayground.FilesFolders.Files
             return true;
         }
 
-        public List<BookmarkLibrary> Run(string filePath)
+        private void ProcessFolderNode(HtmlNode folderNode, FolderBookmark folder)
+        {
+            // process the folder content inside <dl>
+            foreach (HtmlNode child in folderNode.ChildNodes)
+            {
+                if(child.GetType() == typeof(HtmlNode))
+                {
+                    if(child.Name == "h3")
+                    {
+                        Debug.Print($"[Folder] FolderName: {folder.Name}, SubFolder Name: >{child.InnerText}<");
+                        FolderBookmark subFolder = new FolderBookmark();
+                        subFolder.Name = child.InnerText.Trim();
+                        if(child.Attributes["add_date"] != null)
+                        {
+                            string addDateStr = child.Attributes["add_date"].Value;
+                            subFolder.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
+                        }
+                        if(child.Attributes["last_modified"] != null)
+                        {
+                            string modDateStr = child.Attributes["last_modified"].Value;
+                            subFolder.ModifiedDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(modDateStr));
+                        }
+                        // .NextSibling() won't work, it returns the next text nodes with whitespace
+                        ProcessFolderNode(child.SelectSingleNode("following-sibling::dl[1]"), subFolder); // <h3> next sibling is <dl>
+                        folder.SubFolders.Add(subFolder);
+                    }
+                    else if(child.Name == "a")
+                    {
+                        string url = child.Attributes["href"].Value;
+                        string name = System.Net.WebUtility.UrlDecode(child.InnerText.Trim());
+                        Debug.Print($"[LINK] FolderName: {folder.Name}, Bookmark: >{name}<, URL: {url}");
+                        LinkBookmark link = new LinkBookmark();
+                        link.Name = name;
+                        link.Url = url;
+                        if(child.Attributes["add_date"] != null)
+                        {
+                            string addDateStr = child.Attributes["add_date"].Value;
+                            link.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
+                        }
+                        folder.Links.Add(link);
+                    }
+                }
+            }
+        }
+
+        public FolderBookmark ExtractFolderStructure(string filePath)
         {
             // TODO
             LoadFile(filePath);
-//             List<BookmarkLibrary> res = Parse();
-            List<BookmarkLibrary> res = new List<BookmarkLibrary>();
-            return res;
-        }
 
+            FolderBookmark folderTreeRoot = new FolderBookmark();
+            folderTreeRoot.Name = "Root";
+
+            // first node is <dl>
+            HtmlNode root = null;
+
+            foreach (HtmlNode child in doc.DocumentNode.ChildNodes)
+            {
+                //Debug.Print("------------------------------------");
+                //Debug.Print(child.GetType().ToString());
+                //Debug.Print($"Child Node: {child.Name}, InnerText: {child.InnerText}");
+
+                // get the first DL, this is the root
+                if(child.GetType() == typeof(HtmlNode))
+                {
+                    root = child;
+                }
+            }
+
+            if (root == null)
+            {
+                Debug.Print($"No root <DL> node found. Check the file {filePath}");
+                return folderTreeRoot;
+            }
+            else 
+            {
+                // Debug.Print($"Child Node: {root.Name}, InnerText: {root.InnerText}");
+                Debug.Print($"Child Node: {root.Name}");
+                ProcessFolderNode(root, folderTreeRoot);
+            }
+            return folderTreeRoot;
+        }
+        
         public int Query(string filePath, string query)
         {
             string q = query.ToLower();
@@ -177,106 +281,6 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 Debug.Print($"HtmlAgilityPack Query Exception: {ex.Message}");
             }
             return count;
-        }
-        //public List<BookmarkLibrary> Parse()
-        //{
-        //   var dl = doc.DocumentNode.SelectSingleNode("//dl/p");
-        //   var items = ParseDL(dl);
-        //   return items;
-        //}
-
-        //public List<BookmarkLibrary> ParseDL(HtmlNode dlNode)
-        //{
-        //    List<BookmarkLibrary> items = new List<BookmarkLibrary>();
-        //    var dtNodes = dlNode.SelectNodes("./dt");
-        //    if (dtNodes != null)
-        //    {
-        //        foreach (var dtNode in dtNodes)
-        //        {
-        //            BookmarkLibrary item = new BookmarkLibrary();
-        //            var h3Node = dtNode.SelectSingleNode("./h3");
-        //            if (h3Node != null)
-        //            {
-        //                item.Name = h3Node.InnerText;
-        //                var subDlNode = dtNode.SelectSingleNode("./dl/p"); // ./following-sibling::dl[1]
-        //                if (subDlNode != null)
-        //                {
-        //                    item.Children = ParseDL(subDlNode);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var aNode = dtNode.SelectSingleNode("./a[@href]");
-        //                if (aNode != null)
-        //                {
-        //                    item.Name = System.Net.WebUtility.UrlDecode(aNode.InnerText);
-        //                    item.Url = aNode.Attributes["href"].Value;
-        //                }
-        //            }
-        //            items.Add(item);
-        //        }
-        //    }
-        //    return items;
-        //}
-
-        /// <summary>
-        /// Structure of Bookmarks.html
-        //
-        //  <!DOCTYPE NETSCAPE-Bookmark-file-1>
-        //  <dt>
-        //    <h3>Folder Name</h3>
-        //    <dl><p>
-        //      <dt><h3>Sub Folder Name</h3>
-        //      <dt><a href="Url" ADD_DATE="unix epoch">Name URL encoded</a></dt>
-        //      ...
-        //    </dl>
-        //  </dt>
-        //
-        //  Browser specific keys:
-        //  Firefox => <a LAST_MODIFIED="unix epoch">
-        // 
-        /// </summary>
-        /// <param name="doc"></param>
-        public void ParseWIP()
-        {
-            var nodes = doc.DocumentNode.SelectNodes("//dt[1]");
-
-            foreach (var node in nodes)
-            {
-                var n = node;
-                //Debug.Print($"-- HtmlAgilityPack InnertText: \n{node.InnerText}");
-
-                var childrenDocs = node.ChildNodes;
-                foreach (var child in childrenDocs)
-                {
-                    Debug.Print($"---- HtmlAgilityPack Child InnertText: \n{child.InnerText}");
-                }
-                continue;
-            }
-        }
-
-        public void GetFolderName(HtmlNode node)
-        {
-            var h3Node = node.SelectSingleNode(".//h3");
-            if (h3Node != null)
-            {
-                string folderName = h3Node.InnerText;
-                Debug.Print($"Folder Name: {folderName}");
-            }
-        }
-
-        public void GetBookmarkLinks(HtmlNode node)
-        {
-            var linkNodes = node.SelectNodes(".//a[@href]");
-            if (linkNodes != null)
-            {
-                foreach (var linkNode in linkNodes)
-                {
-                    string url = linkNode.Attributes["href"].Value;
-                    string name = System.Net.WebUtility.UrlDecode(linkNode.InnerText);
-                    Debug.Print($"Bookmark: {name}, URL: {url}");
-                }
-            }
         }
 
         // use for benchmarking which lib gets all links fastest

@@ -30,29 +30,31 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("HtmlAgilityPack->Run()")]
-        private List<BookmarkLibrary> Test_HtmlAgilityPackParser(string filePath)
+        private FolderBookmark Test_HtmlAgilityPackParser(string cleanfilePath)
         {
-            return htmlAgilityPackParser.Run(filePath);
+            return htmlAgilityPackParser.ExtractFolderStructure(cleanfilePath);
         }
 
         [Time("AngleSharp->Run()")]
-        private void Test_AngleSharpParser(string filePath)
+        private void Test_AngleSharpParser(string cleanfilePath)
         {
-            angleSharpParsers.Run(filePath);
+            //TODO: implement extraction of folder structure
+            angleSharpParsers.ExtractFolderStructure(cleanfilePath);
         }
-
 
         public void RunBenchmarks(string filePath)
         {
-            // HTML Agility Pack
-            //List<BookmarkItem> bk = Test_HtmlAgilityPackParser(filePath);
+            // 1. clean HTML first
+            if (!CleanHtml(filePath))
+            {
+                Debug.Print("Failed to clean HTML bookmark file. Skipping test, fix the problem");
+                return;
+            }
+
+            Test_HtmlAgilityPackParser(cleanedOutPath);
             //PrintResults(bk);
 
-            // AngleSharp
-            //Test_AngleSharpParser(filePath);
-
-            // BookmarksManager
-            //Test_BookmarksManagerParser(filePath);
+            Test_AngleSharpParser(cleanedOutPath);
         }
 
         public void PrintResults(List<BookmarkLibrary> items)
@@ -138,9 +140,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
         #endregion
 
         // This will return a cleaner HTML file with unnecessary tags removed and return clean/structured html tree
-        public void CleanHtml(string filePath)
+        public bool CleanHtml(string filePath)
         {
-            bool success = htmlAgilityPackParser.CleanUpBookmarkFile(filePath, cleanedOutPath);
+            return htmlAgilityPackParser.CleanUpBookmarkFile(filePath, cleanedOutPath);
         }
     }
 }

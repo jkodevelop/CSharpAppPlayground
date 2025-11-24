@@ -2,17 +2,17 @@
 {
     public class LinkBookmark
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public string Url { get; set; }
-        public DateTime AddDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public DateTimeOffset? AddDate { get; set; }
+        // public DateTimeOffset ModifiedDate { get; set; } // exported bookmarks don't have modified date for links
     }
 
     public class FolderBookmark
     {
         public string Name { get; set; }
-        public DateTime AddDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public DateTimeOffset? AddDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
         public List<LinkBookmark> Links { get; set; }
         public List<FolderBookmark> SubFolders { get; set; }
         public FolderBookmark()

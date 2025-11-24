@@ -14,23 +14,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
     {
         public string filePath = "";
 
-        public void Run(string filePath)
+        public void ExtractFolderStructure(string filePath)
         {
-            this.filePath = filePath;
-            string htmlContent = File.ReadAllText(filePath);
-            var config = Configuration.Default.WithDefaultLoader();
-            var context = BrowsingContext.New(config);
-
-            IDocument doc = context.OpenAsync(req => req.Content(htmlContent)).GetAwaiter().GetResult();
-
-            // Example: Extracting info from IDocument
-            Debug.Print($"Document Title: {doc.Title}");
-
-            // Or query elements
-            foreach (var element in doc.QuerySelectorAll("p"))
-            {
-                //Debug.Print($"Paragraph Text: {element.TextContent}");
-            }
+            // TODO: implement extraction of folder structure
         }
 
         public int Query(string filePath, string query)
