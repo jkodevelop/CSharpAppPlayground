@@ -41,6 +41,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
             return angleSharpParsers.ExtractFolderStructure(cleanfilePath);
         }
 
+        [Time("AngleSharp->Run() + skip file read")]
+        private FolderBookmark Test_AngleSharpParserSkipFileOpen(string cleanfilePath)
+        {
+            return angleSharpParsers.ExtractFolderStructureContentStr(cleanfilePath);
+        }
+
         public void RunBenchmarks(string filePath)
         {
             // 1. clean HTML first
@@ -53,8 +59,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
             Test_HtmlAgilityPackParser(cleanedOutPath);
             //PrintResults(bk);
 
-            // TODO compare, without counting the FileReadAllText time
-            Test_AngleSharpParser(cleanedOutPath);
+            // A) compare, without counting the FileReadAllText time
+            string cleanHtml = File.ReadAllText(cleanedOutPath);
+            Test_AngleSharpParserSkipFileOpen(cleanHtml);
+
+            // B) compare, including the FileReadAllText time
+            //Test_AngleSharpParser(cleanedOutPath);
         }
 
         public void PrintResults(List<BookmarkLibrary> items)

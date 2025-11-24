@@ -45,8 +45,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         public FolderBookmark ExtractFolderStructure(string filePath)
         {
-            // TODO: implement extraction of folder structure
             string htmlContent = File.ReadAllText(filePath);
+            return ExtractFolderStructureContentStr(htmlContent);
+        }
+
+        public FolderBookmark ExtractFolderStructureContentStr(string htmlContent)
+        {
             var parser = new HtmlParser();
             IHtmlDocument document = parser.ParseDocument(htmlContent);
 
