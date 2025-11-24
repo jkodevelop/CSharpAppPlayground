@@ -17,7 +17,30 @@ namespace CSharpAppPlayground.FilesFolders.Files
 
         private void ProcessFolder(IElement node, FolderBookmark folder)
         {
+            // 1. get the links directly under this folder
+            IHtmlCollection<IElement> links = node.QuerySelectorAll(":scope > a");
+            folder.Links = links.Select(link => new LinkBookmark {
+                Name = (link.TextContent ?? "").Trim(),
+                Url = link.GetAttribute("href") ?? "",
+                AddDateUnixTimeSeconds = link.GetAttribute("add_date") ?? ""
+            }).ToList();
 
+            IHtmlCollection<IElement> subFolders = node.QuerySelectorAll(":scope > h3");
+            foreach (var subFolderElement in subFolders)
+            {
+                FolderBookmark subFolder = new FolderBookmark();
+                subFolder.Name = (subFolderElement.TextContent ?? "").Trim();
+                subFolder.AddDateUnixTimeSeconds = subFolderElement.GetAttribute("add_date") ?? "";
+                subFolder.ModifiedDateUnixTimeSeconds = subFolderElement.GetAttribute("last_modified") ?? "";
+
+                // The corresponding <dl> element contains the contents of the folder
+                IElement? dl = subFolderElement.NextElementSibling;
+                if (dl != null && dl.TagName.ToLower() == "dl")
+                {
+                    ProcessFolder(dl, subFolder);
+                }
+                folder.SubFolders.Add(subFolder);
+            }
         }
 
         public FolderBookmark ExtractFolderStructure(string filePath)
@@ -31,40 +54,19 @@ namespace CSharpAppPlayground.FilesFolders.Files
             FolderBookmark rootFolder = new FolderBookmark();
             rootFolder.Name = "Root";
 
-            
-
             if (root != null)
             {
+                //PrintHtmlContent(document);
 
-                var ll = root.QuerySelectorAll(":scope > a");
-
-
-                // Start processing from the root element
-                var links = root.QuerySelectorAll("a");
-                rootFolder.Links = links.Select(link => new LinkBookmark
-                {
-                    Name = link.TextContent ?? "",
-                    Url = link.GetAttribute("href") ?? ""
-                }).ToList();
-
-                root.GetElementsByTagName("a").ToList().ForEach(a =>
-                {
-                   Debug.Print($"Link: {a.TextContent}, Href: {a.GetAttribute("href")}");
-                });
-
-                //root.Children.ToList().ForEach(child =>
-                //{
-                //    if (child is IElement element)
-                //    {
-                //        Debug.Print($"Name: {child.TextContent} <{child.TagName}>");
-                //    }
-                //});
-
-                Debug.Print("-------- anglesharp -------");
-                Debug.Print(document.DocumentElement.OuterHtml);
+                ProcessFolder(root, rootFolder);
             }
-
             return rootFolder;
+        }
+
+        public void PrintHtmlContent(IHtmlDocument document)
+        {
+            Debug.Print("-------- AngleSharp -------\n");
+            Debug.Print(document.DocumentElement.OuterHtml);
         }
 
         public int Query(string filePath, string query)

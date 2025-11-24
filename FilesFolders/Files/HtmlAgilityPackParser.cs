@@ -62,6 +62,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
         public void PrintHtmlContent(HtmlAgilityPack.HtmlDocument d)
         {
             string htmlContent = d.DocumentNode.OuterHtml;
+            Debug.Print("-------- HtmlAgilityPack -------\n");
             Debug.Print(htmlContent);
         }
 
@@ -159,7 +160,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             }
 
             // DEBUG: Printout the final html
-            PrintHtmlContent(doc_lessTags);
+            // PrintHtmlContent(doc_lessTags);
             
             try
             {
@@ -188,17 +189,20 @@ namespace CSharpAppPlayground.FilesFolders.Files
                         //Debug.Print($"[Folder] FolderName: {folder.Name}, SubFolder Name: >{child.InnerText}<");
                         FolderBookmark subFolder = new FolderBookmark();
                         subFolder.Name = child.InnerText.Trim();
-                        if(child.Attributes["add_date"] != null)
-                        {
-                            string addDateStr = child.Attributes["add_date"].Value;
-                            subFolder.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
-                        }
-                        if(child.Attributes["last_modified"] != null)
-                        {
-                            string modDateStr = child.Attributes["last_modified"].Value;
-                            subFolder.ModifiedDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(modDateStr));
-                        }
-                        // .NextSibling() won't work, it returns the next text nodes with whitespace
+                        subFolder.AddDateUnixTimeSeconds = child.Attributes["add_date"]?.Value ?? "";
+                        subFolder.ModifiedDateUnixTimeSeconds = child.Attributes["last_modified"]?.Value ?? "";
+                        //if(child.Attributes["add_date"] != null)
+                        //{
+                        //    string addDateStr = child.Attributes["add_date"].Value;
+                        //    subFolder.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
+                        //}
+                        //if(child.Attributes["last_modified"] != null)
+                        //{
+                        //    string modDateStr = child.Attributes["last_modified"].Value;
+                        //    subFolder.ModifiedDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(modDateStr));
+                        //}
+
+                        // NOTE: .NextSibling() won't work, it returns the next text nodes with whitespace
                         ProcessFolderNode(child.SelectSingleNode("following-sibling::dl[1]"), subFolder); // <h3> next sibling is <dl>
                         folder.SubFolders.Add(subFolder);
                     }
@@ -210,11 +214,12 @@ namespace CSharpAppPlayground.FilesFolders.Files
                         LinkBookmark link = new LinkBookmark();
                         link.Name = name;
                         link.Url = url;
-                        if(child.Attributes["add_date"] != null)
-                        {
-                            string addDateStr = child.Attributes["add_date"].Value;
-                            link.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
-                        }
+                        link.AddDateUnixTimeSeconds = child.Attributes["add_date"]?.Value ?? "";
+                        //if(child.Attributes["add_date"] != null)
+                        //{
+                        //    string addDateStr = child.Attributes["add_date"].Value;
+                        //    link.AddDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(addDateStr));
+                        //}
                         folder.Links.Add(link);
                     }
                 }
