@@ -185,7 +185,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 {
                     if(child.Name == "h3")
                     {
-                        Debug.Print($"[Folder] FolderName: {folder.Name}, SubFolder Name: >{child.InnerText}<");
+                        //Debug.Print($"[Folder] FolderName: {folder.Name}, SubFolder Name: >{child.InnerText}<");
                         FolderBookmark subFolder = new FolderBookmark();
                         subFolder.Name = child.InnerText.Trim();
                         if(child.Attributes["add_date"] != null)
@@ -206,7 +206,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
                     {
                         string url = child.Attributes["href"].Value;
                         string name = System.Net.WebUtility.UrlDecode(child.InnerText.Trim());
-                        Debug.Print($"[LINK] FolderName: {folder.Name}, Bookmark: >{name}<, URL: {url}");
+                        //Debug.Print($"[LINK] FolderName: {folder.Name}, Bookmark: >{name}<, URL: {url}");
                         LinkBookmark link = new LinkBookmark();
                         link.Name = name;
                         link.Url = url;
@@ -253,7 +253,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             else 
             {
                 // Debug.Print($"Child Node: {root.Name}, InnerText: {root.InnerText}");
-                Debug.Print($"Child Node: {root.Name}");
+                // Debug.Print($"Child Node: {root.Name}");
                 ProcessFolderNode(root, folderTreeRoot);
             }
             return folderTreeRoot;

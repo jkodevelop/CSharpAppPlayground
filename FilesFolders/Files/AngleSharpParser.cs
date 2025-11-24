@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using System.Diagnostics;
 
@@ -14,9 +15,56 @@ namespace CSharpAppPlayground.FilesFolders.Files
     {
         public string filePath = "";
 
-        public void ExtractFolderStructure(string filePath)
+        private void ProcessFolder(IElement node, FolderBookmark folder)
+        {
+
+        }
+
+        public FolderBookmark ExtractFolderStructure(string filePath)
         {
             // TODO: implement extraction of folder structure
+            string htmlContent = File.ReadAllText(filePath);
+            var parser = new HtmlParser();
+            IHtmlDocument document = parser.ParseDocument(htmlContent);
+
+            IElement? root = document.QuerySelector("dl"); // get the root <dl> element
+            FolderBookmark rootFolder = new FolderBookmark();
+            rootFolder.Name = "Root";
+
+            
+
+            if (root != null)
+            {
+
+                var ll = root.QuerySelectorAll(":scope > a");
+
+
+                // Start processing from the root element
+                var links = root.QuerySelectorAll("a");
+                rootFolder.Links = links.Select(link => new LinkBookmark
+                {
+                    Name = link.TextContent ?? "",
+                    Url = link.GetAttribute("href") ?? ""
+                }).ToList();
+
+                root.GetElementsByTagName("a").ToList().ForEach(a =>
+                {
+                   Debug.Print($"Link: {a.TextContent}, Href: {a.GetAttribute("href")}");
+                });
+
+                //root.Children.ToList().ForEach(child =>
+                //{
+                //    if (child is IElement element)
+                //    {
+                //        Debug.Print($"Name: {child.TextContent} <{child.TagName}>");
+                //    }
+                //});
+
+                Debug.Print("-------- anglesharp -------");
+                Debug.Print(document.DocumentElement.OuterHtml);
+            }
+
+            return rootFolder;
         }
 
         public int Query(string filePath, string query)

@@ -36,10 +36,9 @@ namespace CSharpAppPlayground.FilesFolders.Files
         }
 
         [Time("AngleSharp->Run()")]
-        private void Test_AngleSharpParser(string cleanfilePath)
+        private FolderBookmark Test_AngleSharpParser(string cleanfilePath)
         {
-            //TODO: implement extraction of folder structure
-            angleSharpParsers.ExtractFolderStructure(cleanfilePath);
+            return angleSharpParsers.ExtractFolderStructure(cleanfilePath);
         }
 
         public void RunBenchmarks(string filePath)
@@ -54,6 +53,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             Test_HtmlAgilityPackParser(cleanedOutPath);
             //PrintResults(bk);
 
+            // TODO compare, without counting the FileReadAllText time
             Test_AngleSharpParser(cleanedOutPath);
         }
 
