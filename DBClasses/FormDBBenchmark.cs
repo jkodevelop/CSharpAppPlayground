@@ -163,7 +163,8 @@ namespace CSharpAppPlayground.DBClasses
             string[] words = tbSearchText.Text.Split(' ');
             Debug.Print($"Search contains Words: {tbSearchText.Text}");
             mongoSearch.RunWordsSearchTest(words);
-
+            mysqlSearch.RunWordsSearchTest(words);
+            postgresSearch.RunWordsSearchTest(words);
         }
     }
 }

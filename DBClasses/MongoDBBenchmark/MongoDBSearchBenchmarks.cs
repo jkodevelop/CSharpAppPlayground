@@ -35,7 +35,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
                 "\nMONGO words search" +
                 "\n/////////////////////////////////////////////////////////");
             Test_ContainWordsSearch(words);
-            Test_FullTextSearch(words);
+            Test_FullTextSearch(string.Join(' ', words));
         }
 
         [Time("ContainWordsSearch")]
@@ -47,10 +47,10 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
         }
 
         [Time("FullTextSearch")]
-        private void Test_FullTextSearch(string[] words)
+        private void Test_FullTextSearch(string words)
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
-            var v = FullTextSearch(string.Join(' ', words));
+            var v = FullTextSearch(words);
             Debug.Print($"Found {v.Count} FullTextSearch words:{string.Join(", ", words)}");
         }
 

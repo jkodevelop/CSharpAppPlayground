@@ -30,7 +30,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         {
             Debug.Print("\n--- Method 1: Contain Words Search ---");
             var v = ContainWordsSearch(words);
-            Debug.Print($"Found {v.Count} ContainWordsSearch for words:{String.Join(',', words)}");
+            Debug.Print($"Found {v.Count} ContainWordsSearch for words:{string.Join(',', words)}");
         }
 
         [Time("FullTextSearch")]
@@ -38,7 +38,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
             var v = FullTextSearch(words);
-            Debug.Print($"Found {v.Count} FullTextSearch for words:{String.Join(',', words)}");
+            Debug.Print($"Found {v.Count} FullTextSearch for words:{string.Join(',', words)}");
         }
 
         public void RunSimpleSearchTest(string searchTerm)
@@ -197,20 +197,45 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
         public List<VidsSQL> FullTextSearch(string[] words)
         {
+            var objects = new List<VidsSQL>();
             try
             {
                 /*
                 POSTGRES only ------------------------
-                SELECT *
-                FROM YourTable
-                WHERE to_tsvector(yourColumn) @@ to_tsquery('top & blender');
+                SELECT * FROM table_name
+                WHERE to_tsvector(column_name) @@ to_tsquery('word1 & word2');
                 */
+                if (words == null || words.Length == 0)
+                    return objects;
+
+                // create tsquery string for Postgres text search
+                // For example, "word1 & word2"
+                string tsquery = string.Join(" & ", words
+                    .Where(w => !string.IsNullOrWhiteSpace(w))
+                    .Select(w => w.Replace("'", "''"))); // escape single quotes for SQL
+                Debug.Print($"Postgres.FullTextSearch: tsquery: {tsquery}");
+
+                string query = "SELECT * FROM \"Vids\" WHERE to_tsvector(\"filename\") @@ to_tsquery(@tsquery);";
+                psqlBase.WithSqlCommand<object>(command =>
+                {
+                    command.Parameters.AddWithValue("@tsquery", tsquery);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var vidSQL = new VidsSQL();
+                        while (reader.Read())
+                        {
+                            objects.Add(vidSQL.MapReaderToObject(reader));
+                        }
+                    }
+                    return true;
+                }, query);
+
             }
             catch (Exception ex)
             {
                 Debug.Print($"[postgres] FullTextSearch: Error retrieving Vids by words: {ex.Message}");
             }
-            return null;
+            return objects;
         }
     }
 }

@@ -158,7 +158,7 @@
             btnContainsText.Name = "btnContainsText";
             btnContainsText.Size = new Size(183, 35);
             btnContainsText.TabIndex = 14;
-            btnContainsText.Text = "Contains Search Benchmark";
+            btnContainsText.Text = "Contains Words Benchmark";
             btnContainsText.UseVisualStyleBackColor = true;
             btnContainsText.Click += btnContainsText_Click;
             // 

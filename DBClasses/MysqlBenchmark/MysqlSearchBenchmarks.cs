@@ -24,6 +24,15 @@ WHERE name = BINARY 'John'
 -- or
 WHERE name = 'John' COLLATE utf8mb4_bin
 */
+/*
+ * -- Other SQL DB full text search examples, these are not part of MYSQL or POSTGRES
+
+SELECT * FROM table_name
+WHERE CONTAINS(column_name, 'top AND blender');
+
+SELECT * FROM table_name
+WHERE FREETEXT(column_name, 'top blender');  
+*/
 
 namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
@@ -50,7 +59,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         {
             Debug.Print("\n--- Method 1: Contain Words Search ---");
             var v = ContainWordsSearch(words);
-            Debug.Print($"Found {v.Count} ContainWordsSearch for words:{String.Join(',', words)}");
+            Debug.Print($"Found {v.Count} ContainWordsSearch for words:{string.Join(',', words)}");
         }
 
         [Time("FullTextSearch")]
@@ -58,7 +67,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
             var v = FullTextSearch(words);
-            Debug.Print($"Found {v.Count} FullTextSearch for words:{String.Join(',', words)}");
+            Debug.Print($"Found {v.Count} FullTextSearch for words:{string.Join(',', words)}");
         }   
 
         public void RunSimpleSearchTest(string searchTerm)
@@ -187,7 +196,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
                 LOWER(column_name) LIKE '% word1 %' 
                 AND LOWER(column_name) LIKE '% word2 %';  
                 */
-                string query = "SELECT * FROM Vids WHERE ";
+string query = "SELECT * FROM Vids WHERE ";
                 mysqlBase.WithSqlCommand<object>(command =>
                 {
                     for (int i = 0; i < words.Length; i++)
@@ -219,30 +228,39 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         {
             //--create fulltext index:
             //CREATE FULLTEXT INDEX ON table_name(column_name) KEY INDEX index_name;
+            var objects = new List<VidsSQL>();
             try
             {
                 /* MYSQL only ---------------------------
                 SELECT * FROM table_name
                 WHERE MATCH(column_name) AGAINST('+word1 +word2' IN BOOLEAN MODE);
                 */
+                if (words == null || words.Length == 0)
+                    return new List<VidsSQL>();
+
+                string searchString = string.Join(" ", words.Select(w => $"+{w}"));
+                Debug.Print($"Mysql.FullTextSearch: searchString: {searchString}");
+                
+                string query = "SELECT * FROM Vids WHERE MATCH(filename) AGAINST(@search IN BOOLEAN MODE);";
+                mysqlBase.WithSqlCommand<object>(command =>
+                {
+                    command.Parameters.AddWithValue("@search", searchString);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var vidSQL = new VidsSQL();
+                        while (reader.Read())
+                        {
+                            objects.Add(vidSQL.MapReaderToObject(reader));
+                        }
+                    }
+                    return true;
+                }, query);
             }
             catch (Exception ex)
             {
                 Debug.Print($"[Mysql] FullTextSearch: Error retrieving Vids by words: {ex.Message}");
             }
-            return null;
+            return objects;
         }
     }
 }
-
-/*
- * 
- * -- Other SQL DB full text search examples, these are not part of MYSQL or POSTGRES
-
-SELECT * FROM table_name
-WHERE CONTAINS(column_name, 'top AND blender');
-
-SELECT * FROM table_name
-WHERE FREETEXT(column_name, 'top blender');  
- 
-*/
