@@ -1,7 +1,9 @@
 ﻿using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
+using CSharpAppPlayground.DBClasses.MysqlExamples;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 {
@@ -12,6 +14,31 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         public PostgresSearchBenchmarks()
         {
             psqlBase = new PostgresBase();
+        }
+
+        public void RunWordsSearchTest(string[] words)
+        {
+            Debug.Print("\n/////////////////////////////////////////////////////////" +
+                "\nPOSTGRES words search" +
+                "\n/////////////////////////////////////////////////////////");
+            Test_ContainWordsSearch(words);
+            Test_FullTextSearch(words);
+        }
+
+        [Time("ContainWordsSearch")]
+        private void Test_ContainWordsSearch(string[] words)
+        {
+            Debug.Print("\n--- Method 1: Contain Words Search ---");
+            var v = ContainWordsSearch(words);
+            Debug.Print($"Found {v.Count} ContainWordsSearch for words:{String.Join(',', words)}");
+        }
+
+        [Time("FullTextSearch")]
+        private void Test_FullTextSearch(string[] words)
+        {
+            Debug.Print("\n--- Method 2: Full Text Search ---");
+            var v = FullTextSearch(words);
+            Debug.Print($"Found {v.Count} FullTextSearch for words:{String.Join(',', words)}");
         }
 
         public void RunSimpleSearchTest(string searchTerm)
@@ -128,6 +155,62 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                 Debug.Print($"Postgres.GetFilename({searchTerm}): {ex.Message}");
             }
             return objects;
+        }
+
+        public List<VidsSQL> ContainWordsSearch(string[] words)
+        {
+            var objects = new List<VidsSQL>();
+            try
+            {
+                /* -- case insensitive example
+                SELECT * FROM table_name WHERE 
+                LOWER(column_name) LIKE '% word1 %' 
+                AND LOWER(column_name) LIKE '% word2 %';  
+                */
+                string query = "SELECT * FROM \"Vids\" WHERE ";
+                psqlBase.WithSqlCommand<object>(command =>
+                {
+                    for (int i = 0; i < words.Length; i++)
+                    {
+                        if (i > 0)
+                            query += " AND ";
+                        query += $"LOWWER(filename) LIKE @word{i} ";
+                        command.Parameters.AddWithValue($"@word{i}", $"%{words[i]}%");
+                    }
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var vidSQL = new VidsSQL();
+                        while (reader.Read())
+                        {
+                            objects.Add(vidSQL.MapReaderToObject(reader));
+                        }
+                    }
+                    return true; // doesn't matter cause objects is populated by reference
+                }, query);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"[postgres] ContainWordsSearch: Error retrieving Vids by words: {ex.Message}");             
+            }
+            return objects;
+        }
+
+        public List<VidsSQL> FullTextSearch(string[] words)
+        {
+            try
+            {
+                /*
+                POSTGRES only ------------------------
+                SELECT *
+                FROM YourTable
+                WHERE to_tsvector(yourColumn) @@ to_tsquery('top & blender');
+                */
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"[postgres] FullTextSearch: Error retrieving Vids by words: {ex.Message}");
+            }
+            return null;
         }
     }
 }

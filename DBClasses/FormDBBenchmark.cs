@@ -120,7 +120,7 @@ namespace CSharpAppPlayground.DBClasses
                 if (!File.Exists(tbCSVPath.Text))
                 {
                     Debug.Print("filepath invalid...");
-                    return ;
+                    return;
                 }
                 // import from existing csv data
                 bulkVidsCSVFilePath = tbCSVPath.Text;
@@ -156,6 +156,14 @@ namespace CSharpAppPlayground.DBClasses
             mongoSearch.RunSimpleSearchTest(searchTerm);
             mysqlSearch.RunSimpleSearchTest(searchTerm);
             postgresSearch.RunSimpleSearchTest(searchTerm);
+        }
+
+        private void btnContainsText_Click(object sender, EventArgs e)
+        {
+            string[] words = tbSearchText.Text.Split(' ');
+            Debug.Print($"Search contains Words: {tbSearchText.Text}");
+            mongoSearch.RunWordsSearchTest(words);
+
         }
     }
 }

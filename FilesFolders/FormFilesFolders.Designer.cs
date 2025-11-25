@@ -90,7 +90,7 @@
             // btnCountAndStorage
             // 
             btnCountAndStorage.Enabled = false;
-            btnCountAndStorage.Location = new Point(12, 127);
+            btnCountAndStorage.Location = new Point(12, 117);
             btnCountAndStorage.Name = "btnCountAndStorage";
             btnCountAndStorage.Size = new Size(240, 37);
             btnCountAndStorage.TabIndex = 6;
@@ -111,7 +111,7 @@
             // btnParseBookmark
             // 
             btnParseBookmark.Enabled = false;
-            btnParseBookmark.Location = new Point(288, 155);
+            btnParseBookmark.Location = new Point(288, 142);
             btnParseBookmark.Name = "btnParseBookmark";
             btnParseBookmark.Size = new Size(208, 30);
             btnParseBookmark.TabIndex = 8;
@@ -146,12 +146,12 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(285, 62);
+            label2.Location = new Point(288, 62);
             label2.Name = "label2";
-            label2.Padding = new Padding(90, 0, 90, 0);
-            label2.Size = new Size(205, 15);
+            label2.Padding = new Padding(40, 0, 40, 0);
+            label2.Size = new Size(198, 15);
             label2.TabIndex = 11;
-            label2.Text = "File";
+            label2.Text = "File (bookmark.html)";
             // 
             // label3
             // 
@@ -183,9 +183,9 @@
             // btnBenchmarkGetLinks
             // 
             btnBenchmarkGetLinks.Enabled = false;
-            btnBenchmarkGetLinks.Location = new Point(288, 191);
+            btnBenchmarkGetLinks.Location = new Point(288, 178);
             btnBenchmarkGetLinks.Name = "btnBenchmarkGetLinks";
-            btnBenchmarkGetLinks.Size = new Size(205, 30);
+            btnBenchmarkGetLinks.Size = new Size(208, 30);
             btnBenchmarkGetLinks.TabIndex = 15;
             btnBenchmarkGetLinks.Text = "Benchmark Query All Links";
             btnBenchmarkGetLinks.UseVisualStyleBackColor = true;

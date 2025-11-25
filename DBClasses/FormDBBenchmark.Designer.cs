@@ -40,6 +40,7 @@
             btnGenData = new Button();
             tbCSVPath = new TextBox();
             label3 = new Label();
+            btnContainsText = new Button();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
@@ -103,7 +104,7 @@
             // 
             btnSearchText.Location = new Point(192, 71);
             btnSearchText.Name = "btnSearchText";
-            btnSearchText.Size = new Size(173, 38);
+            btnSearchText.Size = new Size(183, 38);
             btnSearchText.TabIndex = 8;
             btnSearchText.Text = "Text Search Benchmark";
             btnSearchText.UseVisualStyleBackColor = true;
@@ -113,7 +114,7 @@
             // 
             tbSearchText.Location = new Point(192, 33);
             tbSearchText.Name = "tbSearchText";
-            tbSearchText.Size = new Size(173, 23);
+            tbSearchText.Size = new Size(183, 23);
             tbSearchText.TabIndex = 9;
             // 
             // label2
@@ -151,11 +152,22 @@
             label3.TabIndex = 13;
             label3.Text = "CSV data path, column order must be respected\r\nIf empty then \"Generate\" will create new based on \"Amount\"";
             // 
+            // btnContainsText
+            // 
+            btnContainsText.Location = new Point(192, 115);
+            btnContainsText.Name = "btnContainsText";
+            btnContainsText.Size = new Size(183, 35);
+            btnContainsText.TabIndex = 14;
+            btnContainsText.Text = "Contains Search Benchmark";
+            btnContainsText.UseVisualStyleBackColor = true;
+            btnContainsText.Click += btnContainsText_Click;
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnContainsText);
             Controls.Add(label3);
             Controls.Add(tbCSVPath);
             Controls.Add(btnGenData);
@@ -182,6 +194,7 @@
             Controls.SetChildIndex(btnGenData, 0);
             Controls.SetChildIndex(tbCSVPath, 0);
             Controls.SetChildIndex(label3, 0);
+            Controls.SetChildIndex(btnContainsText, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -202,5 +215,6 @@
         private Button btnGenData;
         private TextBox tbCSVPath;
         private Label label3;
+        private Button btnContainsText;
     }
 }
