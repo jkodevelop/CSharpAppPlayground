@@ -6,6 +6,10 @@ using System.Diagnostics;
 
 // NuGet Package: AngleSharp
 
+// Summary: AngleSharp is not as fast as HtmlAgilityPack for any of it's functions.
+// One advantage is it uses modern CSS selectors for querying HTML elements.
+// One HUGE limit is the parsing automatically decodes HTML entities, and there is no way to disable this behavior.
+
 // sources:
 // https://sd.blackball.lv/en/articles/read/18989-csharp-parse-html-with-anglesharp
 
@@ -15,12 +19,14 @@ namespace CSharpAppPlayground.FilesFolders.Files
     {
         public string filePath = "";
 
+        // Note: AngleSharp auto decodes HTML entities in .TextContent so use .InnerHtml instead
         private void ProcessFolder(IElement node, FolderBookmark folder)
         {
             // 1. get the links directly under this folder
             IHtmlCollection<IElement> links = node.QuerySelectorAll(":scope > a");
-            folder.Links = links.Select(link => new LinkBookmark {
-                Name = (link.TextContent ?? "").Trim(),
+            folder.Links = links.Select(link => new LinkBookmark
+            {
+                Name = (link.InnerHtml ?? "").Trim(), // can't use link.TextContent, InnerHtml works to keep HTML entities
                 Url = link.GetAttribute("href") ?? "",
                 AddDateUnixTimeSeconds = link.GetAttribute("add_date") ?? ""
             }).ToList();
@@ -29,7 +35,7 @@ namespace CSharpAppPlayground.FilesFolders.Files
             foreach (var subFolderElement in subFolders)
             {
                 FolderBookmark subFolder = new FolderBookmark();
-                subFolder.Name = (subFolderElement.TextContent ?? "").Trim();
+                subFolder.Name = (subFolderElement.InnerHtml ?? "").Trim(); // can't use link.TextContent, InnerHtml works to keep HTML entities
                 subFolder.AddDateUnixTimeSeconds = subFolderElement.GetAttribute("add_date") ?? "";
                 subFolder.ModifiedDateUnixTimeSeconds = subFolderElement.GetAttribute("last_modified") ?? "";
 

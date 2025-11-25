@@ -1,4 +1,6 @@
-﻿namespace CSharpAppPlayground.FilesFolders.Files
+﻿using System.Diagnostics;
+
+namespace CSharpAppPlayground.FilesFolders.Files
 {
     public class LinkBookmark
     {
@@ -27,9 +29,20 @@
 
     public class BookmarkLibrary
     {
-        public void PrintTree()
+        public void PrintTree(FolderBookmark f, int indentLevel = 0)
         {
-            //TODO: Implement PrintTree method
+            string indent = new string(' ', indentLevel * 2);
+            string line = $"{indent}Folder: ({f.Name})";
+            Debug.Print(line);
+            foreach(var link in f.Links)
+            {
+                string linkLine = $"{indent}Link: ({link.Name}), Url: {link.Url}";
+                Debug.Print(linkLine);
+            }
+            foreach (var subFolder in f.SubFolders)
+            {
+                PrintTree(subFolder, indentLevel + 1);
+            }
         }
     }
 }

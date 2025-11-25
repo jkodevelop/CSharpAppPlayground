@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 // NuGet Package: HtmlAgilityPack
 
+// SUMMARY this is faster than AngleSharp for parsing and querying HTML documents.
+// use this library for any function for html parsing or querying
+
 // [TO DOCUMENT]
 //
 // HtmlAgilityPack common APIs, note this library uses XPath for querying
@@ -209,7 +212,8 @@ namespace CSharpAppPlayground.FilesFolders.Files
                     else if(child.Name == "a")
                     {
                         string url = child.Attributes["href"].Value;
-                        string name = System.Net.WebUtility.UrlDecode(child.InnerText.Trim());
+                        string name = child.InnerText.Trim(); 
+                        //string name = System.Net.WebUtility.UrlDecode(child.InnerText.Trim());
                         //Debug.Print($"[LINK] FolderName: {folder.Name}, Bookmark: >{name}<, URL: {url}");
                         LinkBookmark link = new LinkBookmark();
                         link.Name = name;

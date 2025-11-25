@@ -56,37 +56,24 @@ namespace CSharpAppPlayground.FilesFolders.Files
                 return;
             }
 
-            Test_HtmlAgilityPackParser(cleanedOutPath);
-            //PrintResults(bk);
+            FolderBookmark hapRes = Test_HtmlAgilityPackParser(cleanedOutPath);
+            PrintResults(hapRes, "HtmlAgilityPack");
 
             // A) compare, without counting the FileReadAllText time
             string cleanHtml = File.ReadAllText(cleanedOutPath);
-            Test_AngleSharpParserSkipFileOpen(cleanHtml);
+            FolderBookmark asRes = Test_AngleSharpParserSkipFileOpen(cleanHtml);
 
             // B) compare, including the FileReadAllText time
-            //Test_AngleSharpParser(cleanedOutPath);
+            //FolderBookmark asRes = Test_AngleSharpParser(cleanedOutPath);
+
+            PrintResults(asRes, "AngleSharp");
         }
 
-        public void PrintResults(List<BookmarkLibrary> items)
+        public void PrintResults(FolderBookmark folders, string title)
         {
-            foreach(var item in items)
-            {
-                PrintBookmarkItems(item, 0);
-            }
-        }
-
-        public void PrintBookmarkItems(BookmarkLibrary item, int indentLevel)
-        {
-            //string indent = new string(' ', indentLevel * 2);
-            //string output = $"{indent}Name: {item.Name}, Url: {item.Url}";
-
-            //Debug.Print(output);
-            //f.updateRichTextBoxMain(output);
-
-            //foreach (var child in item.Children)
-            //{
-            //    PrintBookmarkItems(child, indentLevel + 1);
-            //}
+            Debug.Print($"----- {title} -----");
+            BookmarkLibrary bk = new BookmarkLibrary();
+            bk.PrintTree(folders);
         }
 
         #region Full Query Benchmark, includes file processing time
