@@ -220,7 +220,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     .Select(w => w.Replace("'", "''"))); // escape single quotes for SQL
                 Debug.Print($"Postgres.FullTextSearch: tsquery: {tsquery}");
 
-                string query = "SELECT * FROM \"Vids\" WHERE to_tsvector(\"filename\") @@ to_tsquery(@tsquery);";
+                string query = "SELECT * FROM \"Vids\" WHERE to_tsvector('simple',filename) @@ to_tsquery('simple',@tsquery);";
                 psqlBase.WithSqlCommand<object>(command =>
                 {
                     command.Parameters.AddWithValue("@tsquery", tsquery);
