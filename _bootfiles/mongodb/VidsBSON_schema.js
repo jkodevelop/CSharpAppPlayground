@@ -58,3 +58,37 @@ indexSpecs.forEach(function (spec) {
 });
 
 print("Collection + Indexes creation process finished.");
+
+
+// Insert sample data
+db[collectionName].insertMany([
+{
+    "filename" : "top amazing list blender",
+    "duration" : NumberInt(2927),
+    "metadatetime" : ISODate("2018-09-01T04:00:00.000+0000"),
+    "width" : NumberInt(640),
+    "height" : NumberInt(720),
+    "filesizebyte" : NumberLong(4236804352)
+},{
+    "filename" : "top values blender",
+    "duration" : NumberInt(2927),
+    "metadatetime" : ISODate("2015-06-12T04:00:00.000+0000"),
+    "width" : NumberInt(480),
+    "height" : NumberInt(720),
+    "filesizebyte" : NumberLong(4369729281)
+},{
+    "filename" : "top parameters blender",
+    "duration" : NumberInt(2927),
+    "metadatetime" : ISODate("2016-06-12T04:00:00.000+0000"),
+    "width" : NumberInt(640),
+    "height" : NumberInt(720),
+    "filesizebyte" : NumberLong(4369729281)
+},{
+    "filename" : "list of shirts",
+    "duration" : NumberInt(3000),
+    "metadatetime" : ISODate("2018-06-12T04:00:00.000+0000"),
+    "width" : NumberInt(640),
+    "height" : NumberInt(720),
+    "filesizebyte" : NumberLong(4369729281)
+}
+]);

@@ -1,13 +1,10 @@
-﻿using CSharpAppPlayground.DBClasses.Data;
-using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
+﻿using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using MethodTimer;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MySqlX.XDevAPI;
 using System.Configuration;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
 {
@@ -38,7 +35,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Test_FullTextSearch(string.Join(' ', words));
         }
 
-        [Time("ContainWordsSearch")]
+        [Time("MongoDB.ContainWordsSearch")]
         private void Test_ContainWordsSearch(string[] words)
         {
             Debug.Print("\n--- Method 1: Contain Words Search ---");
@@ -46,7 +43,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print($"Found {v.Count} ContainWordsSearch words:{string.Join(", ", words)}");
         }
 
-        [Time("FullTextSearch")]
+        [Time("MongoDB.FullTextSearch")]
         private void Test_FullTextSearch(string words)
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
@@ -64,7 +61,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Test_SearchExact(searchTerm);
         }
 
-        [Time("SearchContain")]
+        [Time("MongoDB.SearchContain")]
         public void Test_SearchContain(string searchTerm)
         {
             Debug.Print("\n--- Method 1: Search Using Contains + Case Insensitive ---");
@@ -72,7 +69,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
         }
 
-        [Time("SearchContainCaseSensitive")]
+        [Time("MongoDB.SearchContainCaseSensitive")]
         public void Test_SearchContainCaseSensitive(string searchTerm)
         {
             Debug.Print("\n--- Method 2: Search Using Contains + Case Sensitive ---");
@@ -80,7 +77,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print($"Found {v.Count} LIKE + case searchTerm:{searchTerm}");
         }
 
-        [Time("SearchExact")]
+        [Time("MongoDB.SearchExact")]
         public void Test_SearchExact(string searchTerm)
         {
             Debug.Print("\n--- Method 3: Search Exact ---");

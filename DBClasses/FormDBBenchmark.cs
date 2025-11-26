@@ -1,7 +1,6 @@
 ﻿using CSharpAppPlayground.Classes;
 using CSharpAppPlayground.Classes.AppSettings;
 using CSharpAppPlayground.Classes.DataGen.Generators;
-using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
@@ -160,8 +159,9 @@ namespace CSharpAppPlayground.DBClasses
 
         private void btnContainsText_Click(object sender, EventArgs e)
         {
-            string[] words = tbSearchText.Text.Split(' ');
             Debug.Print($"Search contains Words: {tbSearchText.Text}");
+
+            string[] words = tbSearchText.Text.Split(' ');
             mongoSearch.RunWordsSearchTest(words);
             mysqlSearch.RunWordsSearchTest(words);
             postgresSearch.RunWordsSearchTest(words);

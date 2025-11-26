@@ -2,7 +2,6 @@ using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using MethodTimer;
 using System.Diagnostics;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 // [TO DOCUMENT] LIKE BINARY
 // only mysql have `BINARY` keyword, postgres does not have this, but postgres supports COLLATE
@@ -54,7 +53,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Test_FullTextSearch(words);
         }
 
-        [Time("ContainWordsSearch")]
+        [Time("Mysql.ContainWordsSearch")]
         private void Test_ContainWordsSearch(string[] words)
         {
             Debug.Print("\n--- Method 1: Contain Words Search ---");
@@ -62,7 +61,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Found {v.Count} ContainWordsSearch for words:{string.Join(',', words)}");
         }
 
-        [Time("FullTextSearch")]
+        [Time("Mysql.FullTextSearch")]
         private void Test_FullTextSearch(string[] words)
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
@@ -80,7 +79,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Test_GetFilename(searchTerm);
         }
 
-        [Time("GetFilenameByLike")]
+        [Time("Mysql.GetFilenameByLike")]
         public void Test_GetFilenameByLike(string searchTerm)
         {
             Debug.Print("\n--- Method 1: Search Using LIKE ---");
@@ -88,7 +87,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
         }
 
-        [Time("GetFilenameByLikeCaseSensitive")]
+        [Time("Mysql.GetFilenameByLikeCaseSensitive")]
         public void Test_GetFilenameByLikeCaseSensitive(string searchTerm)
         {
             Debug.Print("\n--- Method 2: Search Using LIKE casesensitive ---");
@@ -96,7 +95,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Found {v.Count} LIKE + case searchTerm:{searchTerm}");
         }
 
-        [Time("GetFilename")]
+        [Time("Mysql.GetFilename")]
         public void Test_GetFilename(string searchTerm)
         {
             Debug.Print("\n--- Method 3: Search Exact ---");
@@ -188,27 +187,32 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
         public List<VidsSQL> ContainWordsSearch(string[] words)
         {
-            var objects = new List<VidsSQL>();
-            try
-            {
-                /* -- case insensitive example
+            /* -- case insensitive example
                 SELECT * FROM table_name WHERE 
                 LOWER(column_name) LIKE '% word1 %' 
                 AND LOWER(column_name) LIKE '% word2 %';  
-                */
-string query = "SELECT * FROM Vids WHERE ";
+            */
+            var objects = new List<VidsSQL>();
+            var vidSQL = new VidsSQL();
+            try
+            {
+                string query = "SELECT * FROM Vids WHERE ";
+                for (int i = 0; i < words.Length; i++)
+                {
+                    if (i > 0) { query += " AND "; }
+                    var paramName = $"@word{i}";
+                    query += $"LOWER(filename) LIKE {paramName}"; // case insensitive
+                }
+
                 mysqlBase.WithSqlCommand<object>(command =>
                 {
                     for (int i = 0; i < words.Length; i++)
                     {
-                        if (i > 0)
-                            query += " AND ";
-                        query += $"LOWWER(filename) LIKE @word{i} ";
-                        command.Parameters.AddWithValue($"@word{i}", $"%{words[i]}%");
+                        var paramName = $"@word{i}";
+                        command.Parameters.AddWithValue(paramName, $"%{words[i]}%");
                     }
                     using (var reader = command.ExecuteReader())
                     {
-                        var vidSQL = new VidsSQL();
                         while (reader.Read())
                         {
                             objects.Add(vidSQL.MapReaderToObject(reader));
@@ -227,7 +231,8 @@ string query = "SELECT * FROM Vids WHERE ";
         public List<VidsSQL> FullTextSearch(string[] words)
         {
             //--create fulltext index:
-            //CREATE FULLTEXT INDEX ON table_name(column_name) KEY INDEX index_name;
+            // CREATE FULLTEXT INDEX `fulltext_index_name` ON `table_name` (column_name);
+            // CREATE FULLTEXT INDEX `idx_fulltext_filename` ON `testdb`.`vids` (filename) COMMENT '' ALGORITHM DEFAULT LOCK DEFAULT
             var objects = new List<VidsSQL>();
             try
             {

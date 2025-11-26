@@ -20,7 +20,8 @@ CREATE TABLE Vids (
     INDEX idx_filesize (filesizebyte),
     INDEX idx_duration (duration),
     INDEX idx_metadatetime (metadatetime),
-    INDEX idx_dimensions (width, height)
+    INDEX idx_dimensions (width, height),
+    FULLTEXT idx_fulltext_filename (filename)
 );
 
 -- Add table comment
@@ -34,3 +35,11 @@ ALTER TABLE Vids MODIFY COLUMN duration INT NULL COMMENT 'Video duration in seco
 ALTER TABLE Vids MODIFY COLUMN metadatetime DATETIME NULL COMMENT 'Metadata creation/modification datetime';
 ALTER TABLE Vids MODIFY COLUMN width INT NULL COMMENT 'Video width in pixels';
 ALTER TABLE Vids MODIFY COLUMN height INT NULL COMMENT 'Video height in pixels';
+
+
+-- Insert sample data
+INSERT INTO Vids (filename,filesizebyte,duration,metadatetime,width,height) VALUES 
+("top amazing list blender",1000,5000,"2008-10-09 00:00:00",480,320),
+("top values blender",1000,5000,"2008-11-09 00:00:00",480,320),
+("top parameters blender",1000,5000,"2009-10-09 00:00:00",480,320),
+("list of shirts",1000,5000,"2012-10-09 00:00:00",480,320);

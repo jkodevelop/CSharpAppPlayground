@@ -40,6 +40,10 @@ CREATE INDEX idx_filename_trgm_nocase ON "Vids" USING GIN (lower(filename) gin_t
 -- SELECT * FROM vids WHERE lower(filename) LIKE '%example%';
 -- or with ILIKE (though LIKE with lower() is more explicit)
 
+-- other GIN indexes, might not be as useful as trgm*
+CREATE INDEX fulltext_filename_gin ON "Vids" USING GIN (to_tsvector('simple', filename));
+
+
 -- Add table comment
 COMMENT ON TABLE "Vids" IS 'Video metadata storage table';
  
@@ -51,3 +55,11 @@ COMMENT ON COLUMN "Vids"."duration" IS 'Video duration in seconds';
 COMMENT ON COLUMN "Vids"."metadatetime" IS 'Metadata creation/modification datetime';
 COMMENT ON COLUMN "Vids"."width" IS 'Video width in pixels';
 COMMENT ON COLUMN "Vids"."height" IS 'Video height in pixels';
+
+
+-- Insert sample data
+INSERT INTO "Vids" ("filename","filesizebyte","duration","metadatetime","width","height") VALUES 
+('top amazing list blender',1000,5000,'2008-10-09 00:00:00',480,320),
+('top values blender',1000,5000,'2008-11-09 00:00:00',480,320),
+('top parameters blender',1000,5000,'2009-10-09 00:00:00',480,320),
+('list of shirts',1000,5000,'2012-10-09 00:00:00',480,320);

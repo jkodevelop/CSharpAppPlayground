@@ -1,9 +1,7 @@
 ﻿using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
-using CSharpAppPlayground.DBClasses.MysqlExamples;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
 using MethodTimer;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 {
@@ -25,7 +23,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Test_FullTextSearch(words);
         }
 
-        [Time("ContainWordsSearch")]
+        [Time("Postgres.ContainWordsSearch")]
         private void Test_ContainWordsSearch(string[] words)
         {
             Debug.Print("\n--- Method 1: Contain Words Search ---");
@@ -33,7 +31,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Found {v.Count} ContainWordsSearch for words:{string.Join(',', words)}");
         }
 
-        [Time("FullTextSearch")]
+        [Time("Postgres.FullTextSearch")]
         private void Test_FullTextSearch(string[] words)
         {
             Debug.Print("\n--- Method 2: Full Text Search ---");
@@ -51,7 +49,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Test_GetFilename(searchTerm);
         }
 
-        [Time("GetFilenameByILike")]
+        [Time("Postgres.GetFilenameByILike")]
         public void Test_GetFilenameByILike(string searchTerm)
         {
             Debug.Print("\n--- Method 1: Search Using ILIKE ---");
@@ -59,7 +57,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Found {v.Count} LIKE searchTerm:{searchTerm}");
         }
 
-        [Time("GetFilenameByLikeCaseSensitive")]
+        [Time("Postgres.GetFilenameByLikeCaseSensitive")]
         public void Test_GetFilenameByLikeCaseSensitive(string searchTerm)
         {
             Debug.Print("\n--- Method 2: Search Using LIKE + case sensitive ---");
@@ -67,7 +65,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Found {v.Count} LIKE + case searchTerm:{searchTerm}");
         }
 
-        [Time("GetFilename")]
+        [Time("Postgres.GetFilename")]
         public void Test_GetFilename(string searchTerm)
         {
             Debug.Print("\n--- Method 3: Search Exact ---");
@@ -164,17 +162,21 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             {
                 /* -- case insensitive example
                 SELECT * FROM table_name WHERE 
-                LOWER(column_name) LIKE '% word1 %' 
-                AND LOWER(column_name) LIKE '% word2 %';  
+                column_name ILIKE '% word1 %' 
+                AND column_name ILIKE '% word2 %';  
                 */
                 string query = "SELECT * FROM \"Vids\" WHERE ";
+                for (int i = 0; i < words.Length; i++)
+                {
+                    if (i > 0)
+                        query += " AND ";
+                    query += $"filename ILIKE @word{i} "; // case insensitive
+                }
+
                 psqlBase.WithSqlCommand<object>(command =>
                 {
                     for (int i = 0; i < words.Length; i++)
                     {
-                        if (i > 0)
-                            query += " AND ";
-                        query += $"LOWWER(filename) LIKE @word{i} ";
                         command.Parameters.AddWithValue($"@word{i}", $"%{words[i]}%");
                     }
                     using (var reader = command.ExecuteReader())
@@ -197,6 +199,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
         public List<VidsSQL> FullTextSearch(string[] words)
         {
+            //--create GIN fulltext index:
+            // CREATE INDEX <index_name> ON <table_name> USING GIN (to_tsvector('simple', <column_name>));
+            // CREATE INDEX fulltext_filename_gin ON "Vids" USING GIN (to_tsvector('simple', filename));
             var objects = new List<VidsSQL>();
             try
             {
