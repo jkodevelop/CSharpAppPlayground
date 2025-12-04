@@ -8,6 +8,7 @@ namespace CSharpAppPlayground
         _connPostgres connPostgres;
 
         PostgresBaseExamples baseExamples = new PostgresBaseExamples();
+        PostgresEnumExample enumExample = new PostgresEnumExample();
 
         public FormDBPostgres()
         {
@@ -30,6 +31,11 @@ namespace CSharpAppPlayground
         {
             // running basic example: insert, select, update, delete
             baseExamples.RunBasicExample();
+        }
+
+        private void btnEnumExample_Click(object sender, EventArgs e)
+        {
+            enumExample.DemoInsertAndSelect();
         }
     }
 }

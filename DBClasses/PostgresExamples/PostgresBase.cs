@@ -6,6 +6,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
     public class PostgresBase
     {
         private string connectionStr = string.Empty;
+        private static NpgsqlDataSource dataSource;
 
         public PostgresBase()
         {
@@ -13,13 +14,24 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
             // This is replaced, with GlobalConfiguration.Setup().UseMySql().UsePostgreSql(); // to support both DBs
             // GlobalConfiguration.Setup().UsePostgreSql(); // configuring "RepoDb", add more supported API to postgres
+
+            // 1.Create an NpgsqlDataSourceBuilder instance with the connection string
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStr);
+
+            // 2. (Optional) Configure type mappings or other options
+            // For example, to map a custom enum or composite type:
+            // dataSourceBuilder.MapEnum<MyCustomEnum>(); 
+            // dataSourceBuilder.MapComposite<MyCompositeType>();
+
+            // 3. Build the NpgsqlDataSource
+            dataSource = dataSourceBuilder.Build();
         }
 
         public T WithConnection<T>(Func<NpgsqlConnection, T> func)
         {
             try
             {
-                using (var connection = new NpgsqlConnection(connectionStr))
+                using (var connection = dataSource.OpenConnection())
                 {
                     connection.Open();
                     return func(connection);
@@ -39,7 +51,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
         {
             try
             {
-                using (var connection = new NpgsqlConnection(connectionStr))
+                using (var connection = await dataSource.OpenConnectionAsync())
                 {
                     await connection.OpenAsync();
                     return await func(connection);
@@ -59,13 +71,18 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(connectionStr))
+                //using (NpgsqlConnection connection = new NpgsqlConnection(connectionStr))
+                //{
+                //    using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                //    {
+                //        connection.Open();
+                //        return func(command);
+                //    }
+                //}
+
+                using (NpgsqlCommand command = dataSource.CreateCommand(query))
                 {
-                    using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
-                    {
-                        connection.Open();
-                        return func(command);
-                    }
+                    return func(command);
                 }
             }
             catch (NpgsqlException sqlEx)
@@ -82,14 +99,20 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(connectionStr))
+                //using (NpgsqlConnection connection = new NpgsqlConnection(connectionStr))
+                //{
+                //    using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                //    {
+                //        await connection.OpenAsync();
+                //        return await func(command);
+                //    }
+                //}
+
+                using (NpgsqlCommand command = dataSource.CreateCommand(query))
                 {
-                    using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
-                    {
-                        await connection.OpenAsync();
-                        return await func(command);
-                    }
+                    return await func(command);
                 }
+
             }
             catch (NpgsqlException sqlEx)
             {

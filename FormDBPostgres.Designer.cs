@@ -30,6 +30,7 @@
         {
             btnPostgresStatus = new Button();
             btnPostgresBasicExample = new Button();
+            btnEnumExample = new Button();
             SuspendLayout();
             // 
             // btnPostgresStatus
@@ -52,11 +53,22 @@
             btnPostgresBasicExample.UseVisualStyleBackColor = true;
             btnPostgresBasicExample.Click += btnPostgresBasicExample_Click;
             // 
+            // btnEnumExample
+            // 
+            btnEnumExample.Location = new Point(21, 122);
+            btnEnumExample.Name = "btnEnumExample";
+            btnEnumExample.Size = new Size(132, 32);
+            btnEnumExample.TabIndex = 3;
+            btnEnumExample.Text = "Enum Example";
+            btnEnumExample.UseVisualStyleBackColor = true;
+            btnEnumExample.Click += btnEnumExample_Click;
+            // 
             // FormDBPostgres
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnEnumExample);
             Controls.Add(btnPostgresBasicExample);
             Controls.Add(btnPostgresStatus);
             Name = "FormDBPostgres";
@@ -68,5 +80,6 @@
 
         private Button btnPostgresStatus;
         private Button btnPostgresBasicExample;
+        private Button btnEnumExample;
     }
 }
