@@ -1,15 +1,32 @@
-﻿using System.Diagnostics;
+﻿using Npgsql;
+using NpgsqlTypes;
 using System.Configuration;
-using Npgsql;
+using System.Diagnostics;
+
+// TO DOCUMENT
+// problem ENUM POSTGRESQL EXAMPLE: case sensitive problems with enum values
+// example:
+// 1. postgres enum defined as 'Todo', 'Pending', 'Done' - must match exactly in C#
+// 2. .net ActionStatus enum defined as Todo, Pending, Done
+// PROBLEM: sending enum:Pending -> postgres expects 'Pending' but Npgsql sends 'pending' (lowercase) -> error
+// WHY? Npgsql driver, by default, uses a snake-case name translator that converts C# PascalCase names to lower-case for PostgreSQL
+// SOLUTION a:
+//   use [PgName("ExactName")] attribute on enum values to specify exact mapping
+// SOLUTION b: call this before dataSourceBuilder.MapEnum<T>
+//   dataSourceBuilder.DefaultNameTranslator = new Npgsql.NameTranslation.NpgsqlIdentityNameTranslator();
+
 
 namespace CSharpAppPlayground.DBClasses.PostgresExamples
 {
     // Example enum to represent status values - ensure this matches the enum type defined in your PostgreSQL database
     public enum ActionStatus
     {
+        // [PgName("Todo")] // example of solution (a) the postgres driver Npsql auto lowercase conversion, this forces exact value passing
         Todo,
+        //[PgName("Pending")]
         Pending,
-        Done
+        //[PgName("Done")]
+        Done,
     }
 
     public class ExampleEnum
@@ -35,11 +52,17 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
             // 1.Create an NpgsqlDataSourceBuilder instance with the connection string
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStr);
 
+            // 2a. Set the name translator to avoid case conversion issues, just send name as-is, no case change
+            // note by default Npgsql uses NpgsqlSnakeCaseNameTranslator() which converts PascalCase to snake_case (lowercase with underscores)
+            // MUST BE CALLED BEFORE MapEnum<T>()
+            // example of solution (b)
+            dataSourceBuilder.DefaultNameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
+
             // 2. (Optional) Configure type mappings or other options
             // For example, to map a custom enum or composite type:
             // Map the PostgreSQL enum type name without extra quotes
-            dataSourceBuilder.MapEnum<ActionStatus>("ActionStatus"); // "ActionStatus" is the name of ENUM type defined in postgres
             // dataSourceBuilder.MapComposite<MyCompositeType>();
+            dataSourceBuilder.MapEnum<ActionStatus>("ActionStatus"); // "ActionStatus" is the name of ENUM type defined in postgres
 
             // 3. Build the NpgsqlDataSource
             dataSource = dataSourceBuilder.Build();
@@ -57,13 +80,14 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
 
                     // Add parameters
                     command.Parameters.AddWithValue("@title", obj.title);
+                    command.Parameters.AddWithValue("@currentstatus", obj.currentstatus);
 
                     // For enum parameters explicitly set NpgsqlDbType and DataTypeName so Npgsql knows the DB enum type
-                    var statusParam = new NpgsqlParameter("@currentstatus", obj.currentstatus)
-                    {
-                        DataTypeName = "ActionStatus"
-                    };
-                    command.Parameters.Add(statusParam);
+                    //var statusParam = new NpgsqlParameter("@currentstatus", obj.currentstatus)
+                    //{
+                    //    DataTypeName = "ActionStatus"
+                    //};
+                    //command.Parameters.Add(statusParam);
 
                     var result = command.ExecuteScalar();
                     return Convert.ToInt32(result);
@@ -86,7 +110,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
                 using (NpgsqlCommand command = dataSource.CreateCommand(query))
                 {
                     command.CommandText = query;
-                    // Create enum parameter with explicit type
+                    // Create enum parameter with explicit type, alt example of adding Parameter and Value using ENUM
                     var statusParam = new NpgsqlParameter("@currentstatus", status)
                     {
                         DataTypeName = "ActionStatus"
