@@ -110,14 +110,49 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             while (br.BaseStream.Position < moovEnd)
             {
                 long boxStart = br.BaseStream.Position;
+
+                // Check for possible EOF or invalid state before reading
+                if (moovEnd - boxStart < 8)
+                {
+                    // Not enough bytes remaining for a valid box header
+                    break;
+                }
+
                 uint boxSize = ReadUInt32(br);
                 string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
 
+                // Defensive: Detect invalid or pathological box size to prevent infinite loops
+                if ((boxSize < 8 && boxSize != 0) || boxSize > moovEnd - boxStart)
+                {
+                    Debug.Print($"MP4 Parse Error: Detected invalid or oversized boxSize ({boxSize}) for boxType '{boxType}' at position {boxStart}, aborting moov parse.");
+                    break;
+                }
+
+                long nextBoxPos = boxStart + boxSize;
+                if (boxSize == 1)
+                {
+                    if (moovEnd - br.BaseStream.Position < 8)
+                    {
+                        // Not enough bytes for large-size box
+                        Debug.Print($"MP4 Parse Error: Not enough bytes to read large size for boxType '{boxType}' at position {boxStart}, aborting moov parse.");
+                        break;
+                    }
+                    ulong largeSize = br.ReadUInt64();
+                    nextBoxPos = boxStart + 16 + (long)largeSize - 16;
+                }
+                else if (boxSize == 0)
+                {
+                    // box extends to end of parent box
+                    nextBoxPos = moovEnd;
+                }
+
+                bool boxHandled = false;
                 if (boxType == "mvhd")
                 {
                     if (mode != Mp4ParseMode.FrameSizeOnly)
                     {
                         ParseMvhd(br);
+                        boxHandled = true;
                     }
                 }
                 else if (boxType == "trak")
@@ -125,10 +160,23 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                     if (mode != Mp4ParseMode.DurationOnly)
                     {
                         ParseTrak(br, boxStart, boxSize);
+                        boxHandled = true;
                     }
                 }
+
+                if (!boxHandled)
+                {
+                    // Seek to the next box (skip this one)
+                    br.BaseStream.Position = nextBoxPos;
+                }
                 else
-                    br.BaseStream.Position = boxStart + boxSize;
+                {
+                    // If a handler did not advance the position to the end of the box, ensure position is correct
+                    if (br.BaseStream.Position < nextBoxPos)
+                    {
+                        br.BaseStream.Position = nextBoxPos;
+                    }
+                }
             }
         }
 
@@ -173,15 +221,37 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             while (br.BaseStream.Position < moovEnd)
             {
                 long boxStart = br.BaseStream.Position;
+
+                // Prevent infinite loop: ensure we have space for size and type fields
+                if (moovEnd - boxStart < 8)
+                {
+                    // Not enough room for another box, break loop
+                    break;
+                }
+
                 uint boxSize = ReadUInt32(br);
                 string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
 
+                // Prevent zero-sized or too-small box (would cause infinite loop)
+                if (boxSize < 8)
+                {
+                    // Defensive: skip to end of moov box to avoid stuck loop
+                    br.BaseStream.Position = moovEnd;
+                    break;
+                }
+
                 if (boxType == "mvhd")
+                {
                     ParseMvhd(br);
+                }
                 else if (boxType == "trak")
+                {
                     ParseTrak(br, boxStart, boxSize);
+                }
                 else
+                {
                     br.BaseStream.Position = boxStart + boxSize;
+                }
             }
         }
 
@@ -218,8 +288,22 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             while (br.BaseStream.Position < trakEnd)
             {
                 long boxStart = br.BaseStream.Position;
+                if (trakEnd - boxStart < 8)
+                {
+                    // Too little data left for a valid box, prevent infinite loop by breaking
+                    break;
+                }
+
                 uint boxSize = ReadUInt32(br);
                 string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
+
+                // Prevent zero-sized or too-small box (would cause infinite loop)
+                if (boxSize < 8)
+                {
+                    // Defensive: skip to end of trak box to avoid stuck loop
+                    br.BaseStream.Position = trakEnd;
+                    break;
+                }
 
                 if (boxType == "tkhd")
                 {
@@ -232,6 +316,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 }
             }
         }
+
 
         // 4b - width x height
         private void ParseTkhd(BinaryReader br)
@@ -254,7 +339,7 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             // the second one overrides the first correct pass, so lets keep valid values if they show up
             int w = (int)(widthFixed >> 16);
             int h = (int)(heightFixed >> 16);
-            if(w > 0 && h > 0)
+            if (w > 0 && h > 0)
             {
                 info.Width = w;
                 info.Height = h;
