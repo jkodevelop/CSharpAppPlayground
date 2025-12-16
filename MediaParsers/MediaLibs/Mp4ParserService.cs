@@ -62,11 +62,25 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
             while (fs.Position < fs.Length)
             {
                 long boxStart = fs.Position;
+
+                // Check if at or near EOF and abort to avoid infinite loop (defensive)
+                if (fs.Length - boxStart < 8)
+                    break;
+
                 uint boxSize = ReadUInt32(br);
                 string boxType = Encoding.ASCII.GetString(br.ReadBytes(4));
 
+                long nextBoxPos = boxStart + boxSize;
                 if (boxSize == 1)
+                {
                     boxSize = (uint)(br.ReadUInt64() - 16); // large size (rare)
+                    nextBoxPos = boxStart + 16 + boxSize;
+                }
+                else if (boxSize == 0)
+                {
+                    // box extends to end of file
+                    nextBoxPos = fs.Length;
+                }
 
                 if (boxType == "moov")
                 {
@@ -75,7 +89,15 @@ namespace CSharpAppPlayground.MediaParsers.MediaLibs
                 }
                 else
                 {
-                    fs.Position = boxStart + boxSize;
+                    // Defensive: check for impossible box sizes to avoid infinite loop
+                    if (boxSize < 8 && boxSize != 0)
+                    {
+                        Debug.Print($"MP4 Parse: Detected invalid boxSize ({boxSize}) at position {boxStart}, aborting.");
+                        break;
+                    }
+
+                    // Seek to next box using calculated position
+                    fs.Position = nextBoxPos;
                 }
             }
             return info;
