@@ -31,6 +31,7 @@
             btnPostgresStatus = new Button();
             btnPostgresBasicExample = new Button();
             btnEnumExample = new Button();
+            btnBenchBulkUpdate = new Button();
             SuspendLayout();
             // 
             // btnPostgresStatus
@@ -63,11 +64,22 @@
             btnEnumExample.UseVisualStyleBackColor = true;
             btnEnumExample.Click += btnEnumExample_Click;
             // 
+            // btnBenchBulkUpdate
+            // 
+            btnBenchBulkUpdate.Location = new Point(170, 70);
+            btnBenchBulkUpdate.Name = "btnBenchBulkUpdate";
+            btnBenchBulkUpdate.Size = new Size(156, 32);
+            btnBenchBulkUpdate.TabIndex = 4;
+            btnBenchBulkUpdate.Text = "Benchmark Bulk Update";
+            btnBenchBulkUpdate.UseVisualStyleBackColor = true;
+            btnBenchBulkUpdate.Click += btnBenchBulkUpdate_Click;
+            // 
             // FormDBPostgres
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnBenchBulkUpdate);
             Controls.Add(btnEnumExample);
             Controls.Add(btnPostgresBasicExample);
             Controls.Add(btnPostgresStatus);
@@ -81,5 +93,6 @@
         private Button btnPostgresStatus;
         private Button btnPostgresBasicExample;
         private Button btnEnumExample;
+        private Button btnBenchBulkUpdate;
     }
 }
