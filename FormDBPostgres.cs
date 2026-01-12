@@ -1,8 +1,11 @@
 ﻿using CSharpAppPlayground.DBClasses.PostgresExamples;
 using Mysqlx.Crud;
+using RepoDb.Enumerations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CSharpAppPlayground
 {
@@ -86,7 +89,62 @@ namespace CSharpAppPlayground
             //      WHERE t.id IS NULL
             //   GROUP BY s.id
             //  RETURNING t.id
+        }
 
+        private void TODO_Benchmark_SELECT_UNIQUE()
+        {
+            // Compare different ways to select multiple items by (name, size) tuple
+            // using VIEW for N > 100 ~ 5000 items
+            // using WHERE for N < 100 items
+            //
+            // Find just one entry of the a list of objects fitting the query parameters.
+
+            // OPTION 1: using where
+            // 
+            //SELECT DISTINCT ON(filename, filesizebyte)
+            //    id,
+            //    filename,
+            //    filesizebyte
+            //FROM file
+            //WHERE(name, filesizebyte) IN(
+            //    ('nameA', 100),
+            //    ('nameB', 989),
+            //    ('nameC', 500)
+            //)
+            //ORDER BY filename, filesizebyte, id ASC;
+
+            // OPTION 2: using JOIN with VALUES (temporary view) + postgres in-memory map search
+            //
+            //SELECT DISTINCT ON(search_data.search_name, search_data.search_size)
+            //    f.id,
+            //    f.filename,
+            //    f.filesizebyte
+            //FROM(
+            //    VALUES
+            //        ('nameA', 100),
+            //        ('nameB', 989),
+            //        ('nameC', 500)-- Add your N items here
+            //) AS search_data(search_name, search_size)
+            //JOIN file as f
+            //    ON f.name = search_data.search_name
+            //    AND f.filesizebyte = search_data.search_size
+            //ORDER BY search_data.search_name, search_data.search_size, f.id ASC;
+
+            // alt variantions 
+            // 
+            //SELECT DISTINCT ON(search_data.search_name, search_data.search_size)
+            //    f.*
+            //FROM(
+            //    VALUES
+            //        ('nameA', 100),
+            //        ('nameB', 989),
+            //        ('nameC', 500)-- Add your N items here
+            //    ) AS search_data(search_name, search_size)
+            //JOIN file AS f
+            //    ON f.name = search_data.search_name
+            //    AND f.filesizebyte = search_data.search_size
+            //WHERE f.status = 0 
+            //ORDER BY search_data.search_name, search_data.search_size, f.id ASC;
 
         }
     }
