@@ -1,6 +1,9 @@
 using CSharpAppPlayground.DBClasses.Data;
 using System.Diagnostics;
 
+// TODO: add example of postgres ARRAY
+// source: https://www.tutorialsteacher.com/postgresql/array-data-type
+
 namespace CSharpAppPlayground.DBClasses.PostgresExamples
 {
 	public class PostgresBaseExamples
