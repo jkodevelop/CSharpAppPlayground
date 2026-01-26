@@ -35,6 +35,8 @@
             btnPostgresStatus = new Button();
             btnMongoDBStatus = new Button();
             btnDBBenchmark = new Button();
+            btnMariaDB = new Button();
+            btnMariaDBStatus = new Button();
             SuspendLayout();
             // 
             // btnMySQL
@@ -59,7 +61,7 @@
             // 
             // btnMongoDB
             // 
-            btnMongoDB.Location = new Point(22, 141);
+            btnMongoDB.Location = new Point(22, 194);
             btnMongoDB.Name = "btnMongoDB";
             btnMongoDB.Size = new Size(110, 38);
             btnMongoDB.TabIndex = 2;
@@ -89,7 +91,7 @@
             // 
             // btnMongoDBStatus
             // 
-            btnMongoDBStatus.Location = new Point(138, 141);
+            btnMongoDBStatus.Location = new Point(138, 194);
             btnMongoDBStatus.Name = "btnMongoDBStatus";
             btnMongoDBStatus.Size = new Size(54, 38);
             btnMongoDBStatus.TabIndex = 5;
@@ -99,7 +101,7 @@
             // 
             // btnDBBenchmark
             // 
-            btnDBBenchmark.Location = new Point(22, 201);
+            btnDBBenchmark.Location = new Point(22, 253);
             btnDBBenchmark.Name = "btnDBBenchmark";
             btnDBBenchmark.Size = new Size(170, 35);
             btnDBBenchmark.TabIndex = 6;
@@ -107,11 +109,33 @@
             btnDBBenchmark.UseVisualStyleBackColor = true;
             btnDBBenchmark.Click += btnDBBenchmark_Click;
             // 
+            // btnMariaDB
+            // 
+            btnMariaDB.Location = new Point(22, 138);
+            btnMariaDB.Name = "btnMariaDB";
+            btnMariaDB.Size = new Size(110, 38);
+            btnMariaDB.TabIndex = 7;
+            btnMariaDB.Text = "MariaDB";
+            btnMariaDB.UseVisualStyleBackColor = true;
+            btnMariaDB.Click += btnMariaDB_Click;
+            // 
+            // btnMariaDBStatus
+            // 
+            btnMariaDBStatus.Location = new Point(138, 138);
+            btnMariaDBStatus.Name = "btnMariaDBStatus";
+            btnMariaDBStatus.Size = new Size(54, 38);
+            btnMariaDBStatus.TabIndex = 8;
+            btnMariaDBStatus.Text = "status";
+            btnMariaDBStatus.UseVisualStyleBackColor = true;
+            btnMariaDBStatus.Click += btnMariaDBStatus_Click;
+            // 
             // FormDBsMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnMariaDBStatus);
+            Controls.Add(btnMariaDB);
             Controls.Add(btnDBBenchmark);
             Controls.Add(btnMongoDBStatus);
             Controls.Add(btnPostgresStatus);
@@ -133,5 +157,7 @@
         private Button btnPostgresStatus;
         private Button btnMongoDBStatus;
         private Button btnDBBenchmark;
+        private Button btnMariaDB;
+        private Button btnMariaDBStatus;
     }
 }

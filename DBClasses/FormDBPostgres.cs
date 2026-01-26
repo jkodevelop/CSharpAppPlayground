@@ -1,13 +1,7 @@
 ﻿using CSharpAppPlayground.DBClasses.PostgresExamples;
-using Mysqlx.Crud;
-using RepoDb.Enumerations;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace CSharpAppPlayground
+namespace CSharpAppPlayground.DBClasses
 {
     public partial class FormDBPostgres : Form
     {

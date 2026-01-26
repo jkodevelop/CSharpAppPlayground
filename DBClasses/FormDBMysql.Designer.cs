@@ -1,4 +1,4 @@
-﻿namespace CSharpAppPlayground
+﻿namespace CSharpAppPlayground.DBClasses
 {
     partial class FormDBMysql
     {

@@ -1,13 +1,13 @@
 ﻿using CSharpAppPlayground.DBClasses.MysqlExamples;
 using System.Diagnostics;
 
-namespace CSharpAppPlayground
+namespace CSharpAppPlayground.DBClasses
 {
     public partial class FormDBMysql : Form
     {
         _connMysql mysql;
 
-        MysqlBaseExamples baseExamples = new MysqlBaseExamples();
+        MysqlBaseExamples basicExamples = new MysqlBaseExamples();
         public FormDBMysql()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace CSharpAppPlayground
         private void btnMysqlBasicExample_Click(object sender, EventArgs e)
         {
             // running basic example: insert, select, update, delete
-            baseExamples.RunBasicExample();
+            basicExamples.RunBasicExample();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using CSharpAppPlayground.DBClasses.MongoDBExamples;
 using System.Diagnostics;
 
-namespace CSharpAppPlayground
+namespace CSharpAppPlayground.DBClasses
 {
     public partial class FormDBMongo : Form
     {

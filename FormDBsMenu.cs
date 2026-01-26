@@ -1,4 +1,5 @@
 ﻿using CSharpAppPlayground.Classes;
+using CSharpAppPlayground.DBClasses.MariaDBExamples;
 using CSharpAppPlayground.DBClasses.MongoDBExamples;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
@@ -11,6 +12,7 @@ namespace CSharpAppPlayground
         private _connMysql mysql;
         private _connPostgres postgres;
         private _connMongoDB mongo;
+        private _connMariaDB mariadb;
 
         public FormDBsMenu()
         {
@@ -19,9 +21,10 @@ namespace CSharpAppPlayground
             mysql = new _connMysql();
             postgres = new _connPostgres();
             mongo = new _connMongoDB();
+            mariadb = new _connMariaDB();
         }
 
-        protected FormFactory _formMysql = new FormFactory("CSharpAppPlayground.FormDBMysql, CSharpAppPlayground");
+        protected FormFactory _formMysql = new FormFactory("CSharpAppPlayground.DBClasses.FormDBMysql, CSharpAppPlayground");
         private void btnMySQL_Click(object sender, EventArgs e)
         {
             _formMysql.Open();
@@ -32,7 +35,13 @@ namespace CSharpAppPlayground
             Debug.Print($"{serverVersion}");
         }
 
-        protected FormFactory _formPostgres = new FormFactory("CSharpAppPlayground.FormDBPostgres, CSharpAppPlayground");
+        protected FormFactory _formDBMaria = new FormFactory("CSharpAppPlayground.DBClasses.FormDBMaria, CSharpAppPlayground");
+        private void btnMariaDB_Click(object sender, EventArgs e)
+        {
+            _formDBMaria.Open();
+        }
+
+        protected FormFactory _formPostgres = new FormFactory("CSharpAppPlayground.DBClasses.FormDBPostgres, CSharpAppPlayground");
         private void btnPostgres_Click(object sender, EventArgs e)
         {
             _formPostgres.Open();
@@ -43,7 +52,7 @@ namespace CSharpAppPlayground
             Debug.Print($"{serverVersion}");
         }
 
-        protected FormFactory _formMongo = new FormFactory("CSharpAppPlayground.FormDBMongo, CSharpAppPlayground");
+        protected FormFactory _formMongo = new FormFactory("CSharpAppPlayground.DBClasses.FormDBMongo, CSharpAppPlayground");
         private void btnMongoDB_Click(object sender, EventArgs e)
         {
             _formMongo.Open();
@@ -60,5 +69,12 @@ namespace CSharpAppPlayground
         {
             _formDBBenchmark.Open();
         }
+
+        private void btnMariaDBStatus_Click(object sender, EventArgs e)
+        {
+            string serverVersion = mariadb.getServerVersion();
+            Debug.Print($"{serverVersion}");
+        }
+
     }
 }
