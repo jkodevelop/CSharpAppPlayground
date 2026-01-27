@@ -1,6 +1,8 @@
-﻿using AngleSharp.Dom;
+﻿using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
+using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MariaDBExamples;
+using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using MethodTimer;
 using MySql.Data.MySqlClient;
 using System.Configuration;
@@ -8,14 +10,16 @@ using System.Diagnostics;
 
 namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
 {
-    public class MariaDBBasicBenchmarks
+    public class MariaDBBasicBenchmarks: MysqlBasicBenchmarks
     {
         private string connectionStr;
         private MariaDBBase mariaBase;
         private DataGenHelper dataGenHelper;
 
-        private int batchLimit = 5000;
-        private int overloadLimit = 50000;
+        protected int batchLimit = 5000;
+        protected int overloadLimit = 50000;
+
+        private string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
 
         public MariaDBBasicBenchmarks()
         {
@@ -29,11 +33,55 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
             BulkInsertUseInlineFile(csvFilePath);
         }
 
+        public new void FastestCompareBenchmark(int dataSetSize)
+        {
+            // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseInlineFile(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseInlineFile");
+        }
+
+        public new void RunBulkInsertBenchmark(int dataSetSize)
+        {
+            Debug.Print("=== MariaDB Bulk Insert Examples with VidsSQL ===");
+
+            // Generate test data
+            GenerateVidsSQL generator = new GenerateVidsSQL();
+            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            Debug.Print($"Generated {testData.Count} test records\n");
+
+            //Example 1: Single insert loop(baseline)
+            Test_InsertSimpleLoop(testData);
+
+            // Example 2: Multi-value INSERT statement
+            Test_InsertMultiValue(testData);
+
+            // Example 3: Transaction with batched inserts
+            Test_InsertWithTransaction(testData);
+
+            // Example 4: Prepared statement with batching
+            Test_InsertWithPreparedStatement(testData);
+
+            // Example 5: Prepared statement with batching and transaction
+            Test_BulkInsertWithPreparedStatementAndTransaction(testData);
+
+            // EXAMPLE 7: Bulk Insert using Inline File Command
+            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+                Test_BulkInsertUseInlineFile(csvFilePath);
+            else
+                Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseInlineFile");
+
+            Debug.Print("\n=== Benchmark Complete ===");
+        }
+
         #region BENCHMARK METHODS
-        [Time("BulkInsertUseCSVOperation:")]
+        [Time("BulkInsertUseInlineFile:")]
         protected void Test_BulkInsertUseInlineFile(string filePath)
         {
-            Debug.Print("\n--- Method ?: Inline file command Example ---");
+            Debug.Print("\n--- Method 6: Inline file command Example ---");
             int insertedCount = BulkInsertUseInlineFile(filePath);
             Debug.Print($"Inserted {insertedCount} records using CSV operation\n");
         }
@@ -76,7 +124,7 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
             return insertedCount;
         }
 
-        public void ResetVidsTable()
+        public new void ResetVidsTable()
         {
             try
             {
@@ -116,6 +164,22 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
             catch (Exception ex)
             {
                 Debug.Print($"Error in ResetVidsTable: {ex.Message}");
+            }
+        }
+
+        public new int GetVidsCount()
+        {
+            try
+            {
+                return mariaBase.WithSqlCommand(command =>
+                {
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }, "SELECT COUNT(*) FROM Vids");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error in GetVidsCount: {ex.Message}");
+                return -1;
             }
         }
     }

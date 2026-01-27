@@ -1,6 +1,4 @@
-﻿using RepoDb.Extensions.QueryFields;
-
-namespace CSharpAppPlayground.Classes.AppSettings
+﻿namespace CSharpAppPlayground.Classes.AppSettings
 {
     public static class GlobalState
     {

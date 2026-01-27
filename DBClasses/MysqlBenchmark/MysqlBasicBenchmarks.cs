@@ -17,8 +17,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private MysqlBase mysqlBase;
         private DataGenHelper dataGenHelper;
 
-        private int batchLimit = 5000;
-        private int overloadLimit = 50000;
+        protected int batchLimit = 5000;
+        protected int overloadLimit = 50000;
 
         // summary: 
         // ~3500 is maximum before overflow/stack issues on large inserts
@@ -174,7 +174,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// Pros: Simple, safe for large datasets
         /// Cons: Slowest due to many round trips
         /// </summary>
-        private int BulkInsertSingleLoop(List<VidsSQL> vids)
+        protected int BulkInsertSingleLoop(List<VidsSQL> vids)
         {
             int insertedCount = 0;
             try
@@ -214,7 +214,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// Pros: Fast for smaller datasets
         /// Cons: Can hit MySQL packet size limits for very large datasets
         /// </summary>
-        private int BulkInsertMultiValue(List<VidsSQL> vids)
+        protected int BulkInsertMultiValue(List<VidsSQL> vids)
         {
             int insertedCount = 0;
             int batchSize = batchLimit; // Insert in batches to avoid packet size limits
@@ -273,7 +273,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// Pros: All-or-nothing, fast
         /// Cons: Requires careful memory management
         /// </summary>
-        private int BulkInsertWithTransaction(List<VidsSQL> vids)
+        protected int BulkInsertWithTransaction(List<VidsSQL> vids)
         {
             int insertedCount = 0;
             int batchSize = batchLimit;
@@ -335,7 +335,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         /// Pros: Very fast, secure against SQL injection, optimized for MySQL
         /// Cons: More complex
         /// </summary>
-        private int BulkInsertWithPreparedStatement(List<VidsSQL> vids)
+        protected int BulkInsertWithPreparedStatement(List<VidsSQL> vids)
         {
             int insertedCount = 0;
             int batchSize = batchLimit;
@@ -393,7 +393,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             return insertedCount;
         }
 
-        private int BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> vids)
+        protected int BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> vids)
         {
             int insertedCount = 0;
             int batchSize = batchLimit;

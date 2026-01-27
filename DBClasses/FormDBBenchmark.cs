@@ -75,6 +75,11 @@ namespace CSharpAppPlayground.DBClasses
             int mysqlInsertedCount = mysqlBenchmarks.GetVidsCount();
             Debug.Print($"** MySQL Inserted:{mysqlInsertedCount}\n");
 
+            // skipping REPOdb setup for MariaDB /////////////////////////////////////////////////////////////////
+            mariaDBBenchmarks.RunBulkInsertBenchmark(amount);
+            int mariaInsertCount = mariaDBBenchmarks.GetVidsCount();
+            Debug.Print($"** MariaDB Inserted:{mariaInsertCount}\n");
+
             if (whichRepoDBSelect.SelectedIndex == 2)
             {
                 GlobalConfiguration.Setup().UsePostgreSql(); // RepoDb.PostgreSqlBootstrap.Initialize(); [deprecated]
@@ -99,6 +104,7 @@ namespace CSharpAppPlayground.DBClasses
         {
             int amount = (int)numAmount.Value;
             mysqlBenchmarks.FastestCompareBenchmark(amount);
+            mariaDBBenchmarks.FastestCompareBenchmark(amount);
             pgsBenchmarks.FastestCompareBenchmark(amount);
             mongoDBBenchmarks.FastestCompareBenchmark(amount);
             Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
