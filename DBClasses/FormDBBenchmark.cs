@@ -3,6 +3,7 @@ using CSharpAppPlayground.Classes.AppSettings;
 using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
+using CSharpAppPlayground.DBClasses.MariaDBBenchmark;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
@@ -40,10 +41,12 @@ namespace CSharpAppPlayground.DBClasses
         PostgresBasicBenchmarks pgsBenchmarks = new PostgresBasicBenchmarks();
         MysqlBasicBenchmarks mysqlBenchmarks = new MysqlBasicBenchmarks();
         MongoDBBasicBenchmarks mongoDBBenchmarks = new MongoDBBasicBenchmarks();
+        MariaDBBasicBenchmarks mariaDBBenchmarks = new MariaDBBasicBenchmarks();
 
         private void btnResetTables_Click(object sender, EventArgs e)
         {
             mysqlBenchmarks.ResetVidsTable();
+            mariaDBBenchmarks.ResetVidsTable();
             pgsBenchmarks.ResetVidsTable();
             mongoDBBenchmarks.DeleteAll();
         }
@@ -137,6 +140,8 @@ namespace CSharpAppPlayground.DBClasses
 
             mysqlBenchmarks.ImportCSV(bulkVidsCSVFilePath);
             Debug.Print(">>>>> MySQL DONE <<<<<");
+            mariaDBBenchmarks.ImportCSV(bulkVidsCSVFilePath);
+            Debug.Print(">>>>> MariaDB DONE <<<<<");
             pgsBenchmarks.ImportData(testData);
             Debug.Print(">>>>> Postgres DONE <<<<<");
             mongoDBBenchmarks.ImportData(vids);
@@ -166,5 +171,6 @@ namespace CSharpAppPlayground.DBClasses
             mysqlSearch.RunWordsSearchTest(words);
             postgresSearch.RunWordsSearchTest(words);
         }
+
     }
 }

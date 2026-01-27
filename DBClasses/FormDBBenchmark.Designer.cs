@@ -132,7 +132,7 @@
             btnGenData.Name = "btnGenData";
             btnGenData.Size = new Size(327, 33);
             btnGenData.TabIndex = 11;
-            btnGenData.Text = "Generate";
+            btnGenData.Text = "Generate Data in Databases";
             btnGenData.UseVisualStyleBackColor = true;
             btnGenData.Click += btnGenData_Click;
             // 
@@ -140,17 +140,18 @@
             // 
             tbCSVPath.Location = new Point(12, 347);
             tbCSVPath.Name = "tbCSVPath";
+            tbCSVPath.PlaceholderText = "path to CSV file";
             tbCSVPath.Size = new Size(327, 23);
             tbCSVPath.TabIndex = 12;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 308);
+            label3.Location = new Point(12, 286);
             label3.Name = "label3";
-            label3.Size = new Size(327, 30);
+            label3.Size = new Size(312, 45);
             label3.TabIndex = 13;
-            label3.Text = "CSV data path, column order must be respected\r\nIf empty then \"Generate\" will create new based on \"Amount\"";
+            label3.Text = "1. For custom CSV data, column order must be respected\r\n2. Leave empty to \"Generate\" new file based on \"Amount\"\r\n@.\\testdata\\vids_bulk_inserts.csv";
             // 
             // btnContainsText
             // 
