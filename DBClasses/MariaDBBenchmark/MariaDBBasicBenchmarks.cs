@@ -41,18 +41,25 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
 
         private int BulkInsertUseInlineFile(string filePath)
         {
+            if(File.Exists(filePath) == false)
+            {
+                throw new FileNotFoundException($"file not found at path: {filePath}");
+            }
             int insertedCount = 0;
             try
             {
                 using (var connection = new MySqlConnection(connectionStr))
                 {
+                    // LOAD DATA LOCAL INFILE ' %PATH TO FILE% ' INTO TABLE vids FIELDS TERMINATED BY ':' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES (duration, filename, filesizebyte, height, id, metadatetime, width);
+                    // NOTE: If file has a header row use IGNORE 1 LINES
                     connection.Open();
                     string sql = $@"LOAD DATA LOCAL INFILE '{filePath.Replace("\\", "\\\\")}'
                             INTO TABLE Vids
                             FIELDS TERMINATED BY ':'
                             OPTIONALLY ENCLOSED BY '""'
                             LINES TERMINATED BY '\n'
-                            IGNORE 1 LINES;"; // If file has a header row
+                            IGNORE 1 LINES
+                            (duration, filename, filesizebyte, height, id, metadatetime, width);"; 
                     var command = new MySqlCommand(sql, connection);
                     insertedCount = command.ExecuteNonQuery();
                     Debug.Print($"{insertedCount} rows were inserted into the 'Vids' table.");
