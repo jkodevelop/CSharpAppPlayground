@@ -41,12 +41,13 @@
             tbCSVPath = new TextBox();
             label3 = new Label();
             btnContainsText = new Button();
+            label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)numAmount).BeginInit();
             SuspendLayout();
             // 
             // btnBenchmarkInserts
             // 
-            btnBenchmarkInserts.Location = new Point(12, 101);
+            btnBenchmarkInserts.Location = new Point(12, 147);
             btnBenchmarkInserts.Name = "btnBenchmarkInserts";
             btnBenchmarkInserts.Size = new Size(146, 40);
             btnBenchmarkInserts.TabIndex = 0;
@@ -66,7 +67,7 @@
             // 
             // numAmount
             // 
-            numAmount.Location = new Point(12, 34);
+            numAmount.Location = new Point(12, 80);
             numAmount.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
             numAmount.Name = "numAmount";
             numAmount.Size = new Size(146, 23);
@@ -76,7 +77,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 16);
+            label1.Location = new Point(12, 62);
             label1.Name = "label1";
             label1.Size = new Size(97, 15);
             label1.TabIndex = 4;
@@ -85,14 +86,14 @@
             // whichRepoDBSelect
             // 
             whichRepoDBSelect.FormattingEnabled = true;
-            whichRepoDBSelect.Location = new Point(12, 71);
+            whichRepoDBSelect.Location = new Point(12, 117);
             whichRepoDBSelect.Name = "whichRepoDBSelect";
             whichRepoDBSelect.Size = new Size(146, 23);
             whichRepoDBSelect.TabIndex = 6;
             // 
             // btnBenchmarkInsertsFast
             // 
-            btnBenchmarkInsertsFast.Location = new Point(12, 147);
+            btnBenchmarkInsertsFast.Location = new Point(12, 193);
             btnBenchmarkInsertsFast.Name = "btnBenchmarkInsertsFast";
             btnBenchmarkInsertsFast.Size = new Size(146, 23);
             btnBenchmarkInsertsFast.TabIndex = 7;
@@ -102,7 +103,7 @@
             // 
             // btnSearchText
             // 
-            btnSearchText.Location = new Point(192, 71);
+            btnSearchText.Location = new Point(192, 117);
             btnSearchText.Name = "btnSearchText";
             btnSearchText.Size = new Size(183, 38);
             btnSearchText.TabIndex = 8;
@@ -112,7 +113,7 @@
             // 
             // tbSearchText
             // 
-            tbSearchText.Location = new Point(192, 33);
+            tbSearchText.Location = new Point(192, 79);
             tbSearchText.Name = "tbSearchText";
             tbSearchText.Size = new Size(183, 23);
             tbSearchText.TabIndex = 9;
@@ -120,7 +121,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(192, 16);
+            label2.Location = new Point(192, 62);
             label2.Name = "label2";
             label2.Size = new Size(42, 15);
             label2.TabIndex = 10;
@@ -155,7 +156,7 @@
             // 
             // btnContainsText
             // 
-            btnContainsText.Location = new Point(192, 115);
+            btnContainsText.Location = new Point(192, 161);
             btnContainsText.Name = "btnContainsText";
             btnContainsText.Size = new Size(183, 35);
             btnContainsText.TabIndex = 14;
@@ -163,11 +164,21 @@
             btnContainsText.UseVisualStyleBackColor = true;
             btnContainsText.Click += btnContainsText_Click;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(232, 15);
+            label4.TabIndex = 15;
+            label4.Text = "Benchmark uses Table and Collection: Vids";
+            // 
             // FormDBBenchmark
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label4);
             Controls.Add(btnContainsText);
             Controls.Add(label3);
             Controls.Add(tbCSVPath);
@@ -196,6 +207,7 @@
             Controls.SetChildIndex(tbCSVPath, 0);
             Controls.SetChildIndex(label3, 0);
             Controls.SetChildIndex(btnContainsText, 0);
+            Controls.SetChildIndex(label4, 0);
             ((System.ComponentModel.ISupportInitialize)numAmount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -217,5 +229,6 @@
         private TextBox tbCSVPath;
         private Label label3;
         private Button btnContainsText;
+        private Label label4;
     }
 }

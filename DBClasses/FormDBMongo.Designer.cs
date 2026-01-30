@@ -30,6 +30,7 @@
         {
             btnMongoStatus = new Button();
             btnMongoBasicExample = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // btnMongoStatus
@@ -44,7 +45,7 @@
             // 
             // btnMongoBasicExample
             // 
-            btnMongoBasicExample.Location = new Point(21, 69);
+            btnMongoBasicExample.Location = new Point(21, 90);
             btnMongoBasicExample.Name = "btnMongoBasicExample";
             btnMongoBasicExample.Size = new Size(132, 33);
             btnMongoBasicExample.TabIndex = 2;
@@ -52,21 +53,33 @@
             btnMongoBasicExample.UseVisualStyleBackColor = true;
             btnMongoBasicExample.Click += btnMongoBasicExample_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(21, 72);
+            label1.Name = "label1";
+            label1.Size = new Size(118, 15);
+            label1.TabIndex = 3;
+            label1.Text = "col: MongoDBObject";
+            // 
             // FormDBMongo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(btnMongoBasicExample);
             Controls.Add(btnMongoStatus);
             Name = "FormDBMongo";
             Text = "FormDBMongo";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button btnMongoStatus;
         private Button btnMongoBasicExample;
+        private Label label1;
     }
 }

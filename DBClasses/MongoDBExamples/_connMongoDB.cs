@@ -64,9 +64,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBExamples
                     IMongoDatabase adminDatabase = client.GetDatabase("testdb");
                     BsonDocument pingCommand = new BsonDocument("ping", 1);
                     BsonDocument result = adminDatabase.RunCommand<BsonDocument>(pingCommand);
-
-                    Debug.Print($"Successfully connected to MongoDB.");
-
+                    
                     // Get server info
                     BsonDocument serverInfo = client.GetDatabase("testdb").RunCommand<BsonDocument>(new BsonDocument("buildInfo", 1));
                     if (serverInfo.Contains("version"))

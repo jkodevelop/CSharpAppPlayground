@@ -30,6 +30,7 @@
         {
             btnMariaStatus = new Button();
             btnMariaBasicExample = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // btnMariaStatus
@@ -44,7 +45,7 @@
             // 
             // btnMariaBasicExample
             // 
-            btnMariaBasicExample.Location = new Point(22, 71);
+            btnMariaBasicExample.Location = new Point(22, 89);
             btnMariaBasicExample.Name = "btnMariaBasicExample";
             btnMariaBasicExample.Size = new Size(130, 34);
             btnMariaBasicExample.TabIndex = 1;
@@ -52,21 +53,33 @@
             btnMariaBasicExample.UseVisualStyleBackColor = true;
             btnMariaBasicExample.Click += btnMariaBasicExample_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(22, 71);
+            label1.Name = "label1";
+            label1.Size = new Size(105, 15);
+            label1.TabIndex = 7;
+            label1.Text = "table: SqlDBObject";
+            // 
             // FormDBMaria
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(btnMariaBasicExample);
             Controls.Add(btnMariaStatus);
             Name = "FormDBMaria";
             Text = "FormDBMaria";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button btnMariaStatus;
         private Button btnMariaBasicExample;
+        private Label label1;
     }
 }

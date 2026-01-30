@@ -30,6 +30,7 @@
         {
             btnMysqlStatus = new Button();
             btnMysqlBasicExample = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // btnMysqlStatus
@@ -44,7 +45,7 @@
             // 
             // btnMysqlBasicExample
             // 
-            btnMysqlBasicExample.Location = new Point(21, 70);
+            btnMysqlBasicExample.Location = new Point(21, 87);
             btnMysqlBasicExample.Name = "btnMysqlBasicExample";
             btnMysqlBasicExample.Size = new Size(132, 31);
             btnMysqlBasicExample.TabIndex = 1;
@@ -52,21 +53,33 @@
             btnMysqlBasicExample.UseVisualStyleBackColor = true;
             btnMysqlBasicExample.Click += btnMysqlBasicExample_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(21, 69);
+            label1.Name = "label1";
+            label1.Size = new Size(105, 15);
+            label1.TabIndex = 6;
+            label1.Text = "table: SqlDBObject";
+            // 
             // FormDBMysql
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(btnMysqlBasicExample);
             Controls.Add(btnMysqlStatus);
             Name = "FormDBMysql";
             Text = "FormDBMysql";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button btnMysqlStatus;
         private Button btnMysqlBasicExample;
+        private Label label1;
     }
 }

@@ -24,7 +24,21 @@ namespace CSharpAppPlayground
             mariadb = new _connMariaDB();
         }
 
+        // check all DB connections status
+        private void btnStatus_Click(object sender, EventArgs e)
+        {
+            string mysqlStat = mysql.getServerVersion();
+            Debug.Print($"  MySQL: {mysqlStat}");
+            string pgStat = postgres.getServerVersion();
+            Debug.Print($"  PostgreSQL: {pgStat}");
+            string mariaStat = mariadb.getServerVersion();
+            Debug.Print($"  MariaDB: {mariaStat}");
+            string mongoStat = mongo.getServerVersion();
+            Debug.Print($"  MongoDB: {mongoStat}");
+        }
+
         protected FormFactory _formMysql = new FormFactory("CSharpAppPlayground.DBClasses.FormDBMysql, CSharpAppPlayground");
+
         private void btnMySQL_Click(object sender, EventArgs e)
         {
             _formMysql.Open();
@@ -75,6 +89,5 @@ namespace CSharpAppPlayground
             string serverVersion = mariadb.getServerVersion();
             Debug.Print($"{serverVersion}");
         }
-
     }
 }
