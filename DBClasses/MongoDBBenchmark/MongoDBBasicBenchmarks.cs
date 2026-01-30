@@ -64,7 +64,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
 
         }
 
-        [Time("InsertSimpleLoop:")]
+        [Time("MongoDB")]
         protected void Test_InsertSimpleLoop(List<VidsBSON> testData)
         {
             Debug.Print("\n--- Method 1: Single Insert Loop ---");
@@ -72,7 +72,7 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             Debug.Print($"Inserted {insertedCount} records using Single Loop\n");
         }
 
-        [Time("InsertManyAPI:")]
+        [Time("MongoDB")]
         protected void Test_InsertManyAPI(List<VidsBSON> testData)
         {
             Debug.Print("\n--- Method 2: InserMany() ---");

@@ -78,7 +78,7 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
         }
 
         #region BENCHMARK METHODS
-        [Time("BulkInsertUseInlineFile:")]
+        [Time("MariaDB")]
         protected void Test_BulkInsertUseInlineFile(string filePath)
         {
             Debug.Print("\n--- Method 6: Inline file command Example ---");

@@ -113,7 +113,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print("\n=== Benchmark Complete ===");
         }
 
-        [Time("BulkInsertSingleLoop:")]
+        [Time("Postgres")]
         protected void Test_InsertSimpleLoop(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 1: Single Insert Loop ---");
@@ -121,7 +121,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Single Loop\n");
         }
 
-        [Time("BulkInsertMultiValue:")]
+        [Time("Postgres")]
         protected void Test_InsertMultiValue(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 2: Multi-Value INSERT Statement ---");
@@ -129,7 +129,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Multi-Value\n");
         }
 
-        [Time("BulkInsertWithTransaction:")]
+        [Time("Postgres")]
         protected void Test_InsertWithTransaction(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 3: Transaction with Batched Inserts ---");
@@ -137,7 +137,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Transaction with Batching\n");
         }
 
-        [Time("BulkInsertWithPreparedStatement:")]
+        [Time("Postgres")]
         protected void Test_InsertWithPreparedStatement(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 4: Prepared Statement with Batching ---");
@@ -145,7 +145,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
-        [Time("BulkInsertWithPreparedStatementAndTransaction:")]
+        [Time("Postgres")]
         protected void Test_BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 5: Prepared Statement with Batching + transaction ---");
@@ -153,7 +153,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
-        [Time("BulkInsertUseCopyCommand:")]
+        [Time("Postgres")]
         protected void Test_BulkInsertUseCopyCommand(string filePath)
         {
             Debug.Print("\n--- Method 6: PostgreSQL COPY command Example ---");
@@ -161,7 +161,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using COPY command\n");
         }
 
-        [Time("BulkInsertUseBinaryImport:")]
+        [Time("Postgres")]
         protected void Test_BulkInsertUseBinaryImport(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 7: Npgsql Binary Import Example ---");
@@ -169,7 +169,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using Binary Import\n");
         }
 
-        [Time("BulkInsertWithRepoDBInsertAll:")]
+        [Time("Postgres")]
         protected void Test_BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 8: RepoDB InsertAll() Example ---");
@@ -178,7 +178,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll()\n");
         }
 
-        [Time("BulkAddWithPgPartner:")]
+        [Time("Postgres")]
         protected void Test_BulkAddWithPgPartner(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 9: PgPartner BulkAdd() Example ---");

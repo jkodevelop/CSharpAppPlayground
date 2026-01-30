@@ -113,7 +113,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print("\n=== Benchmark Complete ===");
         }
 
-        [Time("BulkInsertSingleLoop:")]
+        [Time("MySQL")]
         protected void Test_InsertSimpleLoop(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 1: Single Insert Loop ---");
@@ -121,7 +121,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Single Loop\n");
         }
 
-        [Time("BulkInsertMultiValue:")]
+        [Time("MySQL")]
         protected void Test_InsertMultiValue(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 2: Multi-Value INSERT Statement ---");
@@ -129,7 +129,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Multi-Value\n");
         }
 
-        [Time("BulkInsertWithTransaction:")]
+        [Time("MySQL")]
         protected void Test_InsertWithTransaction(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 3: Transaction with Batched Inserts ---");
@@ -137,7 +137,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Transaction with Batching\n");
         }
 
-        [Time("BulkInsertWithPreparedStatement:")]
+        [Time("MySQL")]
         protected void Test_InsertWithPreparedStatement(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 4: Prepared Statement with Batching ---");
@@ -145,7 +145,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
-        [Time("BulkInsertWithPreparedStatementAndTransaction:")]
+        [Time("MySQL")]
         protected void Test_BulkInsertWithPreparedStatementAndTransaction(List<VidsSQL> testData)
         {
             Debug.Print("\n--- Method 5: Prepared Statement with Batching + transaction ---");
@@ -153,7 +153,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using Prepared Statement with Batching\n");
         }
 
-        [Time("BulkInsertWithRepoDBInsertAll:")]
+        [Time("MySQL")]
         protected void Test_BulkInsertWithRepoDBInsertAll(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 6: RepoDB InsertAll Example ---");
@@ -161,7 +161,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             Debug.Print($"Inserted {insertedCount} records using RepoDB InsertAll, batchSize:{repoDBBatchLimit}\n");
         }
 
-        [Time("BulkInsertUseCSVOperation:")]
+        [Time("MySQL")]
         protected void Test_BulkInsertUseCSVOperation(string filePath)
         {
             Debug.Print("\n--- Method 7: CSV bulk command Example ---");
