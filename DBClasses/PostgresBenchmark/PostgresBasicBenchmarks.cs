@@ -1,4 +1,4 @@
-﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.PostgresExamples;
@@ -179,11 +179,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         }
 
         [Time("BulkAddWithPgPartner:")]
-        protected async void Test_BulkAddWithPgPartner(List<RepoVidInsert> convertedData)
+        protected void Test_BulkAddWithPgPartner(List<RepoVidInsert> convertedData)
         {
             Debug.Print("\n--- Method 9: PgPartner BulkAdd() Example ---");
-            // int insertedCount = BulkAddWithPgPartner(convertedData).GetAwaiter().GetResult(); // this doesn't work
-            int insertedCount = await BulkAddWithPgPartner(convertedData);
+            // Run on thread pool to avoid deadlock: GetResult() on UI thread would block it,
+            // and the async continuation would need that same thread to complete.
+            int insertedCount = Task.Run(() => BulkAddWithPgPartner(convertedData)).GetAwaiter().GetResult();
             Debug.Print($"Inserted {insertedCount} records using PgPartner BulkAdd()\n");
         }
 

@@ -33,7 +33,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
             {
                 using (var connection = dataSource.OpenConnection())
                 {
-                    connection.Open();
+                    //connection.Open();
                     return func(connection);
                 }
             }
@@ -53,7 +53,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresExamples
             {
                 using (var connection = await dataSource.OpenConnectionAsync())
                 {
-                    await connection.OpenAsync();
+                    //await connection.OpenAsync();
                     return await func(connection);
                 }
             }
