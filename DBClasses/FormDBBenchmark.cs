@@ -159,12 +159,14 @@ namespace CSharpAppPlayground.DBClasses
 
         MongoDBSearchBenchmarks mongoSearch = new MongoDBSearchBenchmarks();
         MysqlSearchBenchmarks mysqlSearch = new MysqlSearchBenchmarks();
+        MariaDBSearchBenchmarks mariaDBSearch = new MariaDBSearchBenchmarks();
         PostgresSearchBenchmarks postgresSearch = new PostgresSearchBenchmarks();
         private void btnSearchText_Click(object sender, EventArgs e)
         {
             string searchTerm = tbSearchText.Text;
             mongoSearch.RunSimpleSearchTest(searchTerm);
             mysqlSearch.RunSimpleSearchTest(searchTerm);
+            mariaDBSearch.RunSimpleSearchTest(searchTerm);
             postgresSearch.RunSimpleSearchTest(searchTerm);
         }
 
@@ -175,6 +177,7 @@ namespace CSharpAppPlayground.DBClasses
             string[] words = tbSearchText.Text.Split(' ');
             mongoSearch.RunWordsSearchTest(words);
             mysqlSearch.RunWordsSearchTest(words);
+            mariaDBSearch.RunWordsSearchTest(words);
             postgresSearch.RunWordsSearchTest(words);
         }
 
