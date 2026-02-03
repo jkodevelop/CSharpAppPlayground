@@ -60,13 +60,13 @@ namespace CSharpAppPlayground.DBClasses.Data
             return csvEntities;
         }
 
-        public bool GenCSVfileWithData(List<VidsSQL> vids, string filePath)
+        public bool GenCSVfileWithData(List<VidsCSV> vids, string filePath)
         {
             bool success = false;
             try
             {
                 CsvManager csvMan = new CsvManager(filePath);
-                csvMan.WriteToCSV<VidsSQL>(vids);
+                csvMan.WriteToCSV<VidsCSV>(vids);
                 success = true;
             }
             catch (Exception ex)

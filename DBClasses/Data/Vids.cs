@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace CSharpAppPlayground.DBClasses.Data
+﻿namespace CSharpAppPlayground.DBClasses.Data
 {
     public class Vids
     {

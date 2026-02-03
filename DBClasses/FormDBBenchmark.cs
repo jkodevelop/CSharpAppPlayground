@@ -7,9 +7,11 @@ using CSharpAppPlayground.DBClasses.MariaDBBenchmark;
 using CSharpAppPlayground.DBClasses.MongoDBBenchmark;
 using CSharpAppPlayground.DBClasses.MysqlBenchmark;
 using CSharpAppPlayground.DBClasses.PostgresBenchmark;
+using CSharpAppPlayground.Loggers;
 using CSharpAppPlayground.UIClasses;
 using RepoDb;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace CSharpAppPlayground.DBClasses
 {
@@ -53,6 +55,8 @@ namespace CSharpAppPlayground.DBClasses
 
         private void btnBenchmarkInserts_Click(object sender, EventArgs e)
         {
+            GlobalLogger.Instance.LogInformation(">>> START: Bulk Insert Benchmarks <<<");
+
             Debug.Print($"select index {whichRepoDBSelect.SelectedIndex}");
             int amount = (int)numAmount.Value;
 
@@ -98,16 +102,19 @@ namespace CSharpAppPlayground.DBClasses
             mongoDBBenchmarks.RunBulkInsertBenchmark(amount);
             long mongoInsertCount = mongoDBBenchmarks.GetVidsCount();
             Debug.Print($"** MongoDB Inserted:{mongoInsertCount}\n");
+
+            GlobalLogger.Instance.LogInformation(">>> END: Bulk Insert Benchmarks <<<");
         }
 
         private void btnBenchmarkInsertsFast_Click(object sender, EventArgs e)
         {
+            GlobalLogger.Instance.LogInformation(">>> Start: Fastest Insert Benchmarks <<<");
             int amount = (int)numAmount.Value;
             mysqlBenchmarks.FastestCompareBenchmark(amount);
             mariaDBBenchmarks.FastestCompareBenchmark(amount);
             pgsBenchmarks.FastestCompareBenchmark(amount);
             mongoDBBenchmarks.FastestCompareBenchmark(amount);
-            Debug.Print("*** Fastest Bulk Insert Benchmark Complete ***");
+            GlobalLogger.Instance.LogInformation(">>> END: Fastest Insert Benchmarks <<<");
         }
 
         GenerateVidsSQL generatorSQL = new GenerateVidsSQL();
