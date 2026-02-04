@@ -37,10 +37,10 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
         public void GenData(int dataSetSize)
         {
-            GenerateVidsSQL generator = new GenerateVidsSQL();
-            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             if (dataSetSize >= overloadLimit)
             {
+                GenerateVidsCSV gen = new GenerateVidsCSV();
+                List<VidsCSV> testData = gen.GenerateData(dataSetSize);
                 if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                     BulkInsertUseCSVOperation(csvFilePath);
                 else
@@ -48,6 +48,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             }
             else
             {
+                GenerateVidsSQL generator = new GenerateVidsSQL();
+                List<VidsSQL> testData = generator.GenerateData(dataSetSize);
                 BulkInsertMultiValue(testData);
             }
         }
@@ -60,8 +62,8 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         public void FastestCompareBenchmark(int dataSetSize)
         {
             // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
-            GenerateVidsSQL generator = new GenerateVidsSQL();
-            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> testData = gen.GenerateData(dataSetSize);
             if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseCSVOperation(csvFilePath);
             else
@@ -103,9 +105,11 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             }
             else
                 Debug.Print("Skipping RepoDB InsertAll() test MySQL");
-            
+
             // Example 7: CSV Bulk Load [FASTEST OPTION]
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(csvData, csvFilePath))
                 Test_BulkInsertUseCSVOperation(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCSVOperation");

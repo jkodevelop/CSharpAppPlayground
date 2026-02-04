@@ -55,7 +55,10 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             GenerateVidsSQL generator = new GenerateVidsSQL();
             List<VidsSQL> testData = generator.GenerateData(dataSetSize);
             Test_BulkInsertUseBinaryImport(testData);
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(csvData, csvFilePath))
                 Test_BulkInsertUseCopyCommand(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
@@ -89,7 +92,9 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
             Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // Example 6: PostgreSQL COPY command (native bulk insert) [Second FASTEST OPTION]
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(csvData, csvFilePath))
                 Test_BulkInsertUseCopyCommand(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");

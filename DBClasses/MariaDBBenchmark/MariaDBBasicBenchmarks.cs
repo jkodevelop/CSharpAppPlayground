@@ -36,8 +36,8 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
         public new void FastestCompareBenchmark(int dataSetSize)
         {
             // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
-            GenerateVidsSQL generator = new GenerateVidsSQL();
-            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> testData = gen.GenerateData(dataSetSize);
             if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
                 Test_BulkInsertUseInlineFile(csvFilePath);
             else
@@ -69,7 +69,9 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
             Test_BulkInsertWithPreparedStatementAndTransaction(testData);
 
             // EXAMPLE 7: Bulk Insert using Inline File Command
-            if (dataGenHelper.GenCSVfileWithData(testData, csvFilePath))
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
+            if (dataGenHelper.GenCSVfileWithData(csvData, csvFilePath))
                 Test_BulkInsertUseInlineFile(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseInlineFile");
