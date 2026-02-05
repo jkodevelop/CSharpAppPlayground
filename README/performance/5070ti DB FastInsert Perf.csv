@@ -7,3 +7,7 @@ For 5070ti computer this is so fast,45000,MariaDB,Method:Test_BulkInsertUseInlin
 For 5070ti computer this is so fast,45000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:00.4848605 ms
 For 5070ti computer postgres is slowest,45000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:03.2981935 ms
 ,45000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:03.9792523 ms
+,100000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:03.7464221 ms
+,100000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:01.0962863 ms
+,100000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:10.6797507 ms
+,100000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:13.4026833 ms
