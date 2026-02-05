@@ -1,4 +1,4 @@
-﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MysqlExamples;
@@ -13,9 +13,12 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 {
     public class MysqlBasicBenchmarks
     {
-        private string connectionStr;
+        protected string connectionStr;
         private MysqlBase mysqlBase;
-        private DataGenHelper dataGenHelper;
+
+        /// <summary>Override in derived classes to supply a different connection string (e.g. MariaDB).</summary>
+        protected virtual string GetConnectionString() => connectionStr;
+        protected DataGenHelper dataGenHelper;
 
         protected int batchLimit = 5000;
         protected int overloadLimit = 50000;
@@ -26,7 +29,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
         private int repoDBBatchLimit = 500;
         public bool repoDBTestEnabled { set; get; } = false;
 
-        private string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
+        protected string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
 
         public MysqlBasicBenchmarks()
         {
@@ -183,7 +186,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             int insertedCount = 0;
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
                     foreach (var vid in vids)
@@ -231,7 +234,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
 
@@ -284,7 +287,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
                     using (var transaction = connection.BeginTransaction())
@@ -346,7 +349,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
 
@@ -404,7 +407,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
 
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
                     using (var transaction = connection.BeginTransaction())
@@ -473,7 +476,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             int insertedCount = 0;
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
 
@@ -511,7 +514,7 @@ namespace CSharpAppPlayground.DBClasses.MysqlBenchmark
             int insertedCount = 0;
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     connection.Open();
 

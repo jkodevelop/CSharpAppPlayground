@@ -1,4 +1,4 @@
-﻿using CSharpAppPlayground.Classes.DataGen.Generators;
+using CSharpAppPlayground.Classes.DataGen.Generators;
 using CSharpAppPlayground.DBClasses.Data;
 using CSharpAppPlayground.DBClasses.Data.SQLbenchmark;
 using CSharpAppPlayground.DBClasses.MariaDBExamples;
@@ -12,14 +12,17 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
 {
     public class MariaDBBasicBenchmarks: MysqlBasicBenchmarks
     {
-        private string connectionStr;
+        protected string connectionStr;
         private MariaDBBase mariaBase;
-        private DataGenHelper dataGenHelper;
+        protected DataGenHelper dataGenHelper;
+
+        /// <summary>Forces base class methods to use this class's MariaDB connection string.</summary>
+        protected override string GetConnectionString() => connectionStr;
 
         protected int batchLimit = 5000;
         protected int overloadLimit = 50000;
 
-        private string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
+        protected string csvFilePath = @".\testdata\mysql_vids_bulk_insert.csv";
 
         public MariaDBBasicBenchmarks()
         {
@@ -98,7 +101,7 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
             int insertedCount = 0;
             try
             {
-                using (var connection = new MySqlConnection(connectionStr))
+                using (var connection = new MySqlConnection(GetConnectionString()))
                 {
                     // LOAD DATA LOCAL INFILE ' %PATH TO FILE% ' INTO TABLE vids FIELDS TERMINATED BY ':' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES (duration, filename, filesizebyte, height, id, metadatetime, width);
                     // NOTE: If file has a header row use IGNORE 1 LINES
