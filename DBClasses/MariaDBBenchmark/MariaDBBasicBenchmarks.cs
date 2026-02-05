@@ -109,7 +109,7 @@ namespace CSharpAppPlayground.DBClasses.MariaDBBenchmark
                             OPTIONALLY ENCLOSED BY '""'
                             LINES TERMINATED BY '\n'
                             IGNORE 1 LINES
-                            (duration, filename, filesizebyte, height, id, metadatetime, width);"; 
+                            (duration, filename, filesizebyte, height, metadatetime, width);"; 
                     var command = new MySqlCommand(sql, connection);
                     insertedCount = command.ExecuteNonQuery();
                     Debug.Print($"{insertedCount} rows were inserted into the 'Vids' table.");

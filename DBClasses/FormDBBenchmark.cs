@@ -12,6 +12,7 @@ using CSharpAppPlayground.UIClasses;
 using RepoDb;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using CSharpAppPlayground.DBClasses.Data;
 
 namespace CSharpAppPlayground.DBClasses
 {
@@ -117,7 +118,8 @@ namespace CSharpAppPlayground.DBClasses
             GlobalLogger.Instance.LogInformation(">>> END: Fastest Insert Benchmarks <<<");
         }
 
-        GenerateVidsSQL generatorSQL = new GenerateVidsSQL();
+        //GenerateVidsSQL generatorSQL = new GenerateVidsSQL();
+        GenerateVidsCSV generatorVidsCSV = new GenerateVidsCSV();
         private void btnGenData_Click(object sender, EventArgs e)
         {
             int amount = (int)numAmount.Value;
@@ -128,7 +130,7 @@ namespace CSharpAppPlayground.DBClasses
             //mongoDBBenchmarks.GenData(amount);
 
             // 2. This will keep them all the same, good for benchmark search etc..
-            List<VidsSQL> testData = new List<VidsSQL>();
+            List<VidsCSV> testData = new List<VidsCSV>();
             List<VidsBSON> vids = new List<VidsBSON>();
             if (tbCSVPath.Text.Length > 0)
             {
@@ -139,13 +141,13 @@ namespace CSharpAppPlayground.DBClasses
                 }
                 // import from existing csv data
                 bulkVidsCSVFilePath = tbCSVPath.Text;
-                testData = csvMan.ReadFromCSV<VidsSQL>(bulkVidsCSVFilePath);
+                testData = csvMan.ReadFromCSV<VidsCSV>(bulkVidsCSVFilePath);
                 vids = csvMan.ReadFromCSV<VidsBSON>(bulkVidsCSVFilePath);
             }
             else
             {
                 // generate new data for this import
-                testData = generatorSQL.GenerateData(amount);
+                testData = generatorVidsCSV.GenerateData(amount);
                 csvMan.WriteToCSV(testData);
                 vids = csvMan.ReadFromCSV<VidsBSON>();
             }

@@ -39,12 +39,12 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
 
         public void GenData(int dataSetSize)
         {
-            GenerateVidsSQL generator = new GenerateVidsSQL();
-            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
-            BulkInsertUseBinaryImport(testData);
+            GenerateVidsCSV gen = new GenerateVidsCSV();
+            List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
+            BulkInsertUseBinaryImport(csvData);
         }
 
-        public void ImportData(List<VidsSQL> testData)
+        public void ImportData(List<VidsCSV> testData)
         {
             BulkInsertUseBinaryImport(testData);
         }
@@ -52,16 +52,14 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         public void FastestCompareBenchmark(int dataSetSize)
         {
             // only test with fastest APIs for big data, Note: if its less then 10000 records the benchmark is kinda pointless
-            GenerateVidsSQL generator = new GenerateVidsSQL();
-            List<VidsSQL> testData = generator.GenerateData(dataSetSize);
-            Test_BulkInsertUseBinaryImport(testData);
-
             GenerateVidsCSV gen = new GenerateVidsCSV();
             List<VidsCSV> csvData = gen.GenerateData(dataSetSize);
             if (dataGenHelper.GenCSVfileWithData(csvData, csvFilePath))
                 Test_BulkInsertUseCopyCommand(csvFilePath);
             else
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
+
+            Test_BulkInsertUseBinaryImport(csvData);
         }
 
         /// <summary>
@@ -100,7 +98,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                 Debug.Print("Failed to generate CSV file for bulk insert, cannot run Test_BulkInsertUseCopyCommand");
 
             // Example 7: Npgsql Binary Import [FASTEST OPTION]
-            Test_BulkInsertUseBinaryImport(testData);
+            Test_BulkInsertUseBinaryImport(csvData);
 
             if (repoDBTestEnabled)
             {
@@ -167,7 +165,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         }
 
         [Time("Postgres")]
-        protected void Test_BulkInsertUseBinaryImport(List<VidsSQL> testData)
+        protected void Test_BulkInsertUseBinaryImport(List<VidsCSV> testData)
         {
             Debug.Print("\n--- Method 7: Npgsql Binary Import Example ---");
             int insertedCount = BulkInsertUseBinaryImport(testData);
@@ -500,7 +498,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
                     connection.Open();
 
                     // PostgreSQL COPY command
-                    string copyCommand = $"COPY \"Vids\" (filename, filesizebyte, duration, metadatetime, width, height) FROM STDIN WITH (FORMAT csv, HEADER true, DELIMITER ':')";
+                    string copyCommand = $"COPY \"Vids\" (duration, filename, filesizebyte, height, metadatetime, width) FROM STDIN WITH (FORMAT csv, HEADER true, DELIMITER ':')";
 
                     using (var writer = connection.BeginTextImport(copyCommand))
                     {
@@ -535,7 +533,7 @@ namespace CSharpAppPlayground.DBClasses.PostgresBenchmark
         /// Pros: Fastest option, direct binary transfer
         /// Cons: More complex setup
         /// </summary>
-        private int BulkInsertUseBinaryImport(List<VidsSQL> vids)
+        private int BulkInsertUseBinaryImport(List<VidsCSV> vids)
         {
             int insertedCount = 0;
             try
