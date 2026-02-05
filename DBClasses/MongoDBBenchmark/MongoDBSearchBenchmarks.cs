@@ -1,4 +1,4 @@
-﻿using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
+using CSharpAppPlayground.DBClasses.Data.BSONbenchmark;
 using MethodTimer;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -142,7 +142,9 @@ namespace CSharpAppPlayground.DBClasses.MongoDBBenchmark
             if (words == null || words.Length == 0)
                 return new List<VidsBSONwithId>();
 
-            var filter = Builders<VidsBSONwithId>.Filter.Text(words);
+            // Wrap in quotes so MongoDB treats as exact phrase (e.g. "source.mp4" matches literal dot, not tokenized)
+            var searchPhrase = string.IsNullOrWhiteSpace(words) ? words : $"\"{words.Trim()}\"";
+            var filter = Builders<VidsBSONwithId>.Filter.Text(searchPhrase);
             var results = collection.Find(filter).ToList();
             return results;
         }
