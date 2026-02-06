@@ -114,7 +114,7 @@ namespace CSharpAppPlayground.DBClasses
             mysqlBenchmarks.FastestCompareBenchmark(amount);
             mariaDBBenchmarks.FastestCompareBenchmark(amount);
             pgsBenchmarks.FastestCompareBenchmark(amount);
-            mongoDBBenchmarks.FastestCompareBenchmark(amount);
+            //mongoDBBenchmarks.FastestCompareBenchmark(amount);
             GlobalLogger.Instance.LogInformation(">>> END: Fastest Insert Benchmarks <<<");
         }
 

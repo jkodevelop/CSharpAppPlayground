@@ -1,0 +1,25 @@
+notes,inserts,db,method,time(ms)
+For 5070ti computer Mysql is faster than Postgres,45000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:01.6180240 ms
+For 5070ti computer this is so fast,45000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:00.4798890 ms
+,45000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:03.2792919 ms
+,45000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:04.0048193 ms
+,45000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:01.6349399 ms
+For 5070ti computer this is so fast,45000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:00.4848605 ms
+For 5070ti computer postgres is slowest,45000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:03.2981935 ms
+,45000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:03.9792523 ms
+,100000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:03.7464221 ms
+,100000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:01.0962863 ms
+,100000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:10.6797507 ms
+5070ti --,100000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:13.4026833 ms
+3080pc,45000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:05.6381301 ms
+,45000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:00.7604698 ms
+,45000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:31.0703515 ms
+,45000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:30.3396663 ms
+,100000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:01.7401749 ms
+,100000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:01.2969628 ms
+,100000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:08.8333880 ms
+,100000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:11.4917118 ms
+,45000,MySQL,Method:Test_BulkInsertUseCSVOperation,00:00:00.7985164 ms
+3080pc even this pc mariadb inlinefile is fastest,45000,MariaDB,Method:Test_BulkInsertUseInlineFile,00:00:00.5601345 ms
+,45000,Postgres,Method:Test_BulkInsertUseCopyCommand,00:00:03.6848012 ms
+ 3080pc --,45000,Postgres,Method:Test_BulkInsertUseBinaryImport,00:00:04.0163429 ms
